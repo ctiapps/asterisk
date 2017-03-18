@@ -1,5 +1,7 @@
 # asterisk
 
+[![Join the chat at https://gitter.im/ctiapps/asterisk](https://badges.gitter.im/ctiapps/asterisk.svg)](https://gitter.im/ctiapps/asterisk?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 Asterisk PBX libs (AMI, AGI, ARI) for crystal-lang
 
 Work in progress! not even in alpha!
