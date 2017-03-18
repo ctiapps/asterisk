@@ -1,0 +1,9 @@
+name: asterisk
+version: 0.1.0
+
+authors:
+  - Andrius Kairiukstis <k@andrius.mobi>
+
+crystal: 0.21.1
+
+license: MIT
