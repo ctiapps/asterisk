@@ -1,6 +1,8 @@
 # asterisk
 
-TODO: Write a description here
+Asterisk PBX libs (AMI, AGI, ARI) for crystal-lang
+
+Work in progress! not even in alpha!
 
 ## Installation
 
