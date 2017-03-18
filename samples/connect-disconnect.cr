@@ -2,8 +2,11 @@ require "../src/asterisk.cr"
 
 ami = Asterisk::Manager.new
 ami.connect
-puts ami.send_action({"action" => "ListCommands"})
-puts ami.send_action({"action" => "SIPpeers"})
-sleep 3
+
+# while in speep mode, AMI events still coming to the listener
+(1..10).each do |counter|
+  puts "[#{counter}] in sleep mode"
+  sleep 1
+end
+
 ami.disconnect
-sleep 10
