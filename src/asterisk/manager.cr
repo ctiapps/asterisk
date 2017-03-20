@@ -80,23 +80,6 @@ module Asterisk
       @event_map.delete(actionid)
     end
 
-    # terminate block.call after given timeout
-    private def timeout(terminate_after : Float64, &block)
-      ch = Channel(Bool).new
-
-      spawn do
-        sleep terminate_after
-        ch.close
-      end
-
-      spawn do
-        block.call
-        ch.send true
-      end
-
-      res = ch.receive rescue false
-    end
-
     private def listen!
       spawn do
         while connected?
@@ -136,7 +119,7 @@ module Asterisk
     private def receive_event
       event = [] of String
 
-      timeout(10.0) do
+      Timeout.timeout(10.0) do
         loop do
           next_line = @conn.gets rescue ""
           break if next_line.to_s.empty?

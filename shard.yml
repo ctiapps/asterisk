@@ -8,6 +8,6 @@ crystal: 0.21.1
 
 dependencies:
   timeout:
-    github: andrius/timeout
+    github: ctiapps/timeout
 
 license: MIT
