@@ -1,9 +1,13 @@
 require "../src/asterisk.cr"
 
-ami = Asterisk::Manager.new
-ami.connect
-puts ami.send_action({"action" => "ListCommands"})
-puts ami.send_action({"action" => "SIPpeers"})
-sleep 3
-ami.disconnect
-sleep 10
+host = ENV.fetch("ASTERISK_MANAGER_HOST", "127.0.0.1")
+port= ENV.fetch("ASTERISK_MANAGER_PORT", "55038")
+
+ami = Asterisk::Manager.new(host, port)
+ami.connect!
+
+# puts ami.send_action({"action" => "ListCommands"})
+# puts ami.send_action({"action" => "SIPpeers"})
+puts ami.send_action({"action" => "Command", "command" => "agi show commands"})
+
+ami.disconnect!
