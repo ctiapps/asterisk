@@ -3,7 +3,7 @@ require "time"
 require "secure_random"
 
 module Asterisk
-  class Manager
+  class AMI
     class LoginError < Exception
     end
 

@@ -1,9 +1,9 @@
-require "../src/asterisk.cr"
+require "../../src/asterisk.cr"
 
 host = ENV.fetch("ASTERISK_MANAGER_HOST", "127.0.0.1")
 port= ENV.fetch("ASTERISK_MANAGER_PORT", "5038")
 
-ami = Asterisk::Manager.new(host, port)
+ami = Asterisk::AMI.new(host, port)
 ami.connect!
 
 # puts ami.send_action({"action" => "ListCommands"})
