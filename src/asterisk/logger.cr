@@ -1,7 +1,7 @@
 require "logger"
 
 module Asterisk
-  LOGGER = Logger.new(STDOUT)
+  LOGGER = Logger.new(STDERR)
   LOGGER.level = Logger::DEBUG
 
   def self.logger
