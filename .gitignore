@@ -1,3 +1,4 @@
+/tmp
 /doc/
 /lib/
 /bin/
@@ -9,3 +10,5 @@ samples/asterisk/crystal/agi/*
 # Libraries don't need dependency lock
 # Dependencies will be locked in application that uses them
 /shard.lock
+
+/.icr*

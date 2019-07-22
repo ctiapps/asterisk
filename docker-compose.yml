@@ -1,0 +1,23 @@
+version: '3.7'
+
+services:
+  asterisk.cr:
+    build: .
+    # ports:
+    #   - 0.0.0.0:18080:8080
+    # depends_on:
+    #   - redis
+    #   - asterisk
+    volumes:
+      - .:/src
+
+  # redis:
+  #   image: redis:alpine
+  #
+  # api:
+  #   image: andrius/alpine-webrick
+  #
+  # asterisk:
+  #   image: andrius/asterisk
+  #   environment:
+  #     - ASTERISK_SIP_PORT=5062

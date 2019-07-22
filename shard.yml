@@ -4,10 +4,12 @@ version: 0.1.0
 authors:
   - Andrius Kairiukstis <k@andrius.mobi>
 
-crystal: 0.21.1
+crystal: 0.29.0
 
 dependencies:
-  timeout:
-    github: ctiapps/timeout
+
+development_dependencies:
+  crytic:
+    github: hanneskaeufler/crytic
 
 license: MIT

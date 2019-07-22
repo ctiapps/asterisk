@@ -1,70 +1,43 @@
+require "./logger.cr"
 require "socket"
 require "time"
-require "secure_random"
+require "uuid"
 
 module Asterisk
   class AMI
+    @conn = TCPSocket.new
+    @connected = false
+    @last_action = ""
+    @last_event = ""
+
     class LoginError < Exception
     end
 
-    class ConnectionLostError < Exception
+    class ConnectionError < Exception
     end
 
-    def logger
-      Asterisk.logger
+    def logger : Logger
+      @logger
     end
 
-    def initialize(@host = "127.0.0.1", @port = "5038")
-      @conn = TCPSocket.new
-      @should_reconnect = true
-      @connected = false
-
-      @actions = Hash(String, Channel(Bool)).new
-      @event_map = Hash(String, Array(Hash(String, String))).new
-    end
-
-    def connect!
-      @conn = TCPSocket.new(@host, @port, 10, 10)
-      @conn.tcp_keepalive_interval = 10
-      @conn.tcp_keepalive_idle = 5
-      @conn.tcp_keepalive_count = 5
-      @conn.keepalive = true
-      @conn.read_timeout = 5
-
-      login
-      event_loop if connected?
-    end
-
-    def disconnect!
-      if connected?
-        res = send_action( { "action" => "logoff" } )
-        logger.info res
-      end
-    ensure
-      @conn.close rescue nil
-      @connected = false
-      logger.debug "Disconnected!"
+    def initialize(@host = "127.0.0.1", @port = "5038", @username = "", @secret = "", @logger : Logger = Asterisk.logger)
     end
 
     def login
-      send_action!( { "action" => "login", "username" => "ahn", "secret" => "ahn" } )
-      login_event = receive_event
-      if login_event
-        # logger.debug login_event
-        if login_event["response"].downcase == "success"
-          # FullyBooted should follow after login
-          fully_booted_event = receive_event
-          if fully_booted_event && fully_booted_event["event"] == "FullyBooted"
-            @connected = true
-            logger.debug "Connected!"
-          else
-            disconnect!
-          end
-        else
-          logger.error "Login failed: #{login_event["message"]}"
-        end
+      @conn = TCPSocket.new(@host, @port)
+      @conn.keepalive = true
+      login!
+      run_listener
+      # wait_fully_booted
+    end
+
+    private def login!
+      response = send_action({"action" => "Login", "username" => @username, "secret" => @secret})
+      if response["response"] == "Success"
+        # Connected but FullyBooted event shall be also processed
+        connected!
       else
-        logger.error "Login failed (AMI timeout or wrong address, or Asterisk is off - also check manager.conf)"
+        raise LoginError.new(response["message"])
       end
     end
 
@@ -72,146 +45,120 @@ module Asterisk
       @connected
     end
 
-    def should_reconnect?
-      @should_reconnect
+    private def connected!
+      @connected = true
+      logger.debug "Connected!"
+    end
+
+    def logoff
+      if connected?
+        unless @last_action =~ /Logoff/i || @last_event =~ /Shutdown/i
+          logger.debug "Will logoff"
+          send_action({"action" => "Logoff"})
+        end
+      end
+    ensure
+      @connected = false
+      @last_action = ""
+      @last_event = ""
+      logger.debug "Logged off"
+      @conn.close
     end
 
     def send_action(action)
-      raise LoginError.new("action should present") unless action.has_key?("action")
-      raise LoginError.new("AMI should be in connected state to send action") unless connected?
-
-      # actionid is maindatory in order to track action response
-      actionid = action["actionid"] ||= SecureRandom.uuid
-
-      # register response catcher - some responses are set of multiple events,
-      # have to track all of them
-      response_catcher actionid
-
-      send_action! action
-
-      catch_response actionid
+      # actionid is mandatory in order to track action response
+      actionid = action["actionid"] ||= UUID.random.to_s
+      send_action!(action)
+      response = read_from_ami
+      logger.debug "send_action: #{action}\nresponse: #{response}"
+      response
     end
 
+    # Format action as a multiline string delimited by "\r\n" and send it
+    # through AMI TCPSocket connection
     private def send_action!(action)
+      @last_action = action["action"]
       multiline_string = ""
-      action.each do |k,v|
+      action.each do |k, v|
         multiline_string += "#{k}: #{v}\r\n"
       end
+      # ending string
       multiline_string += "\r\n"
 
       @conn << multiline_string
     end
 
-    private def response_catcher(actionid : String)
-      @actions[actionid] = Channel(Bool).new
-    end
-
-    private def catch_response(actionid : String)
-      @actions[actionid].receive
-      @event_map.delete(actionid)
-    end
-
-    private def event_loop
+    private def run_listener
       spawn do
-        loop do
-          while connected?
-            process_single_event
-          end
+        logger.info "Starting connection listener"
+        while connected?
+          # receive_and_process_event
+          event = read_from_ami
+          logger.info "listener: got data: #{event}"
+          # next if event["event"]? == "SuccessfulAuth"
 
-          if should_reconnect?
-            reconnect!
+          # unless @confirmation_channel.closed?
+          #   @confirmation_channel.send(event)
+          #   next
+          # end
+
+          if event.empty? && (@last_action =~ /Logoff/i || @last_event =~ /Shutdown/i)
+            logoff
+            @last_event = ""
           else
-            break
+            @last_event = event["event"] rescue "NOOP"
           end
         end
+        logger.info "Connection gone, login again!"
       end
     end
 
-    def reconnect!
-      logger.info "Reconnecting!"
-      disconnect!
-      sleep 0.25
-      connect!
-    rescue
-      nil
-    end
-
-    private def process_single_event
-      # receive event or nil in case of timeout
-      event = begin
-                receive_event
-              rescue ConnectionLostError
-                nil
-              end
-
-      if event
-        logger.debug "EVENT: #{event}"
-
-        if event.has_key?("actionid")
-          actionid = event["actionid"]
-
-          if event.has_key?("eventlist")
-            if event["eventlist"].downcase == "start"
-              # {"response" => "Success", "actionid" => "bd55ec79-1781-4ca1-9ef8-8c6abe491f99", "eventlist" => "start", "message" => "Peer status list will follow"}
-              @event_map[actionid] ||= Array(Hash(String, String)).new
-            else
-              # {"event" => "PeerlistComplete", "actionid" => "bd55ec79-1781-4ca1-9ef8-8c6abe491f99", "eventlist" => "Complete", "listitems" => "1"}
-              @actions[actionid].send true
-            end
-          else
-            if @event_map.has_key?(actionid)
-              @event_map[actionid].push(event)
-            else
-              @event_map[actionid] = Array(Hash(String, String)).new
-              @event_map[actionid].push(event)
-              @actions[actionid].send true
-            end
-          end
-        else
-          # callbacks and hooks
-        end
-      end
-    end
-
-    # Asterisk manager event is a set of multiple strings with "\r\n" at the end and
-    # empty string ("\r\n") terminating event data
-    private def receive_event
-      event = @conn.gets("\r\n\r\n").to_s.gsub("\r\n\r\n", "")
-      logger.debug "Received Asterisk manager event: #{event}"
-      event = event.split("\r\n")
-
-      if event == [""]
-        # AMI just disconnected, if empty line was received
-        @connected = false
-        raise ConnectionLostError.new("AMI connection lost")
-      else
-        parse_event event
-      end
-
+    # Read data from AMI. Usually it's an AMI event, that could be formatted as
+    # a json/hash, but it could be also an confirmation to the past action both
+    # as a hash or as a string.
+    # Data, that AMi returns is a set of a single or multiple strings
+    # delimitered by "\r\n" at the end one more terminating ("\r\n")
+    private def read_from_ami
+      # in case of TCPSocket failure, return "" that considered as logoff
+      data = @conn.gets("\r\n\r\n").to_s rescue ""
+      logger.debug "AMI data received: #{data}"
+      parse_ami_data data.gsub("\r\n\r\n", "").split("\r\n")
     rescue IO::Timeout
-      # Unstable connection, causing no event or broken event
-      nil
+      # Unstable connection, causing no data or broken data
+      raise ConnectionError.new("TCPSocket timeout error")
     end
 
-    # parse_event process multi-line array. Normally Asterisk manager event do hold key: value
-    # delimited by ':', however there could be an message without delimiter, it will be assigned to the unknown key
-    private def parse_event(event : Array)
+    # `parse_ami_data` process multi-line array by each string, splitting it
+    # into key => value pair
+    private def parse_ami_data(data : Array)
+      logger.debug "AMI data received: #{data.empty? ? "(empty string)" : data}"
+
+      # AMI send back empty string as a response to action "logoff"
+      return "" if data.size == 1 && data.first.empty?
+
       result = {} of String => String
-      if event.empty?
-        nil
-      else
-        event.each do |line|
-          # logger.debug "Processing line: #{line}"
-          if /^(.*):(.*)$/ =~ line
-            result[$1.to_s.downcase] = $2.to_s.strip
-          else
-            result["unknown"] ||= ""
-            result["unknown"] += line
-          end
-        end
 
-        result
+      data.each do |line|
+        # Normally Asterisk manager event or confirmation for action containing
+        # key-value pair delimited by ": ", except string confirmations or data
+        # for user-event without delimiter, these will be assigned as unknown key
+        # Examples:
+        #
+        # "event: SuccessfulAuth" => ["event", "SuccessfulAuth"]
+        #
+        # "CoreShowChannels: List currently active channels.  (Priv: system,reporting,all)" =>
+        # ["CoreShowChannels", "List currently active channels.  (Priv: system,reporting,all)"]
+        logger.debug "parse_ami_data: processing line: #{line}"
+        if line =~ /(\S+): (.+)/
+          result[$1.to_s.downcase] = $2.to_s.strip
+        else
+          result["unknown"] ||= ""
+          result["unknown"] += line
+        end
       end
+
+      result
     end
+
   end
 end
