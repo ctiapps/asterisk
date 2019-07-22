@@ -38,4 +38,4 @@ TODO: Write development instructions here
 
 ## Contributors
 
-- [andrius](https://github.com/andrius) Andrius Kairiukstis - creator, maintainer
+- [Andrius Kairiukstis](https://github.com/andrius) - creator, maintainer
