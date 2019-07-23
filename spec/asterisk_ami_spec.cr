@@ -32,7 +32,7 @@ describe Asterisk::AMI do
   #     ami = Asterisk::AMI.new username: "asterisk.cr", secret: "asterisk.cr"
   #     ami.login
   #     sleep 0.02
-  #     ami.dislogin
+  #     ami.logoff
   #     ami.connected?.should be_false
   #   end
   #
@@ -56,16 +56,16 @@ describe Asterisk::AMI do
     it "should successfully set asterisk global variable and then read it" do
       ami = Asterisk::AMI.new username: "asterisk.cr", secret: "asterisk.cr"
       ami.login
-      response = ami.send_action({"action" => "Ping", "actionid" => "1"})
-      response = ami.send_action({"action" => "Ping", "actionid" => "2"})
-      response = ami.send_action({"action" => "Ping", "actionid" => "3"})
-      response = ami.send_action({"action" => "Ping", "actionid" => "4"})
-      response = ami.send_action({"action" => "Ping", "actionid" => "5"})
-      puts "RESPONSE: #{response}"
-      sleep 3
-      true.should be_true
+      10.times do |i|
+        actionid = "#{i + 1}"
+        response = ami.send_action({"action" => "Ping", "actionid" => actionid})
+        # response: {"response" => "Success", "actionid" => "3", ..
+        puts "RESPONSE: #{response}\n----\n\n\n"
+        response["response"].should eq("Success")
+        response["actionid"].should eq(actionid)
+      end
     end
-  
+
     # it "should successfully set asterisk global variable and then read it" do
     #   ami = Asterisk::AMI.new username: "asterisk.cr", secret: "asterisk.cr"
     #   ami.login
