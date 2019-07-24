@@ -10,49 +10,19 @@ module Asterisk
 
     @conn = TCPSocket.new
     @running = false
+    @fully_booted = false
 
-    alias AMIData = Hash(String, String)
+    alias AMIData = Hash(String, String | Nil)
     @tracked_event = Channel::Unbuffered(String).new
     @event_channel : Channel::Unbuffered(AMIData)?
 
     class LoginError < Exception
     end
 
-    class ConnectionError < Exception
+    class NotBootedError < Exception
     end
 
-    class Action
-      property action   : String
-      property actionid : String = rand.to_s
-
-      @unmapped = AMIData.new
-
-      def instance_vars
-        {{ @type.instance_vars.map &.name.stringify }}
-      end
-
-      def initialize(**data)
-        @action   = data[:action]
-        # actionid is mandatory in order to track action response
-        @actionid = data[:actionid]? || UUID.random.to_s
-
-        data.each do |k,v|
-          k = k.to_s
-          @unmapped[k] = v unless instance_vars.includes?(k)
-        end
-      end
-
-      def to_h
-        h = AMIData.new
-        {% for ivar in @type.instance_vars %}
-          {% key = ivar.name.stringify %}
-          {% unless key == "unmapped" %}
-            h[{{key}}] = {{ivar}}
-          {% end %}
-        {% end %}
-        h.merge!(@unmapped)
-        h
-      end
+    class ConnectionError < Exception
     end
 
     def initialize(@host = "127.0.0.1", @port = "5038", @username = "", @secret = "", @logger : Logger = Asterisk.logger)
@@ -60,78 +30,120 @@ module Asterisk
 
     def login
       @conn = TCPSocket.new(@host, @port)
+      listen
       @conn.keepalive = true
-      action = Action.new action: "Login", username: @username, secret: @secret
-      send! action.to_h
-      response = read_from_ami
-      # wait_fully_booted
-      logger.debug "login action and response: #{response}"
+      response = send_action({"action" => "Login", "username" => @username, "secret" => @secret})
+      logger.debug "#{self.class}.login response: #{response}"
       if response["response"] == "Success"
         # running but FullyBooted event shall be also processed
-        run_listener
+        sleep 0.03
+        unless fully_booted?
+          disconnect_and_raise NotBootedError.new("Asterisk did not respond with FullyBooted event")
+        end
       else
-        raise LoginError.new(response["message"])
+        disconnect_and_raise LoginError.new(response["message"])
       end
     end
 
-    def running?
+    private def disconnect_and_raise(ex : Exception)
+      # close everything and raise error
+      logoff!
+    ensure
+      raise ex
+    end
+
+    def connected?
+      running? && fully_booted?
+    end
+
+    private def running?
       @running
     end
 
-    private def set_running!
+    private def running!
       @running = true
-      @last_action = ""
-      @last_event = ""
-      logger.debug "Running!"
+    end
+
+    private def fully_booted?
+      @fully_booted
+    end
+
+    private def fully_booted!
+      @fully_booted = true
     end
 
     def logoff
+      logger.debug "#{self.class}.logoff: Will logoff"
       if running?
-        unless @last_action =~ /Logoff/i || @last_event =~ /Shutdown/i
-          logger.debug "Will logoff"
-          send_action({"action" => "Logoff"})
+        logger.debug "#{self.class}.logoff: Will logoff"
+        response = send_action({"action" => "Logoff"})
+        # {"response" => "Goodbye", "message" => "Thanks for all the fish."}
+        if response["response"] == "Goodbye"
+          logger.debug "#{self.class}.logoff: Logged off"
+        else
+          logger.error "#{self.class}.logoff: Logged off with incorrect response: #{response}"
         end
       end
     ensure
+      logoff!
+    end
+
+    private def logoff!
       @running = false
-      @last_action = ""
-      @last_event = ""
-      logger.debug "Logged off"
+      @fully_booted = false
       @conn.close
+      logger.debug "#{self.class}.logoff!: Disconnected!"
     end
 
     def send_action(action : AMIData)
-      @last_action = action["action"]
-      logger.info "send_action: sending #{action}"
+      action["actionid"] ||= UUID.random.to_s
+      logger.debug "#{self.class}.send_action: ... sending #{action}"
       @event_channel = Channel::Unbuffered(AMIData).new
       @tracked_event.send action["actionid"]
       send!(action)
-      logger.info "send_action: sent, waiting for response"
+      logger.debug "#{self.class}.send_action: >>> sent, waiting for response"
       response = @event_channel.not_nil!.receive
-      logger.info "send_action, response received: #{response}"
+      logger.debug "#{self.class}.send_action: <<< response received: #{response}"
       response
     end
 
-    private def run_listener
-      set_running!
+    private def listen
+      disconnect_and_raise LoginError.new("Already running!") if running?
+      running!
       spawn do
-        logger.info "Starting connection listener"
+        logger.debug "#{self.class}.listen: Starting connection listener"
         respond_to = future { @tracked_event.receive }
         while running?
-          event = read_from_ami
+          data = read!
+          logger.debug "#{self.class}.listen: <<< AMI data received: #{data}"
+          data = format(data.gsub("\r\n\r\n", "").split("\r\n"))
+          logger.debug "#{self.class}.listen: Formatted data: #{data}"
+
           if respond_to.completed?
-            logger.info "respond_to.completed?: #{respond_to.completed?.to_s}"
+            logger.debug "#{self.class}.listen: respond_to.completed?: #{respond_to.completed?.to_s}"
             actionid = respond_to.get
-            logger.info %(action_id: #{actionid}, event["actionid"]: #{event["actionid"]})
-            if event["actionid"] == actionid
-              # modify tracked event to the pair id => listener
-              @event_channel.not_nil!.send event
+            logger.debug %(#{self.class}.listen: action_id: #{actionid}, data["actionid"]: #{data["actionid"]?})
+            if data["actionid"]? == actionid
+              # modify tracked data to the pair id => listener
+              logger.debug "#{self.class}.listen: <<< sending response"
+              @event_channel.not_nil!.send data
             end
+            logger.debug "#{self.class}.listen: Restarting connection listener"
             respond_to = future { @tracked_event.receive }
           end
-          # do something with event!
+
+          # do something with data, process hooks etc!
+
+          # FullyBooted event raised by AMI when all Asterisk initialization
+          # procedures have finished.
+          fully_booted! if data["event"]? == "FullyBooted"
+
+          # Does asterisk get terminated elsewhere?
+          if data["event"]? == "Shutdown" || data == {"unknown" => ""}
+            logoff!
+          end
         end
-        logger.info "Connection gone, login again!"
+        logger.debug "#{self.class}.listen: Connection gone, login again!"
       end
     end
 
@@ -144,8 +156,10 @@ module Asterisk
       end
       # ending string
       multiline_string += "\r\n"
-      # send!
-      @conn << multiline_string
+      # send! TODO: rescue errors
+        @conn << multiline_string
+    rescue ex
+      disconnect_and_raise ex
     end
 
     # Read data from AMI. Usually it's an AMI event, that could be formatted as
@@ -153,39 +167,19 @@ module Asterisk
     # as a hash or as a string.
     # Data, that AMi returns is a set of a single or multiple strings
     # delimitered by "\r\n" at the end one more terminating ("\r\n")
-    private def read_from_ami : AMIData
-      # in case of TCPSocket failure, return "" that considered as logoff
-      data = @conn.gets("\r\n\r\n").to_s rescue ""
-      logger.debug "AMI data received: #{data}"
-      data = parse_ami_data data.gsub("\r\n\r\n", "").split("\r\n")
-      logger.info "Processed dataset: #{data}"
-
-      # if data.empty? && (@last_action =~ /Logoff/i || @last_event =~ /Shutdown/i)
-      #   logoff
-      #   @last_event = ""
-      # else
-      #   @last_event = data["event"] rescue "NOOP"
-      # end
-
-      data
+    private def read! : String
+      @conn.gets("\r\n\r\n").to_s
     rescue IO::Timeout
       # Unstable connection, causing no data or broken data
-      raise ConnectionError.new("TCPSocket timeout error")
+      disconnect_and_raise ConnectionError.new("TCPSocket timeout error")
+    rescue ex
+      disconnect_and_raise ex
     end
 
-    private def readline : String
-      line = @conn.gets("\r\n")
-      logger.debug "AMI line received: #{line}"
-      line
-    rescue IO::Timeout
-      # Unstable connection, causing no data or broken data
-      raise ConnectionError.new("TCPSocket timeout error")
-    end
-
-    # `parse_ami_data` process multi-line array by each string, splitting it
+    # `format` process multi-line array by each string, splitting it
     # into key => value pair
-    private def parse_ami_data(data : Array) : AMIData
-      logger.debug "AMI data received: #{data.empty? ? "(empty string)" : data}"
+    private def format(data : Array) : AMIData
+      logger.debug "#{self.class}.format: AMI data received: #{data.empty? ? "(empty string)" : data}"
 
       # AMI send back empty string as a response to action "logoff"
       # return "" if data.size == 1 && data.first.empty?
@@ -202,7 +196,7 @@ module Asterisk
         #
         # "CoreShowChannels: List currently active channels.  (Priv: system,reporting,all)" =>
         # ["CoreShowChannels", "List currently active channels.  (Priv: system,reporting,all)"]
-        logger.debug "parse_ami_data: processing line: #{line}"
+        logger.debug "#{self.class}.format: processing line: #{line}"
         if line =~ /(\S+): (.+)/
           result[$1.to_s.downcase] = $2.to_s.strip
         else
@@ -212,6 +206,5 @@ module Asterisk
 
       result
     end
-
   end
 end
