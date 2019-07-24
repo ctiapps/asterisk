@@ -13,7 +13,7 @@ Add this to your application's `shard.yml`:
 ```yaml
 dependencies:
   asterisk:
-    github: andrius/asterisk
+    github: ctiapps/asterisk
 ```
 
 ## Usage
