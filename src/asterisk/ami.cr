@@ -11,6 +11,7 @@ module Asterisk
     @running = false
     @fully_booted = false
 
+    alias ActionID = String
     alias AMIData = Hash(String, String | Nil)
 
     class LoginError < Exception
@@ -29,39 +30,98 @@ module Asterisk
       ::raise ex
     end
 
-    # Receiver basically create new pair actionid => channel and that let AMI
+    struct Response
+      @data = AMIData.new
+      delegate :[]=, to: @data
+      delegate :[], to: @data
+      getter data
+      def initialize(data : AMIData? = nil)
+        @data.merge! data if data
+      end
+      def to_h
+        @data
+      end
+    end
+
+    struct Event
+      @data = AMIData.new
+
+      def event=(@event : String)
+        @data["event"] = @event
+      end
+
+      def event : String
+        @data["event"].not_nil!
+      end
+
+      def actionid=(@actionid : ActionID)
+        @data["actionid"] = @actionid
+      end
+
+      def actionid : ActionID
+        @data["actionid"].not_nil!
+      end
+
+      def actionid? : ActionID?
+        @data["actionid"]?
+      end
+
+      def initialize(data : AMIData? = nil)
+        @data.merge! data if data
+      end
+
+      def to_h
+        @data
+      end
+    end
+
+    # Receiver basically id a pair actionid => channel and that let AMI
     # listener method to respond to the send_action after it have enquire action
     # channel is an single-use item, so all data will be vanished immediately
     # after it get received
     class Receiver
-      @input = Channel::Unbuffered(AMIData).new
+      property id : ActionID
+      @input = Channel::Unbuffered(Response | Event).new
+      @@recent_id : ActionID?
       @@processors = Hash(String, Receiver).new
 
       @logger : Logger = Asterisk.logger
       getter logger
 
-      def initialize(@id : String)
+      def initialize(@id : ActionID)
+        @@recent_id = id
         @@processors[id] = self
       end
 
-      def get : AMIData
+      def get : Response | Event
         message = @input.receive
         logger.debug "#{self.class}.get: received #{message}"
         terminate!
         message
       end
 
-      def send(message : AMIData)
+      def send(message : Response | Event)
         @input.send message
       end
 
       def terminate!
         @input.close
+        @@recent_id = nil if @@recent_id == id
         @@processors.delete(@id)
       end
 
-      def self.find(id : String)
+      def self.get(id : ActionID)
+        receiver = Receiver.new(id)
+        yield
+        receiver.get
+      end
+
+      def self.find(id : ActionID)
         @@processors[id]?
+      end
+
+      def self.last
+        @@processors[@@recent_id]? if @@recent_id
       end
 
       def self.terminate(id : String)
@@ -83,14 +143,14 @@ module Asterisk
       @conn.keepalive = true
       response = send_action({"action" => "Login", "username" => @username, "secret" => @secret})
       logger.debug "#{self.class}.login response: #{response}"
-      if response["response"] == "Success"
+      if response.to_h["response"] == "Success"
         # running but FullyBooted event shall be also processed
         sleep 0.03
         unless fully_booted?
           raise NotBootedError.new("Asterisk did not respond with FullyBooted event")
         end
       else
-        raise LoginError.new(response["message"])
+        raise LoginError.new(response.to_h["message"])
       end
     end
 
@@ -100,7 +160,7 @@ module Asterisk
         logger.debug "#{self.class}.logoff: Logging off"
         response = send_action({"action" => "Logoff"})
         # {"response" => "Goodbye", "message" => "Thanks for all the fish."}
-        if response["response"] == "Goodbye"
+        if response.to_h["response"] == "Goodbye"
           logger.debug "#{self.class}.logoff: Logged off"
         else
           logger.error "#{self.class}.logoff: Logged off with incorrect response: #{response}"
@@ -119,13 +179,13 @@ module Asterisk
 
     def send_action(action : AMIData)
       actionid = action["actionid"] ||= UUID.random.to_s
-      logger.debug "#{self.class}.send_action: sending #{action}"
-      receiver = Receiver.new(id: actionid)
-      send!(action)
-      logger.debug "#{self.class}.send_action: sent, waiting for response"
-      response = receiver.get
+      response = Receiver.get(actionid) do
+        logger.debug "#{self.class}.send_action: sending #{action}"
+        send!(action)
+        logger.debug "#{self.class}.send_action: sent, waiting for response"
+      end
       logger.debug "#{self.class}.send_action: response received: #{response}"
-      response
+      response.to_h
     end
 
     private def listen
@@ -139,23 +199,30 @@ module Asterisk
           data = format(data.gsub("\r\n\r\n", "").split("\r\n"))
           logger.debug "#{self.class}.listen: Formatted data: #{data}"
 
-          if data.has_key?("actionid")
-            receiver = Receiver.find(data["actionid"].not_nil!)
-            if receiver
-              logger.debug %(#{self.class}.listen: receiver: #{receiver.inspect})
-              logger.debug "#{self.class}.listen: <<< sending response"
-              receiver.not_nil!.send data
-            end
+          receiver = if data.is_a?(Event)
+            Receiver.find(data.actionid) if data.actionid?
+          else
+            # if data is not event and does not containing "actionid", then we
+            # try to deliver back to the last registered receiver
+            Receiver.last
           end
 
-          # do something with data, process hooks etc!
+          if receiver
+            logger.debug %(#{self.class}.listen: receiver: #{receiver.inspect})
+            logger.debug "#{self.class}.listen: <<< sending response"
+            receiver.send data
+          end
 
-          # FullyBooted event raised by AMI when all Asterisk initialization
-          # procedures have finished.
-          fully_booted! if data["event"]? == "FullyBooted"
+          if data.is_a?(Event)
+            # do something with data, process hooks etc!
+
+            # FullyBooted event raised by AMI when all Asterisk initialization
+            # procedures have finished.
+            fully_booted! if data.event == "FullyBooted"
+          end
 
           # Does asterisk get terminated elsewhere?
-          if data["event"]? == "Shutdown" || data == {"unknown" => ""}
+          if (data.is_a?(Event) && data.event == "Shutdown") || data.to_h == {"unknown" => ""}
             logoff!
           end
         end
@@ -194,7 +261,7 @@ module Asterisk
 
     # `format` process multi-line array by each string, splitting it
     # into key => value pair
-    private def format(data : Array) : AMIData
+    private def format(data : Array) : Response | Event
       logger.debug "#{self.class}.format: AMI data received: #{data.empty? ? "(empty string)" : data}"
 
       # AMI send back empty string as a response to action "logoff"
@@ -220,7 +287,11 @@ module Asterisk
         end
       end
 
-      result
+      if result.has_key?("event")
+        Event.new(result)
+      else
+        Response.new(result)
+      end
     end
 
     def connected?

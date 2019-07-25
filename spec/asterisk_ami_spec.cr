@@ -39,11 +39,11 @@ describe Asterisk::AMI do
       response["message"].should match /set$/i
 
       response = ami.send_action({"action" => "Getvar", "Variable" => "foobar"})
+      ami.logoff
       # {"response" => "Success", "variable" => "foobar", "value" => "39c56eb0b580ad7f"}
       response["response"].should eq("Success")
       response["variable"].should eq("foobar")
       response["value"].should eq(foobar_value)
-      ami.logoff
     end
   end
 
@@ -54,35 +54,52 @@ describe Asterisk::AMI do
       ami = Asterisk::AMI.new username: "asterisk.cr", secret: "asterisk.cr"
       ami.login
       response = ami.send_action({"action" => "ListCommands"})
+      ami.logoff
       # {"response" => "Success", "actionid" => "58a480df-32a1-4378-8f3d-03327b78465f",
       #  "waitevent" => "Wait for an event to occur.  (Priv: <none>)",
       #  "devicestatelist" => "List the current known device states.  (Priv: call,reporting,all)", "..." => "..."}
       response.has_key?("waitevent").should be_true
     end
 
-    # it "should process complex action that include multiple events in response (SIPpeers)" do
-    #   ami = Asterisk::AMI.new username: "asterisk.cr", secret: "asterisk.cr"
-    #   ami.login
-    #   response = ami.send_action({"action" => "SIPpeers"})
-    #   p "----------"
-    #   pp response
-    #   p "----------"
-    #   # INFO -- : {"response" => "Success", "actionid" => "01b9e8bf-1b6a-4c8b-8f57-8880f1d895db", "eventlist" => "start",
-    #   # res.not_nil!.first["objectname"].should match /^test-account-\d{3}/
-    #   true.should be_true
-    # end
+    it "should process complex action that include multiple events in response (Queues)" do
+      ami = Asterisk::AMI.new username: "asterisk.cr", secret: "asterisk.cr"
+      ami.login
+      response = ami.send_action({"action" => "Queues"})
+      ami.logoff
+      # D, [2019-07-21 05:12:41 +00:00 #7416] DEBUG -- : Received Asterisk manager event:
+      # D, [2019-07-21 05:12:41 +00:00 #7416] DEBUG -- : Processing line: No queues.
+      response["unknown"].should match /No queues/i
+    end
 
-    # # TODO
-    # it "should process complex action that include multiple events in response (Queues)" do
-    #   ami = Asterisk::AMI.new username: "asterisk.cr", secret: "asterisk.cr"
-    #   ami.login
-    #   res = ami.send_action({"action" => "Queues"})
-    #   # D, [2019-07-21 05:12:41 +00:00 #7416] DEBUG -- : Received Asterisk manager event:
-    #   # D, [2019-07-21 05:12:41 +00:00 #7416] DEBUG -- : Processing line: No queues.
-    #   sleep 10.seconds
-    #   true.should be_true
-    # end
-  
+    it "should process complex action that include multiple events in response (SIPpeers)" do
+      ami = Asterisk::AMI.new username: "asterisk.cr", secret: "asterisk.cr"
+      ami.login
+      response = ami.send_action({"action" => "SIPpeers"})
+      ami.logoff
+      p "----------"
+      pp response
+      p "----------"
+      sleep 2
+      # INFO -- : {"response" => "Success", "actionid" => "01b9e8bf-1b6a-4c8b-8f57-8880f1d895db", "eventlist" => "start",
+      # res.not_nil!.first["objectname"].should match /^test-account-\d{3}/
+      true.should be_true
+    end
+
+    it "should process complex action that include multiple events in response (IAXpeers)" do
+      ami = Asterisk::AMI.new username: "asterisk.cr", secret: "asterisk.cr"
+      ami.login
+      response = ami.send_action({"action" => "IAXpeers"})
+      ami.logoff
+      p "----------"
+      pp response
+      p "----------"
+      sleep 2
+      # INFO -- : {"response" => "Success", "actionid" => "01b9e8bf-1b6a-4c8b-8f57-8880f1d895db", "eventlist" => "start",
+      # res.not_nil!.first["objectname"].should match /^test-account-\d{3}/
+      true.should be_true
+    end
+
+
     # # TODO
     # it "should successfully process complex action (that include multiple events in response)" do
     #   ami = Asterisk::AMI.new username: "asterisk.cr", secret: "asterisk.cr"
