@@ -110,7 +110,7 @@ describe Asterisk::AMI do
     #   sleep 10.seconds
     #   ami.connected?.should be_true
     # end
-  
+
     it "should successfully process complex action (that include multiple events in response)" do
       ami = Asterisk::AMI.new username: "asterisk.cr", secret: "asterisk.cr"
       ami.login

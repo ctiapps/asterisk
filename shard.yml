@@ -6,8 +6,6 @@ authors:
 
 crystal: 0.29.0
 
-dependencies:
-
 development_dependencies:
   crytic:
     github: hanneskaeufler/crytic
