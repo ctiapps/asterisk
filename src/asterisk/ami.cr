@@ -12,7 +12,7 @@ module Asterisk
     @fully_booted = false
 
     alias ActionID = String
-    alias AMIData = Hash(String, String | Nil)
+    alias AMIData = Hash(String, String?)
 
     class LoginError < Exception
     end
@@ -30,32 +30,14 @@ module Asterisk
       ::raise ex
     end
 
-    struct Response
+    class Response
       @data = AMIData.new
       delegate :[]=, to: @data
       delegate :[], to: @data
       getter data
-      def initialize(data : AMIData? = nil)
-        @data.merge! data if data
-      end
-      def to_h
-        @data
-      end
-    end
 
-    struct Event
-      @data = AMIData.new
-
-      def event=(@event : String)
-        @data["event"] = @event
-      end
-
-      def event : String
-        @data["event"].not_nil!
-      end
-
-      def actionid=(@actionid : ActionID)
-        @data["actionid"] = @actionid
+      def actionid=(actionid : ActionID)
+        @data["actionid"] = actionid
       end
 
       def actionid : ActionID
@@ -75,43 +57,74 @@ module Asterisk
       end
     end
 
+    class Event < Response
+      def event=(event : String)
+        @data["event"] = event
+      end
+
+      def event : String
+        @data["event"].not_nil!
+      end
+    end
+
     # Receiver basically id a pair actionid => channel and that let AMI
     # listener method to respond to the send_action after it have enquire action
     # channel is an single-use item, so all data will be vanished immediately
     # after it get received
     class Receiver
+      WAIT_FOR_TERMINATE = 0.01
+      # expects_answer_before in send_action
+      WAIT_FOR_ANSWER = 0.002
+
+      property expects_answer_before : Float64?
+
       property id : ActionID
-      @input = Channel::Unbuffered(Response | Event).new
-      @@recent_id : ActionID?
+      @input = Channel::Unbuffered(Response).new
       @@processors = Hash(String, Receiver).new
 
       @logger : Logger = Asterisk.logger
       getter logger
 
-      def initialize(@id : ActionID)
-        @@recent_id = id
+      def initialize(@id : ActionID, @expects_answer_before : Float64?)
         @@processors[id] = self
       end
 
-      def get : Response | Event
-        message = @input.receive
-        logger.debug "#{self.class}.get: received #{message}"
+      def get : Response
+        stop_after expects_answer_before.not_nil! if expects_answer_before
+        data = @input.receive
+        logger.debug "#{self.class}.get: received #{data.inspect}"
         terminate!
-        message
+        data
+      rescue Channel::ClosedError
+        terminate!
+        Response.new({"response" => "Error", "message" => "Timeout error while waiting for AMI response"})
       end
 
-      def send(message : Response | Event)
-        @input.send message
+      def stop_after(timeout : Float64)
+        spawn do
+          started_at  = Time.now
+          loop do
+            sleep WAIT_FOR_ANSWER
+            if (Time.now - started_at).to_f >= timeout
+              @input.close
+              break
+            end
+          end
+        end
+      end
+
+      def send(data : Response)
+        @input.send data
       end
 
       def terminate!
         @input.close
-        @@recent_id = nil if @@recent_id == id
         @@processors.delete(@id)
+        sleep WAIT_FOR_TERMINATE
       end
 
-      def self.get(id : ActionID)
-        receiver = Receiver.new(id)
+      def self.get(id : ActionID, expects_answer_before : Float64?)
+        receiver = Receiver.new(id, expects_answer_before)
         yield
         receiver.get
       end
@@ -120,8 +133,9 @@ module Asterisk
         @@processors[id]?
       end
 
-      def self.last
-        @@processors[@@recent_id]? if @@recent_id
+      def self.current
+        actionid = @@processors.keys.last?
+        @@processors[actionid] if actionid
       end
 
       def self.terminate(id : String)
@@ -177,14 +191,14 @@ module Asterisk
       logger.debug "#{self.class}.logoff!: Disconnected!"
     end
 
-    def send_action(action : AMIData)
+    def send_action(action : AMIData, expects_answer_before : Float64? = 0.3)
       actionid = action["actionid"] ||= UUID.random.to_s
-      response = Receiver.get(actionid) do
+      response = Receiver.get(actionid, expects_answer_before) do
         logger.debug "#{self.class}.send_action: sending #{action}"
         send!(action)
         logger.debug "#{self.class}.send_action: sent, waiting for response"
       end
-      logger.debug "#{self.class}.send_action: response received: #{response}"
+      logger.debug "#{self.class}.send_action: response received: #{response.inspect}"
       response.to_h
     end
 
@@ -197,14 +211,21 @@ module Asterisk
           data = read!
           logger.debug "#{self.class}.listen: <<< AMI data received: #{data}"
           data = format(data.gsub("\r\n\r\n", "").split("\r\n"))
-          logger.debug "#{self.class}.listen: Formatted data: #{data}"
+          logger.debug "#{self.class}.listen: Formatted data: #{data.inspect}"
 
-          receiver = if data.is_a?(Event)
-            Receiver.find(data.actionid) if data.actionid?
+          # receiver = if data.is_a?(Event)
+          #   Receiver.find(data.actionid) if data.actionid?
+          # else
+          #   # if data is not event and does not containing "actionid", then we
+          #   # try to deliver back to the last registered receiver
+          #   Receiver.current
+          # end
+          receiver = if data.actionid?
+            Receiver.find(data.actionid)
           else
-            # if data is not event and does not containing "actionid", then we
-            # try to deliver back to the last registered receiver
-            Receiver.last
+            logger.debug "#{self.class}.listen: Not sure who is consumer for data"
+            Receiver.current
+            # nil
           end
 
           if receiver
@@ -215,16 +236,21 @@ module Asterisk
 
           if data.is_a?(Event)
             # do something with data, process hooks etc!
+            # here... TODO...
 
             # FullyBooted event raised by AMI when all Asterisk initialization
             # procedures have finished.
             fully_booted! if data.event == "FullyBooted"
+
+            # Does asterisk get terminated elsewhere?
+            logoff! if data.event == "Shutdown"
           end
 
           # Does asterisk get terminated elsewhere?
-          if (data.is_a?(Event) && data.event == "Shutdown") || data.to_h == {"unknown" => ""}
-            logoff!
-          end
+          # (empty strings are coming to the AMI interface in some cases of
+          # forced process termination; in such case Asterisk does not send
+          # "Shutdown" event
+          logoff! if data.to_h == {"unknown" => ""}
         end
         logger.debug "#{self.class}.listen: Connection gone, login again!"
       end
@@ -261,13 +287,12 @@ module Asterisk
 
     # `format` process multi-line array by each string, splitting it
     # into key => value pair
-    private def format(data : Array) : Response | Event
+    private def format(data : Array) : Response
       logger.debug "#{self.class}.format: AMI data received: #{data.empty? ? "(empty string)" : data}"
 
-      # AMI send back empty string as a response to action "logoff"
-      # return "" if data.size == 1 && data.first.empty?
-
       result = AMIData.new
+      cli_command = false
+      previous_key = ""
 
       data.each do |line|
         # Normally Asterisk manager event or confirmation for action containing
@@ -280,8 +305,20 @@ module Asterisk
         # "CoreShowChannels: List currently active channels.  (Priv: system,reporting,all)" =>
         # ["CoreShowChannels", "List currently active channels.  (Priv: system,reporting,all)"]
         logger.debug "#{self.class}.format: processing line: #{line}"
-        if line =~ /(\S+): (.+)/
-          result[$1.to_s.downcase] = $2.to_s.strip
+
+        # logic for
+        # {"action" => "Command", "command" => "..."}
+        if cli_command && previous_key == "actionid"
+          result["result"] = line.split("\n").map(&.chomp.strip).join("\n").gsub(/--END COMMAND--$/, "")
+          next
+        end
+
+        if line =~ /(^[\w\s\/-]*):[\s]*(.*)$/m
+          previous_key = key = $1.to_s.downcase
+          # TODO: serializer for value
+          value = $2.to_s.strip
+          result[key] = value
+          cli_command = true if key = "response" && value == "Follows"
         else
           result["unknown"] = result["unknown"]?.to_s + line
         end

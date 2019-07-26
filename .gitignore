@@ -1,15 +1,16 @@
-/tmp
+/tmp/
 /doc/
 /docs/
 /lib/
 /bin/
 /.shards/
 
-samples/asterisk/crystal/ami/*
-samples/asterisk/crystal/agi/*
+# Ongoging (development) tests
+/spec/current_spec.cr
 
 # Libraries don't need dependency lock
 # Dependencies will be locked in application that uses them
 /shard.lock
 
+# Remainings from icr sessions
 /.icr*
