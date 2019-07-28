@@ -317,8 +317,14 @@ module Asterisk
           previous_key = key = $1.to_s.downcase
           # TODO: serializer for value
           value = $2.to_s.strip
-          result[key] = value
-          cli_command = true if key = "response" && value == "Follows"
+          if result.has_key?(key)
+            result[key] += "\n#{value}".strip.chomp
+          else
+            result[key] = value
+          end
+          if key = "response" && value == "Follows"
+            cli_command = true
+          end
         else
           result["unknown"] = result["unknown"]?.to_s + line
         end
