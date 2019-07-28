@@ -318,7 +318,7 @@ module Asterisk
           # TODO: serializer for value
           value = $2.to_s.strip
           if result.has_key?(key)
-            result[key] += "\n#{value}".strip.chomp
+            result[key] = "#{result[key]}\n#{value}".strip.chomp
           else
             result[key] = value
           end
