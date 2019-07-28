@@ -82,10 +82,10 @@ module Asterisk
       @input = Channel::Unbuffered(Response).new
       @@processors = Hash(String, Receiver).new
 
-      @logger : Logger = Asterisk.logger
+      @logger : Logger
       getter logger
 
-      def initialize(@id : ActionID, @expects_answer_before : Float64?)
+      def initialize(@id : ActionID, @expects_answer_before : Float64? @logger : Logger = Asterisk.logger)
         @@processors[id] = self
       end
 
@@ -193,7 +193,7 @@ module Asterisk
 
     def send_action(action : AMIData, expects_answer_before : Float64? = 0.3)
       actionid = action["actionid"] ||= UUID.random.to_s
-      response = Receiver.get(actionid, expects_answer_before) do
+      response = Receiver.get(actionid, expects_answer_before, logger) do
         logger.debug "#{self.class}.send_action: sending #{action}"
         send!(action)
         logger.debug "#{self.class}.send_action: sent, waiting for response"
