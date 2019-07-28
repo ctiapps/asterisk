@@ -123,7 +123,7 @@ module Asterisk
         sleep WAIT_FOR_TERMINATE
       end
 
-      def self.get(id : ActionID, expects_answer_before : Float64?)
+      def self.get(id : ActionID, expects_answer_before : Float64?, @logger : Logger = Asterisk.logger)
         receiver = Receiver.new(id, expects_answer_before)
         yield
         receiver.get
