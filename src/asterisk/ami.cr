@@ -85,7 +85,7 @@ module Asterisk
       @logger : Logger
       getter logger
 
-      def initialize(@id : ActionID, @expects_answer_before : Float64? @logger : Logger = Asterisk.logger)
+      def initialize(@id : ActionID, @expects_answer_before : Float64?, @logger : Logger = Asterisk.logger)
         @@processors[id] = self
       end
 
