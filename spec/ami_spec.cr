@@ -5,10 +5,10 @@ describe Asterisk::AMI do
     # less noicy, please
     Asterisk.logger.level = Logger::ERROR
     # Ensure that asterisk is up and running for each test
-    unless AsteriskPBX.running?
-      AsteriskPBX.start!
+    unless Asterisk::Server.running?
+      Asterisk::Server.start
       # let Asterisk boot
-      sleep 5.seconds
+      sleep 3.seconds
     end
   end
 
@@ -144,18 +144,28 @@ describe Asterisk::AMI do
 
     it "should correctly process responses on heavy loaded system" do
       # Asterisk.logger.level = Logger::ERROR
+
+      # background spam
+      spam = Asterisk::AMI.new username: "asterisk.cr", secret: "asterisk.cr"
+      spam.login
+      # spawn do
+      #   5_000.times do
+      #     spam.send_action({"action" => "Ping"})
+      #   end
+      # end
+
       ami = Asterisk::AMI.new username: "asterisk.cr", secret: "asterisk.cr"
       ami.login
-      5000.times do |i|
+      5_000.times do |i|
         foobar_value = Random::Secure.hex(8)
         response = ami.send_action({"action" => "Setvar", "Variable" => "foobar", "Value" => foobar_value})
         # {"response" => "Success", "message" => "Variable Set"}
+        pp response
         response["response"].should eq("Success")
         response["message"].should match /set$/i
 
         actionid = "#{i + 1}"
         response = ami.send_action({"action" => "Ping", "actionid" => actionid})
-        # {"response" => "Success", "actionid" => "3", ping" => "Pong"}
         if response["actionid"]? != actionid
           ami.logger.error "incorrect response for ping actionid #{actionid}: #{response.inspect}"
         end
@@ -170,6 +180,7 @@ describe Asterisk::AMI do
         response["value"].should eq(foobar_value)
       end
       ami.logoff
+      spam.logoff
     end
   end
 end

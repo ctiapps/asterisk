@@ -4,10 +4,6 @@ version: 0.1.0
 authors:
   - Andrius Kairiukstis <k@andrius.mobi>
 
-crystal: 0.29.0
-
-development_dependencies:
-  crytic:
-    github: hanneskaeufler/crytic
+crystal: 0.30.0
 
 license: MIT
