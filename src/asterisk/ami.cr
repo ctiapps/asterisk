@@ -39,7 +39,7 @@ module Asterisk
       @conn = TCPSocket.new(@host, @port)
       @conn.sync = true
       @conn.keepalive = false
-      listen
+      run
       response = send_action({"action" => "Login", "username" => @username, "secret" => @secret})
       logger.debug "#{self.class}.login response: #{response}"
       if response.success?
@@ -88,16 +88,16 @@ module Asterisk
       response
     end
 
-    private def listen
+    private def run
       raise LoginError.new("Already running!") if running?
       running!
       spawn do
-        logger.debug "#{self.class}.listen: Starting connection listener"
+        logger.debug "#{self.class}.run: Starting"
         while running?
           io_data = read!
-          # logger.debug "#{self.class}.listen: <<< AMI data received: #{data}"
+          # logger.debug "#{self.class}.run: <<< AMI data received: #{data}"
           data = format(io_data)
-          logger.debug "#{self.class}.listen: Formatted data: #{data.inspect}"
+          logger.debug "#{self.class}.run: Formatted data: #{data.inspect}"
 
           if receiver.waiting?
             # received message is an AMI unstructured (text) information
@@ -105,10 +105,10 @@ module Asterisk
             # that's response of action containing same actionid as receiver
             if ! data.is_a?(Event) && data.actionid?.nil? && ! data.response_present?
               receiver.send data
-              logger.debug "#{self.class}.listen: <<< sending response: #{data.inspect} to receiver: #{receiver.inspect}"
+              logger.debug "#{self.class}.run: <<< sending response: #{data.inspect} to receiver: #{receiver.inspect}"
             elsif data.actionid_present? && data.actionid == receiver.actionid
               receiver.send data
-              logger.debug "#{self.class}.listen: <<< sending response: #{data.inspect} to receiver: #{receiver.inspect}"
+              logger.debug "#{self.class}.run: <<< sending response: #{data.inspect} to receiver: #{receiver.inspect}"
             end
           end
 
@@ -130,7 +130,7 @@ module Asterisk
           # "Shutdown" event
           logoff! if data.to_h == {"unknown" => ""}
         end
-        logger.debug "#{self.class}.listen: Connection gone, login again!"
+        logger.debug "#{self.class}.run: Connection gone, login again!"
       end
     end
 
@@ -159,7 +159,12 @@ module Asterisk
     rescue IO::Timeout
       raise ConnectionError.new("TCPSocket timeout error")
     rescue ex
-      raise ex
+      # Errno Bad file descriptor could come after connection get closed
+      if running?
+        raise ex
+      else
+        ""
+      end
     end
 
     # `format` process each line of given multi-line string (array), splitting

@@ -8,7 +8,7 @@ describe Asterisk::AMI do
     unless Asterisk::Server.running?
       Asterisk::Server.start
       # let Asterisk boot
-      sleep 3.seconds
+      sleep 5.seconds
     end
   end
 
@@ -33,7 +33,6 @@ describe Asterisk::AMI do
       ami = Asterisk::AMI.new username: "asterisk.cr", secret: "asterisk.cr"
       ami.login
       ami.connected?.should be_true
-      sleep 0.01
       ami.logoff
       ami.connected?.should be_false
     end
@@ -42,33 +41,25 @@ describe Asterisk::AMI do
       ami = Asterisk::AMI.new username: "asterisk.cr", secret: "asterisk.cr"
       ami.login
       ami.connected?.should be_true
-      channel = Channel(Exception? | Nil).new
-      spawn do
-        sleep 2.seconds
-        Asterisk::Server.kill
-        channel.send(nil)
-      end
-      channel.receive
-      sleep 0.5.seconds
+      sleep 2.seconds
+      Asterisk::Server.kill
       Asterisk::Server.running?.should be_false
       ami.connected?.should be_false
       ami.logoff
     end
 
-    # TODO: rework this test
-    # it "should not let to login if asterisk is not yet fully booted" do
-    #   Asterisk::Server.kill
-    #   Asterisk::Server.running?.should be_false
-    #   Asterisk::Server.start
-    #   sleep 0.2
-    #   loop do
-    #     sleep 0.1
-    #     break if Asterisk::Server.running?
-    #   end
-    #   ami = Asterisk::AMI.new username: "asterisk.cr", secret: "asterisk.cr"
-    #   expect_raises(Asterisk::AMI::NotBootedError) do
-    #     ami.login
-    #   end
-    # end
+    it "should not let to login if asterisk is not yet fully booted" do
+      Asterisk::Server.kill
+      Asterisk::Server.running?.should be_false
+      Asterisk::Server.start
+      # nmap dependency
+      while Asterisk::Server.port_closed?
+        sleep 0.01
+      end
+      ami = Asterisk::AMI.new username: "asterisk.cr", secret: "asterisk.cr"
+      expect_raises(Asterisk::AMI::NotBootedError) do
+        ami.login
+      end
+    end
   end
 end

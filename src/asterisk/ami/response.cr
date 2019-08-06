@@ -30,8 +30,8 @@ module Asterisk
       def_property value, String
       def_property output, Array(String)
 
-      def success?
-        response?.to_s.match /Success/i
+      def success? : Bool
+        response?.to_s == "Success"
       end
 
       def initialize(data : AMIData? = nil)

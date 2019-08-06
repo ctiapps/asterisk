@@ -17,3 +17,22 @@ def logger
   Asterisk.logger
 end
 logger.level = LOG_LEVEL
+
+module TestHelpers
+  def with_ami(username = "asterisk.cr", secret = "asterisk.cr", &block)
+    unless Asterisk::Server.running?
+      Asterisk::Server.start
+      # let Asterisk boot
+      sleep 3.seconds
+    end
+
+    ami = Asterisk::AMI.new username: username, secret: secret
+    ami.login
+
+    yield ami
+
+    ami.logoff
+  end
+end
+
+extend TestHelpers

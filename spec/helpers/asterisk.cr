@@ -23,6 +23,7 @@ module Asterisk
 
     def self.kill
       shell_command %(ps x | grep "asterisk -vvv" | grep -v grep | awk '{print $1}' | xargs kill -9)
+      sleep 0.5.seconds
     end
 
     def self.running? : Bool
@@ -34,9 +35,13 @@ module Asterisk
       shell_command %(#{asterisk} -V).split.last
     end
 
-    def self.port_is_open?(port : Int32 | Int64 | String, host = "127.0.0.1") : Bool
-      result = shell_command %(nmap -p #{port} #{host} | grep #{port} | awk '{print $2}')
-      result.to_s.strip.chomp == "open"
+    def self.port_open?(port : Int64 | String = "5038", host = "127.0.0.1") : Bool
+      # 5038/tcp open  unknown
+      shell_command("nmap -p #{port} #{host} | grep #{port}").split[1] == "open"
+    end
+
+    def self.port_closed?(port : Int64 | String = "5038", host = "127.0.0.1") : Bool
+      ! port_open?(port, host)
     end
 
     def self.shell_command(command)
