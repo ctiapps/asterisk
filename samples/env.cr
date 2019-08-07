@@ -1,2 +1,0 @@
-puts ARGV
-puts env

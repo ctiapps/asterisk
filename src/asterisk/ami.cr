@@ -1,217 +1,285 @@
+require "./logger.cr"
 require "socket"
-require "time"
-require "secure_random"
+require "uuid"
+require "./ami/*"
 
 module Asterisk
   class AMI
+    alias EventName = String
+    alias ActionID = String
+    alias AMIData = Hash(String, String | Array(String))
+
+    @conn = TCPSocket.new
+    @connected = false
+    @running = false
+    @fully_booted = false
+    @event_callbacks = Hash(EventName, Proc(AMI, Event, Nil)).new
+    getter logger : Logger = Asterisk.logger
+    getter receiver : Receiver = Receiver.new(logger: logger)
+    getter ami_version : String?
+    getter asterisk_version : String?
+    getter asterisk_platform : String?
+
     class LoginError < Exception
     end
 
-    class ConnectionLostError < Exception
+    class NotBootedError < Exception
     end
 
-    def logger
-      Asterisk.logger
+    class ConnectionError < Exception
     end
 
-    def initialize(@host = "127.0.0.1", @port = "5038")
-      @conn = TCPSocket.new
-      @should_reconnect = true
-      @connected = false
-
-      @actions = Hash(String, Channel(Bool)).new
-      @event_map = Hash(String, Array(Hash(String, String))).new
+    # close client and raise error
+    private def raise(ex : Exception)
+      close
+      ::raise ex
     end
 
-    def connect!
-      @conn = TCPSocket.new(@host, @port, 10, 10)
-      @conn.tcp_keepalive_interval = 10
-      @conn.tcp_keepalive_idle = 5
-      @conn.tcp_keepalive_count = 5
-      @conn.keepalive = true
-      @conn.read_timeout = 5
-
-      login
-      event_loop if connected?
+    # on_close callback
+    def on_close(&@on_close : AMI ->)
     end
 
-    def disconnect!
-      if connected?
-        res = send_action( { "action" => "logoff" } )
-        logger.info res
-      end
-    ensure
-      @conn.close rescue nil
-      @connected = false
-      logger.debug "Disconnected!"
+    # on_event callback (event name, AMI instance, event body)
+    def on_event(event : EventName, &block : AMI, Event ->)
+      @event_callbacks[event.to_s.downcase] = block
     end
 
-    def login
-      send_action!( { "action" => "login", "username" => "ahn", "secret" => "ahn" } )
-      login_event = receive_event
-      if login_event
-        # logger.debug login_event
-        if login_event["response"].downcase == "success"
-          # FullyBooted should follow after login
-          fully_booted_event = receive_event
-          if fully_booted_event && fully_booted_event["event"] == "FullyBooted"
-            @connected = true
-            logger.debug "Connected!"
-          else
-            disconnect!
-          end
-        else
-          logger.error "Login failed: #{login_event["message"]}"
-        end
-      else
-        logger.error "Login failed (AMI timeout or wrong address, or Asterisk is off - also check manager.conf)"
-      end
+    def initialize(@host = "127.0.0.1", @port = "5038", @username = "", @secret = "", @logger : Logger = Asterisk.logger)
     end
 
     def connected?
-      @connected
+      @connected && running? && fully_booted?
     end
 
-    def should_reconnect?
-      @should_reconnect
-    end
-
-    def send_action(action)
-      raise LoginError.new("action should present") unless action.has_key?("action")
-      raise LoginError.new("AMI should be in connected state to send action") unless connected?
-
-      # actionid is maindatory in order to track action response
-      actionid = action["actionid"] ||= SecureRandom.uuid
-
-      # register response catcher - some responses are set of multiple events,
-      # have to track all of them
-      response_catcher actionid
-
-      send_action! action
-
-      catch_response actionid
-    end
-
-    private def send_action!(action)
-      multiline_string = ""
-      action.each do |k,v|
-        multiline_string += "#{k}: #{v}\r\n"
-      end
-      multiline_string += "\r\n"
-
-      @conn << multiline_string
-    end
-
-    private def response_catcher(actionid : String)
-      @actions[actionid] = Channel(Bool).new
-    end
-
-    private def catch_response(actionid : String)
-      @actions[actionid].receive
-      @event_map.delete(actionid)
-    end
-
-    private def event_loop
-      spawn do
-        loop do
-          while connected?
-            process_single_event
-          end
-
-          if should_reconnect?
-            reconnect!
-          else
-            break
-          end
+    def login
+      raise LoginError.new("Already connected, logoff first") if @connected
+      @conn = TCPSocket.new(@host, @port)
+      @conn.sync = true
+      @conn.keepalive = false
+      run
+      response = send_action({"action" => "Login", "username" => @username, "secret" => @secret})
+      if response.success?
+        # {"unknown" => "Asterisk Call Manager/2.10.5",
+        #  "response" => "Success",
+        #  "message" => "Authentication accepted"}
+        @ami_version = response["unknown"].as(String).split("/").last
+        @connected = true
+        # AMI should enqueue FullyBooted event that will be processed by runner
+        sleep 0.03
+        unless fully_booted?
+          raise NotBootedError.new("After logn, AMI shoud respond with FullyBooted event")
         end
+        # last thing, get asterisk version
+        version_information = command("core show version")
+        version_information =~ /Asterisk (\d{1,2}.\d{1,2}.\d{1,2}).+on a (\S+)/
+        @asterisk_version = $1
+        @asterisk_platform = $2
+        logger.debug "#{self.class}.login: Logged in"
+      else
+        raise LoginError.new(response.message)
       end
     end
 
-    def reconnect!
-      logger.info "Reconnecting!"
-      disconnect!
-      sleep 0.25
-      connect!
-    rescue
-      nil
-    end
-
-    private def process_single_event
-      # receive event or nil in case of timeout
-      event = begin
-                receive_event
-              rescue ConnectionLostError
-                nil
-              end
-
-      if event
-        logger.debug "EVENT: #{event}"
-
-        if event.has_key?("actionid")
-          actionid = event["actionid"]
-
-          if event.has_key?("eventlist")
-            if event["eventlist"].downcase == "start"
-              # {"response" => "Success", "actionid" => "bd55ec79-1781-4ca1-9ef8-8c6abe491f99", "eventlist" => "start", "message" => "Peer status list will follow"}
-              @event_map[actionid] ||= Array(Hash(String, String)).new
-            else
-              # {"event" => "PeerlistComplete", "actionid" => "bd55ec79-1781-4ca1-9ef8-8c6abe491f99", "eventlist" => "Complete", "listitems" => "1"}
-              @actions[actionid].send true
-            end
-          else
-            if @event_map.has_key?(actionid)
-              @event_map[actionid].push(event)
-            else
-              @event_map[actionid] = Array(Hash(String, String)).new
-              @event_map[actionid].push(event)
-              @actions[actionid].send true
-            end
-          end
+    def logoff
+      if running?
+        response = send_action({"action" => "Logoff"})
+        # {"response" => "Goodbye", "message" => "Thanks for all the fish."}
+        if response.response == "Goodbye"
+          logger.debug "#{self.class}.logoff: Logged off"
         else
-          # callbacks and hooks
+          logger.error "#{self.class}.logoff: Logged off with incorrect response: #{response}"
         end
       end
+      close
     end
 
-    # Asterisk manager event is a set of multiple strings with "\r\n" at the end and
-    # empty string ("\r\n") terminating event data
-    private def receive_event
-      event = @conn.gets("\r\n\r\n").to_s.gsub("\r\n\r\n", "")
-      logger.debug "Received Asterisk manager event: #{event}"
-      event = event.split("\r\n")
-
-      if event == [""]
-        # AMI just disconnected, if empty line was received
-        @connected = false
-        raise ConnectionLostError.new("AMI connection lost")
+    def command(command : String) : String | Array(String)
+      result = send_action({"action" => "Command", "command" => command}).output
+      if result.size == 1
+        result.first
       else
-        parse_event event
-      end
-
-    rescue IO::Timeout
-      # Unstable connection, causing no event or broken event
-      nil
-    end
-
-    # parse_event process multi-line array. Normally Asterisk manager event do hold key: value
-    # delimited by ':', however there could be an message without delimiter, it will be assigned to the unknown key
-    private def parse_event(event : Array)
-      result = {} of String => String
-      if event.empty?
-        nil
-      else
-        event.each do |line|
-          # logger.debug "Processing line: #{line}"
-          if /^(.*):(.*)$/ =~ line
-            result[$1.to_s.downcase] = $2.to_s.strip
-          else
-            result["unknown"] ||= ""
-            result["unknown"] += line
-          end
-        end
-
         result
       end
+    end
+
+    # increase expects_answer_before with heavy loaded CPU
+    def send_action(action : AMIData, expects_answer_before : Float64 = 0.3)
+      actionid = action["actionid"] ||= UUID.random.to_s
+      @receiver = Receiver.new(logger: logger)
+      response = receiver.get(actionid: actionid, expects_answer_before: expects_answer_before) do
+        conn_send(action)
+      end
+      logger.debug "#{self.class}.send_action: response received: #{response.inspect}"
+      response
+    end
+
+    # Format action as a multiline string delimited by "\r\n" and send it
+    # through AMI TCPSocket connection
+    private def conn_send(action : AMIData)
+      # Asterisk AMI action is a multi-line string delimited by "\r\n" following
+      # with one empty strring
+      action_s = ""
+      action.each do |k, v|
+        action_s += "#{k}: #{v}\r\n"
+      end
+      action_s += "\r\n"
+      @conn << action_s
+    rescue ex
+      raise ex
+    end
+
+    private def run
+      @running = true
+      spawn do
+        logger.debug "#{self.class}.run: Starting"
+        while running?
+          io_data = conn_read
+          data = format(io_data)
+          logger.debug "#{self.class}.run: Formatted data: #{data.inspect}"
+
+          # Are asterisk get terminated elsewhere?
+          # (empty strings are coming to the AMI interface in some cases of
+          # forced process termination; in such case Asterisk does not send
+          # "Shutdown" event
+          close if data.to_h == {"unknown" => ""}
+
+          if receiver.waiting?
+            # received message is an AMI unstructured (text) information
+            # message that comes as response right after actin was send OR
+            # that's response of action containing same actionid as receiver
+            if !data.is_a?(Event) && data.actionid?.nil? && !data.response_present?
+              receiver.send data
+              # logger.debug "#{self.class}.run: <<< sending response: #{data.inspect} to receiver: #{receiver.inspect}"
+            elsif data.actionid_present? && data.actionid == receiver.actionid
+              receiver.send data
+              # logger.debug "#{self.class}.run: <<< sending response: #{data.inspect} to receiver: #{receiver.inspect}"
+            end
+          end
+
+          if data.is_a?(Event)
+            # FullyBooted event raised by AMI when all Asterisk initialization
+            # procedures have finished.
+            @fully_booted = true if data.event == "FullyBooted"
+
+            # Does asterisk get terminated elsewhere?
+            close if data.event == "Shutdown"
+
+            # do something with data, process hooks etc!
+            trigger_callback data
+          end
+        end
+      end
+    end
+
+    # Read AMI data, which is event, or response/confirmation to the enqueued
+    # action. AMI always return data as a set of multiple strings
+    # delimitered by "\r\n" with one empty string at the end ("\r\n\r\n")
+    private def conn_read : String
+      data = @conn.gets("\r\n\r\n").to_s
+      # logger.debug "#{self.class}.conn_read: <<< AMI data received: #{data}"
+      data
+    rescue IO::Timeout
+      raise ConnectionError.new("TCPSocket timeout error")
+    rescue ex
+      # Connection error triggered after @conn.close could be ignored
+      if running?
+        raise ex
+      else
+        ""
+      end
+    end
+
+    # `format` process each line of given multi-line string (array), splitting
+    # it into key => value pair
+    private def format(data : String) : Response
+      # convert input data (multi-line string to the array of strings)
+      data = data.gsub(/\r\n\r\n$/, "").split("\r\n")
+
+      result = AMIData.new
+
+      cli_command = false
+      previous_key = ""
+
+      data.each do |line|
+        # Normally Asterisk manager event or confirmation for action containing
+        # key-value pair delimited by ": ", except string confirmations or data
+        # for user-event without delimiter, these will be assigned as unknown key
+        # Examples:
+        #
+        # "event: SuccessfulAuth" => ["event", "SuccessfulAuth"]
+        #
+        # "CoreShowChannels: List currently active channels.  (Priv: system,reporting,all)" =>
+        # ["CoreShowChannels", "List currently active channels.  (Priv: system,reporting,all)"]
+
+        # Logic for
+        # ```{"action" => "Command", "command" => "..."}```
+        if cli_command && previous_key == "actionid"
+          result["output"] = line.gsub(/--END COMMAND--$/, "").chomp.split("\n")
+          break
+        end
+
+        if line =~ /(^[\w\s\/-]*):[\s]*(.*)$/m
+          previous_key = key = $1.to_s.downcase
+          value = $2.to_s
+
+          # if key already present, then value is an array
+          if result.has_key?(key)
+            if result[key].is_a?(Array)
+              result[key].as(Array).push value
+            else
+              result[key] = [result[key].as(String)].push value
+            end
+          else
+            result[key] = value
+          end
+
+          # Asterisk 13, with multi-line output
+          if key == "response" && value == "Follows"
+            cli_command = true
+          end
+
+          # there were no delimiter, will assign data to the "unknown" key
+        else
+          key = "unknown"
+          if result.has_key?(key)
+            if result[key].is_a?(Array)
+              result[key].as(Array).push line
+            else
+              result[key] = [result[key].as(String)].push line
+            end
+          else
+            result[key] = line
+          end
+        end
+      end
+
+      if result.has_key?("event")
+        Event.new(result)
+      else
+        Response.new(result)
+      end
+    end
+
+    private def trigger_callback(event : Event)
+      name = event.event.to_s.downcase
+      @event_callbacks[name]?.try &.call(self, event)
+    end
+
+    private def close
+      return unless running?
+      @connected = false
+      @running = false
+      @fully_booted = false
+      @conn.close
+      @on_close.try &.call(self)
+    end
+
+    private def running?
+      @running
+    end
+
+    private def fully_booted?
+      @fully_booted
     end
   end
 end
