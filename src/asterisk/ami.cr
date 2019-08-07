@@ -5,16 +5,20 @@ require "./ami/*"
 
 module Asterisk
   class AMI
-    getter logger : Logger = Asterisk.logger
-
-    @conn         = TCPSocket.new
-    @running      = false
-    @fully_booted = false
-
-    getter receiver : Receiver = Receiver.new
-
+    alias EventName = String
     alias ActionID = String
     alias AMIData = Hash(String, String | Array(String))
+
+    @conn = TCPSocket.new
+    @connected = false
+    @running = false
+    @fully_booted = false
+    @event_callbacks = Hash(EventName, Proc(AMI, Event, Nil)).new
+    getter logger : Logger = Asterisk.logger
+    getter receiver : Receiver = Receiver.new(logger: logger)
+    getter ami_version : String?
+    getter asterisk_version : String?
+    getter asterisk_platform : String?
 
     class LoginError < Exception
     end
@@ -25,38 +29,59 @@ module Asterisk
     class ConnectionError < Exception
     end
 
+    # close client and raise error
     private def raise(ex : Exception)
-      # close everything and raise error
-      logoff!
-    ensure
+      close
       ::raise ex
+    end
+
+    # on_close callback
+    def on_close(&@on_close : AMI ->)
+    end
+
+    # on_event callback (event name, AMI instance, event body)
+    def on_event(event : EventName, &block : AMI, Event ->)
+      @event_callbacks[event.to_s.downcase] = block
     end
 
     def initialize(@host = "127.0.0.1", @port = "5038", @username = "", @secret = "", @logger : Logger = Asterisk.logger)
     end
 
+    def connected?
+      @connected && running? && fully_booted?
+    end
+
     def login
+      raise LoginError.new("Already connected, logoff first") if @connected
       @conn = TCPSocket.new(@host, @port)
       @conn.sync = true
       @conn.keepalive = false
       run
       response = send_action({"action" => "Login", "username" => @username, "secret" => @secret})
-      logger.debug "#{self.class}.login response: #{response}"
       if response.success?
-        # running but FullyBooted event shall be also processed
+        # {"unknown" => "Asterisk Call Manager/2.10.5",
+        #  "response" => "Success",
+        #  "message" => "Authentication accepted"}
+        @ami_version = response["unknown"].as(String).split("/").last
+        @connected = true
+        # AMI should enqueue FullyBooted event that will be processed by runner
         sleep 0.03
         unless fully_booted?
-          raise NotBootedError.new("Asterisk did not respond with FullyBooted event")
+          raise NotBootedError.new("After logn, AMI shoud respond with FullyBooted event")
         end
+        # last thing, get asterisk version
+        version_information = command("core show version")
+        version_information =~ /Asterisk (\d{1,2}.\d{1,2}.\d{1,2}).+on a (\S+)/
+        @asterisk_version = $1
+        @asterisk_platform = $2
+        logger.debug "#{self.class}.login: Logged in"
       else
         raise LoginError.new(response.message)
       end
     end
 
     def logoff
-      logger.debug "#{self.class}.logoff: Preparing"
       if running?
-        logger.debug "#{self.class}.logoff: Logging off"
         response = send_action({"action" => "Logoff"})
         # {"response" => "Goodbye", "message" => "Thanks for all the fish."}
         if response.response == "Goodbye"
@@ -65,101 +90,98 @@ module Asterisk
           logger.error "#{self.class}.logoff: Logged off with incorrect response: #{response}"
         end
       end
-    ensure
-      logoff!
+      close
     end
 
-    private def logoff!
-      @running = false
-      @fully_booted = false
-      @conn.close
-      logger.debug "#{self.class}.logoff!: Disconnected!"
+    def command(command : String) : String | Array(String)
+      result = send_action({"action" => "Command", "command" => command}).output
+      if result.size == 1
+        result.first
+      else
+        result
+      end
     end
 
-    def send_action(action : AMIData, expects_answer_before : Float64 = 0.0)
+    # increase expects_answer_before with heavy loaded CPU
+    def send_action(action : AMIData, expects_answer_before : Float64 = 0.3)
       actionid = action["actionid"] ||= UUID.random.to_s
-      @receiver = Receiver.new(actionid: actionid, expects_answer_before: expects_answer_before, logger: logger)
-      response = receiver.get do
-        send!(action)
-        logger.debug "#{self.class}.send_action: sending #{action}"
-        logger.debug "#{self.class}.send_action: sent, waiting for response"
+      @receiver = Receiver.new(logger: logger)
+      response = receiver.get(actionid: actionid, expects_answer_before: expects_answer_before) do
+        conn_send(action)
       end
       logger.debug "#{self.class}.send_action: response received: #{response.inspect}"
       response
     end
 
+    # Format action as a multiline string delimited by "\r\n" and send it
+    # through AMI TCPSocket connection
+    private def conn_send(action : AMIData)
+      # Asterisk AMI action is a multi-line string delimited by "\r\n" following
+      # with one empty strring
+      action_s = ""
+      action.each do |k, v|
+        action_s += "#{k}: #{v}\r\n"
+      end
+      action_s += "\r\n"
+      @conn << action_s
+    rescue ex
+      raise ex
+    end
+
     private def run
-      raise LoginError.new("Already running!") if running?
-      running!
+      @running = true
       spawn do
         logger.debug "#{self.class}.run: Starting"
         while running?
-          io_data = read!
-          # logger.debug "#{self.class}.run: <<< AMI data received: #{data}"
+          io_data = conn_read
           data = format(io_data)
           logger.debug "#{self.class}.run: Formatted data: #{data.inspect}"
+
+          # Are asterisk get terminated elsewhere?
+          # (empty strings are coming to the AMI interface in some cases of
+          # forced process termination; in such case Asterisk does not send
+          # "Shutdown" event
+          close if data.to_h == {"unknown" => ""}
 
           if receiver.waiting?
             # received message is an AMI unstructured (text) information
             # message that comes as response right after actin was send OR
             # that's response of action containing same actionid as receiver
-            if ! data.is_a?(Event) && data.actionid?.nil? && ! data.response_present?
+            if !data.is_a?(Event) && data.actionid?.nil? && !data.response_present?
               receiver.send data
-              logger.debug "#{self.class}.run: <<< sending response: #{data.inspect} to receiver: #{receiver.inspect}"
+              # logger.debug "#{self.class}.run: <<< sending response: #{data.inspect} to receiver: #{receiver.inspect}"
             elsif data.actionid_present? && data.actionid == receiver.actionid
               receiver.send data
-              logger.debug "#{self.class}.run: <<< sending response: #{data.inspect} to receiver: #{receiver.inspect}"
+              # logger.debug "#{self.class}.run: <<< sending response: #{data.inspect} to receiver: #{receiver.inspect}"
             end
           end
 
           if data.is_a?(Event)
-            # do something with data, process hooks etc!
-            # here... TODO...
-
             # FullyBooted event raised by AMI when all Asterisk initialization
             # procedures have finished.
-            fully_booted! if data.event == "FullyBooted"
+            @fully_booted = true if data.event == "FullyBooted"
 
             # Does asterisk get terminated elsewhere?
-            logoff! if data.event == "Shutdown"
+            close if data.event == "Shutdown"
+
+            # do something with data, process hooks etc!
+            trigger_callback data
           end
-
-          # Does asterisk get terminated elsewhere?
-          # (empty strings are coming to the AMI interface in some cases of
-          # forced process termination; in such case Asterisk does not send
-          # "Shutdown" event
-          logoff! if data.to_h == {"unknown" => ""}
         end
-        logger.debug "#{self.class}.run: Connection gone, login again!"
       end
     end
 
-    # Format action as a multiline string delimited by "\r\n" and send it
-    # through AMI TCPSocket connection
-    private def send!(action : AMIData)
-      multiline_string = ""
-      action.each do |k, v|
-        multiline_string += "#{k}: #{v}\r\n"
-      end
-      # ending string
-      multiline_string += "\r\n"
-      # send! TODO: rescue errors
-      @conn << multiline_string
-    rescue ex
-      raise ex
-    end
-
-    # Read data from AMI. Usually it's an AMI event, that could be formatted as
-    # a json/hash, but it could be also an confirmation to the past action both
-    # as a hash or as a string.
-    # Data, that AMi returns is a set of a single or multiple strings
-    # delimitered by "\r\n" at the end one more terminating ("\r\n")
-    private def read! : String
-      @conn.gets("\r\n\r\n").to_s
+    # Read AMI data, which is event, or response/confirmation to the enqueued
+    # action. AMI always return data as a set of multiple strings
+    # delimitered by "\r\n" with one empty string at the end ("\r\n\r\n")
+    private def conn_read : String
+      data = @conn.gets("\r\n\r\n").to_s
+      # logger.debug "#{self.class}.conn_read: <<< AMI data received: #{data}"
+      data
     rescue IO::Timeout
       raise ConnectionError.new("TCPSocket timeout error")
     rescue ex
-      # Errno Bad file descriptor could come after connection get closed
+      # Connection error triggered after @conn.close could be ignored
       if running?
         raise ex
       else
@@ -192,7 +214,7 @@ module Asterisk
         # Logic for
         # ```{"action" => "Command", "command" => "..."}```
         if cli_command && previous_key == "actionid"
-          result["output"] = line.gsub(/--END COMMAND--$/, "").split("\n")
+          result["output"] = line.gsub(/--END COMMAND--$/, "").chomp.split("\n")
           break
         end
 
@@ -238,20 +260,22 @@ module Asterisk
       end
     end
 
-    def connected?
-      running? && fully_booted?
+    private def trigger_callback(event : Event)
+      name = event.event.to_s.downcase
+      @event_callbacks[name]?.try &.call(self, event)
+    end
+
+    private def close
+      return unless running?
+      @connected = false
+      @running = false
+      @fully_booted = false
+      @conn.close
+      @on_close.try &.call(self)
     end
 
     private def running?
       @running
-    end
-
-    private def running!
-      @running = true
-    end
-
-    private def fully_booted!
-      @fully_booted = true
     end
 
     private def fully_booted?

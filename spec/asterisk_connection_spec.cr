@@ -16,7 +16,7 @@ describe Asterisk::Server do
   end
 
   it "after start, Asterisk Manager should listen on 127.0.0.1:5038" do
-    Asterisk::Server.port_is_open?("5038").should be_true
+    Asterisk::Server.port_open?("5038").should be_true
   end
 
   it "should stop by 'core stop now' CLI command" do

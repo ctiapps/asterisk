@@ -7,55 +7,62 @@ module Asterisk
     class Receiver
       WAIT_FOR_ANSWER = 0.001
 
-      property actionid : ActionID?
-      getter expects_answer_before : Float64
+      getter actionid : ActionID?
+      getter expects_answer_before : Float64 = 0.3
       getter logger : Logger
 
       getter response_channel : Channel::Unbuffered(Response)
 
-      def initialize(@actionid : ActionID? = nil, @expects_answer_before : Float64 = 0.0, @logger : Logger = Asterisk.logger)
+      def initialize(@logger : Logger = Asterisk.logger)
         # start with closed Receiver
         @response_channel = Channel::Unbuffered(Response).new
-        response_channel.close
+        close
       end
 
-      def get : Response
+      def send(data : Response | Event)
+        response_channel.send data
+      end
+
+      def get(@actionid : ActionID, @expects_answer_before : Float64 = 0.3) : Response
         response = begin
           @response_channel = Channel::Unbuffered(Response).new
           yield
-          stop_after expects_answer_before
+          close_after expects_answer_before
           response_channel.receive
         rescue Channel::ClosedError
-          Response.new({"response" => "Error", "message" => "Timeout error while waiting for AMI response"})
+          Response.new({"response" => "Error", "message" => "Timeout while waiting for AMI response", "expects_answer_before" => expects_answer_before.to_s})
         end
       ensure
-        terminate!
+        close
         logger.debug "#{self.class}.get: received #{response.inspect}"
         response
       end
 
-      private def stop_after(expects_answer_before : Float64)
-        if expects_answer_before > 0.0
-          spawn do
-            started_at = Time.now
-            while (Time.now - started_at).to_f < expects_answer_before
-              sleep WAIT_FOR_ANSWER
-            end
-            terminate!
-            logger.debug "#{self.class}.stop_after: terminated"
+      def closed?
+        response_channel.closed?
+      end
+
+      # if Receiver instance is open, AMI runner might send response or event to
+      # the response_channel
+      def waiting?
+        ! closed?
+      end
+
+      # close response_channel after given timeout
+      private def close_after(timeout : Float64)
+        timeout = 0.3 if timeout < 0.3
+        spawn do
+          started_at = Time.now
+          while (Time.now - started_at).to_f < timeout
+            sleep WAIT_FOR_ANSWER
           end
+          close
         end
       end
 
-      def send(data : Response)
-        response_channel.send data
-      end
-
-      def waiting?
-        ! response_channel.closed?
-      end
-
-      def terminate!
+      # close response_channel
+      private def close
+        return if closed?
         @actionid = nil
         response_channel.close
         sleep 0.001

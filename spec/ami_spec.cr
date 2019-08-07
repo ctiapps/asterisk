@@ -3,6 +3,14 @@ require "./spec_helper"
 describe Asterisk::AMI do
   # Testing basic actions
   describe "#basic_actions" do
+    it "after login, client should set ami_version, asterisk_version and asterisk_platform" do
+      with_ami do |ami|
+        ami.ami_version.should_not be_nil
+        ami.asterisk_version.should_not be_nil
+        ami.asterisk_platform.should_not be_nil
+      end
+    end
+
     it "should respond with 'Pong' to action 'ping'" do
       with_ami do |ami|
         10.times do |i|
@@ -120,6 +128,24 @@ describe Asterisk::AMI do
         response = ami.send_action({"action" => "Command", "command" => "sip show peers", "actionid" => actionid})
         response.actionid.should eq(actionid)
         response.output.as(Array(String)).join("\n").should match /test-account-905/im
+      end
+    end
+
+    it "ami method 'command' should return expected result" do
+      with_ami do |ami|
+        # returns one line
+        ami.command("core show version") =~ /Asterisk (\d{1,2}.\d{1,2}.\d{1,2}).+on a (\S+)/
+        asterisk_version = $1
+        asterisk_platform = $2
+        asterisk_version.should be_a(String)
+        asterisk_platform.should be_a(String)
+
+        # returns array (two lines)
+        ami.command("core show uptime").as(Array(String)).join("\n") =~ /(?|uptime: (.+)|reload: (.+))/i
+        uptime = $1
+        last_reload = $1
+        uptime.should be_a(String)
+        last_reload.should be_a(String)
       end
     end
 

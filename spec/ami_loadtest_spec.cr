@@ -4,9 +4,18 @@ describe Asterisk::AMI do
   it "should correctly respond to all the invoked events within heavy loaded Asterisk" do
     # # less noicy, please
     # Asterisk.logger.level = Logger::ERROR
+
+    # consider increasing expects_answer_before timeout for higher value of
+    # fibers_count, CPU load could be high
+    expects_answer_before = 1.0
+
+    # how many parallel AMI connections should be tested
     fibers_count = 10
-    test_loops_count = 500
     fibers = Channel(Nil).new(fibers_count)
+
+    # how much loops of tests to execute
+    test_loops_count = 500
+
     fibers_count.times do |spawn_no|
       spawn_no_pretty = "0000#{spawn_no}"[-4, 4]
       foobar = "foobar_#{spawn_no_pretty}"
@@ -29,7 +38,7 @@ describe Asterisk::AMI do
             response.message.should match /Variable Set/i
 
             actionid = Random::Secure.hex(8)
-            response = ami.send_action({"action" => "SIPpeers", "actionid" => actionid}, expects_answer_before: 0.5)
+            response = ami.send_action({"action" => "SIPpeers", "actionid" => actionid}, expects_answer_before: expects_answer_before)
             response.success?.should be_true
             response.actionid.should eq(actionid)
             response["eventlist"].should match /^start$/i
@@ -65,10 +74,12 @@ describe Asterisk::AMI do
 
             # short random pause after loop to randomize fibers data
             sleep 0.002 + rand(0.05)
+
+          rescue ex
+            puts %(\n\nAMI loadtest spec: #{ex.class}:#{ex.message}\n#{ex.backtrace.pretty_inspect}\n\nLatest response: #{response.inspect rescue "-- n/a ---"}\n\n)
+            break
           end # test loop
 
-        rescue ex
-          puts "\n\nAMI loadtest spec: #{ex.class}:#{ex.message}\n#{ex.backtrace.pretty_inspect}\n\n"
         ensure
           fibers.send nil
         end # with_ami
