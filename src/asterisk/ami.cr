@@ -44,7 +44,7 @@ module Asterisk
       @event_callbacks[event.to_s.downcase] = block
     end
 
-    def initialize(@host = "127.0.0.1", @port = "5038", @username = "", @secret = "", @logger : Logger = Asterisk.logger)
+    def initialize(@host = "127.0.0.1", @port : String | Int32 = 5038, @username = "", @secret = "", @logger : Logger = Asterisk.logger)
     end
 
     def connected?

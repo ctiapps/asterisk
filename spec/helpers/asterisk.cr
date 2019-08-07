@@ -50,5 +50,9 @@ module Asterisk
       io.close
       io.to_s.chomp.strip
     end
+
+    def self.exec(command)
+      result = shell_command(%(asterisk -rx "#{command}"))
+    end
   end
 end

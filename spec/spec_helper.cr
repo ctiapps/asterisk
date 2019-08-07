@@ -33,6 +33,18 @@ module TestHelpers
 
     ami.logoff
   end
+
+  def with_agi
+    unless Asterisk::Server.running?
+      Asterisk::Server.start
+      # let Asterisk boot
+      sleep 3.seconds
+    end
+
+    agi = Asterisk::FastAGI.new host: "127.0.0.1", port: 9000
+    yield agi
+    agi.close
+  end
 end
 
 extend TestHelpers
