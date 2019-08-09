@@ -148,5 +148,23 @@ describe Asterisk::AMI do
         last_reload.should be_a(String)
       end
     end
+
+    # it "should process queue of concurrent events" do
+    #   with_ami do |ami|
+    #     tests_count = 100
+    #     tests_count.times do |test_no|
+    #       spawn do
+    #         actionid = Random::Secure.hex(8)
+    #         response = ami.send_action({"action" => "SIPpeers", "actionid" => actionid}, expects_answer_before: 0.5)
+    #         pp response unless response.success?
+    #         response.success?.should be_true
+    #         response.actionid.should eq(actionid)
+    #         response["eventlist"].should match /^start$/i
+    #         response.message.should match /list will follow/i
+    #       end
+    #     end
+    #     sleep 10
+    #   end
+    # end
   end
 end

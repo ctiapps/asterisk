@@ -79,6 +79,8 @@ module Asterisk
         raise LoginError.new(response.message)
       end
     end
+    def connect; login; end
+    def start; login; end
 
     def logoff
       if running?

@@ -1,48 +1,33 @@
 require "./logger.cr"
-require "./agi/*"
+require "./agi/core.cr"
 
 module Asterisk
   class AGI
-    # TODO (fix it based on params data.
-    # Prior version 1.6 (don't remember) it were "|"
-    getter parameters_delimiter = ","
-    # response of last recent command
-    getter response = Response.new
-
+    # Asterisk communicate AGI through STDIN/STDOUT
+    # and with FastAGI using TCPSocket
     @input : IO::FileDescriptor | TCPSocket = STDIN
     @output : IO::FileDescriptor | TCPSocket = STDOUT
-    getter params = Hash(String, String).new
-    getter logger : Logger = Asterisk.logger
-
-    struct Response
-      property response : String
-      property return_code : String
-      property result : String
-      property additional_data : String
-
-      def initialize(@response = "", @return_code = "", @result = "", @additional_data = "")
-      end
-    end
 
     def initialize(@input = STDIN, @output = STDOUT, @logger : Logger = Asterisk.logger)
-      get_params
+      # right after connection with AGI, asterisk do send key-value set of
+      # environment parameters
+      read_asterisk_env
     end
 
     # During AGI initiation, Asterisk do send formatted data: parameters and
-    # environment data (param_name: value); method `get_params` do read data
-    # from the input channel and store them to the @params
-    private def get_params
+    # environment data (param_name: value); method `read_asterisk_env` do read data
+    # from the input channel and store them to the @asterisk_env
+    private def read_asterisk_env
       loop do
-        params_data_pair = @input.gets.as(String)
-        logger.debug "<<< received params property: #{params_data_pair}"
+        asterisk_env_data_pair = @input.gets.as(String)
+        logger.debug "<<< received asterisk_env property: #{asterisk_env_data_pair}"
 
-        # agi_request: /var/lib/asterisk/agi-bin/basic
-        break if params_data_pair.empty?
+        break if asterisk_env_data_pair.empty?
 
-        name, value = params_data_pair.as(String).split(": ")
-        @params[name] = value
+        name, value = asterisk_env_data_pair.as(String).split(": ")
+        @asterisk_env[name] = value
       end
-      params
+      asterisk_env
     end
 
     # Exec AGI/FastAGI command

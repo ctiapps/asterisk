@@ -1,5 +1,6 @@
-require "socket"
+require "./logger.cr"
 require "./agi"
+require "socket"
 
 module Asterisk
   class FastAGI < AGI
@@ -44,7 +45,6 @@ module Asterisk
         client.close
       rescue IO::EOFError
         logger.info "#{self.class}: #{client_addr} disconnected"
-      ensure
       end
     end
 

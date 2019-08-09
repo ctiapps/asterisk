@@ -8,7 +8,7 @@ context asterisk.cr {
   };
 
   asyncagi => {
-    AGI(agi://localhost:4573);
+    AGI(agi:async);
   };
 
   // various test cases
