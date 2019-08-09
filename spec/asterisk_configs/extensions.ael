@@ -1,16 +1,22 @@
 context asterisk.cr {
-  basic => {
+  agi => {
     AGI(/var/lib/asterisk/agi-bin/basic,1,2,3,4,5);
   };
 
   fastagi => {
-    AGI(agi://localhost:9000);
+    AGI(agi://localhost:4573);
   };
 
+  asyncagi => {
+    AGI(agi://localhost:4573);
+  };
+
+  // various test cases
+
+  // answer call, then hangup
   answer => {
     Answer;
-    Wait(30);
-    Busy(4);
+    Wait(8);
     Hangup;
   };
 

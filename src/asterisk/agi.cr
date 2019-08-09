@@ -3,60 +3,69 @@ require "./agi/*"
 
 module Asterisk
   class AGI
-    @input  : IO::FileDescriptor | TCPSocket = STDIN
+    # TODO (fix it based on params data.
+    # Prior version 1.6 (don't remember) it were "|"
+    getter parameters_delimiter = ","
+    # response of last recent command
+    getter response = Response.new
+
+    @input : IO::FileDescriptor | TCPSocket = STDIN
     @output : IO::FileDescriptor | TCPSocket = STDOUT
-    @params = Hash(String, String).new
+    getter params = Hash(String, String).new
+    getter logger : Logger = Asterisk.logger
 
-    class LoginError < Exception
+    struct Response
+      property response : String
+      property return_code : String
+      property result : String
+      property additional_data : String
+
+      def initialize(@response = "", @return_code = "", @result = "", @additional_data = "")
+      end
     end
 
-    class ConnectionLostError < Exception
-    end
-
-    def initialize(@input = STDIN, @output = STDOUT)
+    def initialize(@input = STDIN, @output = STDOUT, @logger : Logger = Asterisk.logger)
       get_params
     end
 
-    def logger
-      Asterisk.logger
+    # During AGI initiation, Asterisk do send formatted data: parameters and
+    # environment data (param_name: value); method `get_params` do read data
+    # from the input channel and store them to the @params
+    private def get_params
+      loop do
+        params_data_pair = @input.gets.as(String)
+        logger.debug "<<< received params property: #{params_data_pair}"
+
+        # agi_request: /var/lib/asterisk/agi-bin/basic
+        break if params_data_pair.empty?
+
+        name, value = params_data_pair.as(String).split(": ")
+        @params[name] = value
+      end
+      params
     end
 
-    def get_params
-      loop do
-        pair = @input.gets
-        logger.debug "params line: #{pair}."
-
-        #  agi_request: /var/lib/asterisk/agi-bin/basic
-        break if pair == ""
-
-        param_name, param_value = pair.as(String).split(": ")
-        @params[param_name] = param_value
-      end
+    # Exec AGI/FastAGI command
+    private def execute(command : String)
+      logger.debug ">>> executing AGI command: #{command}"
+      @output.print "#{command}\n"
+      read_response
     end
 
-    def command(cmd)
-      logger.debug "Executing command: #{cmd}."
-      @output.print "#{cmd}\n"
-      # @output << "\n"
-
-      # get response (could be multiline)
-      # normally it's format:
-      # 200 result=1
-      res = ""
+    private def read_response : Response
+      response = ""
       loop do
-        r = @input.gets.as(String).chomp
-        res += r
-        # break if r =~ /^\d+ /
-        break if r =~ /^(\d{3}) result=(0[\d*]+|-?[\d*#]+|\(timeout\))(?: (.+)|)/
+        response += @input.gets.as(String).chomp
+        logger.error "response: #{response}"
+        break if response =~ /^\d{3}/
       end
-
-      # So asterisk responses have a format. The format is:
-      #   <error_code><space>result=<result_data><space>[additional_data]
-      # ^(\d{3}) result=(0[\d*]+|-?[\d*#]+|\(timeout\))(?: (.+)|)
-      # $1 code #2 result_data $3 additional_data
-      logger.debug "res: #{res}."
-
-      res
+      match = response.match(/^(\d{3}) result=(0[\d*]+|-?[\d*#]+|\(timeout\))(?: (.+)|)/).not_nil!
+      @response = Response.new response: match[0], # original asterisk response
+        return_code: match[1],                     # 200 is expected
+        result: match[2],
+        additional_data: match[3]?.to_s
+      logger.debug "<<< received AGI response #{response.inspect}"
+      @response
     end
   end
 end

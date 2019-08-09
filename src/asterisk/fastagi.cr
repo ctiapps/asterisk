@@ -3,33 +3,26 @@ require "./agi"
 
 module Asterisk
   class FastAGI < AGI
-    @server = TCPServer.new
+    @fastagi = TCPServer.new
     @running = false
-    getter logger : Logger = Asterisk.logger
-
-    class LoginError < Exception
-    end
-
-    class ConnectionError < Exception
-    end
 
     def initialize(@host = "127.0.0.1", @port : String | Int32 = 4573, @logger : Logger = Asterisk.logger)
     end
 
     # on_close callback
-    def on_close(&@on_close : AMI ->)
+    def on_close(&@on_close : AGI ->)
     end
 
     def start(&@block : AGI ->)
-      @server = TCPServer.new(@host, @port.to_i)
+      @fastagi = TCPServer.new(@host, @port.to_i)
       @running = true
-      logger.info "#{self.class} FastAGI service listen on #{@host}:#{@port}"
+      logger.info "#{self.class}: service listen on #{@host}:#{@port}"
       spawn do
         loop do
-          logger.info "Spawning another process"
-          process(@server.accept)
+          logger.info "#{self.class}: spawning another process"
+          process(@fastagi.accept)
         rescue IO::Error
-          puts "error @running: #{@running.to_s}"
+          close
           break
         end
       end
@@ -37,21 +30,30 @@ module Asterisk
 
     def close
       @running = false
-      @server.close
-      logger.info "server closed"
+      unless @fastagi.closed?
+        @fastagi.close
+        logger.info "#{self.class}: server closed"
+      end
     end
 
     def process(client : TCPSocket)
       spawn do
         client_addr = client.remote_address
-        logger.info "#{client_addr} connected"
+        logger.info "#{self.class}: #{client_addr} connected"
         @block.try &.call(AGI.new(client, client))
         client.close
       rescue IO::EOFError
-        logger.info "#{client_addr} disconnected"
+        logger.info "#{self.class}: #{client_addr} disconnected"
       ensure
       end
     end
 
+    def running?
+      @running
+    end
+
+    def closed?
+      !running? && @fastagi.closed?
+    end
   end
 end

@@ -16,6 +16,7 @@ Spec.override_default_formatter(Spec::VerboseFormatter.new)
 def logger
   Asterisk.logger
 end
+
 logger.level = LOG_LEVEL
 
 module TestHelpers
@@ -41,7 +42,7 @@ module TestHelpers
       sleep 3.seconds
     end
 
-    agi = Asterisk::FastAGI.new host: "127.0.0.1", port: 9000
+    agi = Asterisk::FastAGI.new # host: "127.0.0.1", port: 4573
     yield agi
     agi.close
   end

@@ -45,7 +45,7 @@ module Asterisk
       # if Receiver instance is open, AMI runner might send response or event to
       # the response_channel
       def waiting?
-        ! closed?
+        !closed?
       end
 
       # close response_channel after given timeout

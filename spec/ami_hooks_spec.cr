@@ -30,6 +30,5 @@ describe Asterisk::AMI do
         end
       end
     end
-
   end
 end

@@ -148,6 +148,5 @@ describe Asterisk::AMI do
         last_reload.should be_a(String)
       end
     end
-
   end
 end
