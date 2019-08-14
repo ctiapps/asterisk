@@ -211,7 +211,7 @@ module Asterisk
         # "CoreShowChannels: List currently active channels.  (Priv: system,reporting,all)" =>
         # ["CoreShowChannels", "List currently active channels.  (Priv: system,reporting,all)"]
 
-        # Logic for
+        # Logic for, after the actionid it follow up with resulting data
         # ```{"action" => "Command", "command" => "..."}```
         if cli_command && previous_key == "actionid"
           result["output"] = line.gsub(/--END COMMAND--$/, "").chomp.split("\n")
@@ -251,6 +251,11 @@ module Asterisk
             result[key] = line
           end
         end
+      end
+
+      # Make "output" equal for asterisk 13 and 16
+      if result.has_key?("output") && result["output"].is_a?(String)
+        result["output"] = [result["output"].as(String)]
       end
 
       if result.has_key?("event")
