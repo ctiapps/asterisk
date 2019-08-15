@@ -14,7 +14,7 @@ describe Asterisk::AMI do
     it "should respond with 'Pong' to action 'ping'" do
       with_ami do |ami|
         10.times do |i|
-          actionid = Random::Secure.hex(8)
+          actionid = UUID.random.to_s
           response = ami.send_action({"action" => "Ping", "actionid" => actionid})
           response.success?.should be_true
           response.actionid.should eq(actionid)
@@ -26,15 +26,15 @@ describe Asterisk::AMI do
     it "should successfully set and read asterisk dialplan global variable" do
       with_ami do |ami|
         # set
-        actionid = Random::Secure.hex(8)
-        foobar_value = Random::Secure.hex(8)
+        actionid = UUID.random.to_s
+        foobar_value = UUID.random.to_s
         response = ami.send_action({"action" => "Setvar", "Variable" => "foobar", "Value" => foobar_value, "actionid" => actionid})
         response.success?.should be_true
         response.actionid.should eq(actionid)
         response["message"].should match /Variable Set$/i
 
         # read
-        actionid = Random::Secure.hex(8)
+        actionid = UUID.random.to_s
         response = ami.send_action({"action" => "Getvar", "Variable" => "foobar", "actionid" => actionid})
         response.success?.should be_true
         response.actionid.should eq(actionid)
@@ -48,27 +48,33 @@ describe Asterisk::AMI do
   describe "#multiline_events" do
     it "should process action that contain multiple lines in response (ListCommands)" do
       with_ami do |ami|
-        actionid = Random::Secure.hex(8)
+        actionid = UUID.random.to_s
         response = ami.send_action({"action" => "ListCommands", "actionid" => actionid})
         response.actionid.should eq(actionid)
         response["waitevent"]?.should be_truthy
       end
     end
 
-    it "should process complex action that include multiple events in response (Queues)" do
-      with_ami do |ami|
-        response = ami.send_action({"action" => "Queues"})
-        # D, [2019-07-21 05:12:41 +00:00 #7416] DEBUG -- : Received Asterisk manager event:
-        # D, [2019-07-21 05:12:41 +00:00 #7416] DEBUG -- : Processing line: No queues.
-        response["unknown"].should match /No queues/i
-      end
-    end
+    # it "should process complex action that include multiple events in response (Queues)" do
+    #   with_ami do |ami|
+    #     # Asterisk.logger.level = Logger::DEBUG
+    #     if ami.asterisk_version =~ /^13\./
+    #       response = ami.send_action({"action" => "Queues"})
+    #       pp response
+    #       # D, [2019-07-21 05:12:41 +00:00 #7416] DEBUG -- : Received Asterisk manager event:
+    #       # D, [2019-07-21 05:12:41 +00:00 #7416] DEBUG -- : Processing line: No queues.
+    #       response["unknown"].should match /No queues/i
+    #       sleep 5
+    #     else
+    #       puts "\n    (above test works only with Asterisk 13.x!)"
+    #     end
+    #   end
+    # end
 
     it "should process complex action that include multiple events in response (SIPpeers)" do
       with_ami do |ami|
-        # # increase verbosity
         # Asterisk.logger.level = Logger::DEBUG
-        actionid = Random::Secure.hex(8)
+        actionid = UUID.random.to_s
         response = ami.send_action({"action" => "SIPpeers", "actionid" => actionid})
         # sleep 3.seconds
         logger.debug response
@@ -84,7 +90,7 @@ describe Asterisk::AMI do
 
     it "should process complex action that include multiple events in response (IAXpeers)" do
       with_ami do |ami|
-        actionid = Random::Secure.hex(8)
+        actionid = UUID.random.to_s
         response = ami.send_action({"action" => "IAXpeers", "actionid" => actionid})
         response.success?.should be_true
         response.actionid.should eq(actionid)
@@ -95,7 +101,7 @@ describe Asterisk::AMI do
 
     it "should successfully process asterisk command 'agi show commands'" do
       with_ami do |ami|
-        actionid = Random::Secure.hex(8)
+        actionid = UUID.random.to_s
         response = ami.send_action({"action" => "Command", "command" => "agi show commands", "actionid" => actionid})
         response.actionid.should eq(actionid)
         response.output.as(Array(String)).join("\n").should match /database del/im
@@ -104,7 +110,7 @@ describe Asterisk::AMI do
 
     it "should successfully process asterisk command 'core show uptime'" do
       with_ami do |ami|
-        actionid = Random::Secure.hex(8)
+        actionid = UUID.random.to_s
         response = ami.send_action({"action" => "Command", "command" => "core show uptime", "actionid" => actionid})
         # D, [2019-07-21 20:04:01 +00:00 #11966] DEBUG -- : format_event: processing line: Response: Follows
         # D, [2019-07-21 20:04:01 +00:00 #11966] DEBUG -- : format_event: processing line: Privilege: Command
@@ -124,7 +130,7 @@ describe Asterisk::AMI do
 
     it "should successfully process asterisk command 'sip show peers'" do
       with_ami do |ami|
-        actionid = Random::Secure.hex(8)
+        actionid = UUID.random.to_s
         response = ami.send_action({"action" => "Command", "command" => "sip show peers", "actionid" => actionid})
         response.actionid.should eq(actionid)
         response.output.as(Array(String)).join("\n").should match /test-account-905/im
