@@ -80,9 +80,9 @@ module Asterisk
         end
         # last thing, get asterisk version
         version_information = command("core show version")
-        /Asterisk (\d{1,2}.\d{1,2}.\d{1,2}).+on a (\S+)/ =~ version_information
-        @asterisk_version = $1
-        @asterisk_platform = $2
+        version_information =~ /Asterisk(?:\s+certified\/|\s+)(\S+)\s+.+on a\s+(\S+)/
+        @asterisk_version = $1 rescue nil
+        @asterisk_platform = $2 rescue nil
         logger.debug "#{self.class}.login: Logged in"
       else
         raise LoginError.new(response.message)
@@ -111,61 +111,58 @@ module Asterisk
       end
     end
 
-    def send_action(action : AMIData, expects_answer_before : Float64? = 0.3)
-      if expects_answer_before.nil?
-        # spawn?
-        conn_send(action)
-        Response.new({"response" => "Sent",
-                      "actionid" => action["actionid"]?.to_s,
-                      "message"  => %(Action #{action["action"]} enqueued asynchronously)})
+    # send action asynchronously
+    def send_action!(action : AMIData)
+      conn_send(action)
+    end
+
+    def send_action(action : AMIData, expects_answer_before : Float64 = 0.3)
+      actionid = action["actionid"] ||= %(#{action["action"]}-#{UUID.random.to_s})
+      # conneciton listener will push responses to this container
+      responses = [] of Response
+      @responses[actionid] = responses
+      conn_send(action)
+
+      waited = 0
+      multiple_responses = false
+      loop do
+        sleep WAIT_FOR_ANSWER
+        waited += WAIT_FOR_ANSWER
+        # got response(s)?
+        first = responses.first?
+        last = responses.last?
+
+        # expecting to receive more data
+        if first && first["eventlist"]?.to_s =~ /start/i
+          multiple_responses = true
+        end
+
+        # that were last record
+        if multiple_responses && last && last["eventlist"]?.to_s =~ /Complete/i
+          break
+        end
+
+        # got one record and it is not eventlist-like response
+        # in this case result is a single response
+        break if first && ! multiple_responses
+
+        # timeout
+        if waited >= expects_answer_before
+          responses.push Response.new({"response" => "Timeout", "actionid" => actionid})
+          break
+        end
+      end
+
+      # remove mapping actionid => responses
+      @responses.delete(actionid)
+
+      if multiple_responses
+        response = responses.shift
+        response.events = [] of AMIData
+        responses.each {|r| response.events.as(Array(AMIData)).push r.data }
+        response
       else
-        actionid = action["actionid"] ||= %(#{action["action"]}-#{UUID.random.to_s})
-        # conneciton listener will push responses to this container
-        responses = [] of Response
-        @responses[actionid] = responses
-        conn_send(action)
-
-        waited = 0
-        multiple_responses = false
-        loop do
-          sleep WAIT_FOR_ANSWER
-          waited += WAIT_FOR_ANSWER
-          # got response(s)?
-          first = responses.first?
-          last = responses.last?
-
-          # expecting to receive more data
-          if first && first["eventlist"]?.to_s =~ /start/
-            multiple_responses = true
-          end
-
-          # that were last record
-          if multiple_responses && last && last["eventlist"]?.to_s =~ /Complete/i
-            break
-          end
-
-          # got one record and it is not eventlist-like response
-          # in this case result is a single response
-          break if first && ! multiple_responses
-
-          # timeout
-          if waited >= expects_answer_before
-            responses.push Response.new({"response" => "Timeout", "actionid" => actionid})
-            break
-          end
-        end
-
-        # remove mapping actionid => responses
-        @responses.delete(actionid)
-
-        if multiple_responses
-          response = responses.shift
-          response.events = [] of AMIData
-          responses.each {|r| response.events.as(Array(AMIData)).push r.data }
-          response
-        else
-          responses.first
-        end
+        responses.first
       end
     end
 
@@ -174,8 +171,8 @@ module Asterisk
     # through AMI TCPSocket connection
     private def conn_send(action : AMIData)
       synchronize do
-        # Asterisk AMI action is a multi-line string delimited by "\r\n" following
-        # with one empty strring
+        # Asterisk AMI action is a multi-line string delimited by "\r\n",
+        # following by empty string ("\r\n\r\n" is a termination characters)
         action_s = ""
         action.each do |k, v|
           action_s += "#{k}: #{v}\r\n"
@@ -188,7 +185,9 @@ module Asterisk
     end
 
     private def synchronize
-      @conn_lock.synchronize { yield }
+      @conn_lock.synchronize do
+        yield
+      end
     end
 
     private def run
