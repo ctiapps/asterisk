@@ -2,12 +2,21 @@ version: '3.7'
 
 services:
   asterisk.cr:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile-16
     # ports:
     #   - 0.0.0.0:18080:8080
     # depends_on:
     #   - redis
     #   - asterisk
+    volumes:
+      - .:/src
+
+  "13":
+    build:
+      context: .
+      dockerfile: Dockerfile-13
     volumes:
       - .:/src
 
