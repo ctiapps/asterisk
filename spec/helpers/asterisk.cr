@@ -28,7 +28,7 @@ module Asterisk
 
     def self.running? : Bool
       result = shell_command(%(asterisk -rx "core show uptime"))
-      ! result.empty? && (result =~ /Unable to connect/i).nil?
+      !result.empty? && (result =~ /Unable to connect/i).nil?
     end
 
     def self.version : String
@@ -41,7 +41,7 @@ module Asterisk
     end
 
     def self.port_closed?(port : Int64 | String = "5038", host = "127.0.0.1") : Bool
-      ! port_open?(port, host)
+      !port_open?(port, host)
     end
 
     def self.shell_command(command)
@@ -49,6 +49,10 @@ module Asterisk
       Process.run(command, shell: true, output: io)
       io.close
       io.to_s.chomp.strip
+    end
+
+    def self.exec(command)
+      result = shell_command(%(asterisk -rx "#{command}"))
     end
   end
 end

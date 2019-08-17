@@ -74,7 +74,6 @@ describe Asterisk::AMI do
 
             # short random pause after loop to randomize fibers data
             sleep rand(0.05)
-
           rescue ex
             puts %(\n\nAMI loadtest spec: #{ex.class}:#{ex.message}\n#{ex.backtrace.pretty_inspect}\n\nLatest response: #{response.inspect rescue "-- n/a ---"}\n\n)
             break
