@@ -1,4 +1,5 @@
 require "spec"
+require "uuid"
 require "./helpers/*"
 require "../src/asterisk"
 

@@ -30,6 +30,9 @@ module Asterisk
       def_property value, String
       def_property output, Array(String)
 
+      # Response including nested events (i.e. action SIPpeers)
+      property events : Array(AMIData)? = nil
+
       def success? : Bool
         response?.to_s == "Success"
       end
