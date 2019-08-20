@@ -11,6 +11,12 @@ context asterisk.cr {
     AGI(agi:async);
   };
 
+  ari => {
+		NoOp(DNID: ${CALLERID(dnid)});
+    Stasis(asterisk.cr);
+		NoOp(Stasis status ${STASISSTATUS});
+  };
+
   // various test cases
 
   // answer call, then hangup
