@@ -39,9 +39,9 @@ module Asterisk
         #  "mailboxes",
         #  "events",
         #  "applications"]
+        #
         # TEST with only one resource
-        resources.delete "asterisk"
-        # resources = %w{events}
+        # resources = %w{asterisk}
         # resources = %w{channels}
 
         resources.each do |resource_name|

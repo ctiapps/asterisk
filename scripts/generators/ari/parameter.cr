@@ -46,24 +46,34 @@ module Asterisk
         end
 
         private def classify(datatype)
-          datatype.gsub("-- none --",          "-- none --").
-                   gsub("Application",         "Applications::Application").
-                   gsub("Bridge",              "Bridges::Bridge").
-                   gsub("Channel",             "Channels::Channel").
-                   gsub("CallerID",            "Channels::CallerID").
-                   gsub("Dialed",              "Channels::Dialed").
-                   gsub("DialplanCEP",         "Channels::DialplanCEP").
-                   gsub("RTPStat",             "Channels::RTPStat").
-                   gsub("DeviceState",         "DeviceStates::DeviceState").
-                   gsub("Endpoint",            "Endpoints::Endpoint").
-                   gsub("TextMessage",         "Endpoints::TextMessage").
-                   gsub("Mailbox",             "Mailboxes::Mailbox").
-                   gsub("Playback",            "Playbacks::Playback").
-                   gsub("LiveRecording",       "Recordings::LiveRecording").
-                   gsub("StoredRecording",     "Recordings::StoredRecording").
-                   gsub("FormatLangPair",      "Sounds::FormatLangPair").
-                   gsub("Sound",               "Sounds::Sound").
-                   gsub("Sounds::Sounds",      "Sounds")
+          datatype.gsub("-- none --",      "-- none --").
+                   gsub(/(?<!\w)(?<!\b::)AsteriskInfo(?!\w+)/,        "Asterisk::AsteriskInfo").
+                   gsub(/(?<!\w)(?<!\b::)AsteriskPing(?!\w+)/,        "Asterisk::AsteriskPing").
+                   gsub(/(?<!\w)(?<!\b::)BuildInfo(?!\w+)/,           "Asterisk::BuildInfo").
+                   gsub(/(?<!\w)(?<!\b::)ConfigInfo(?!\w+)/,          "Asterisk::ConfigInfo").
+                   gsub(/(?<!\w)(?<!\b::)ConfigTuple(?!\w+)/,         "Asterisk::ConfigTuple").
+                   gsub(/(?<!\w)(?<!\b::)LogChannel(?!\w+)/,          "Asterisk::LogChannel").
+                   gsub(/(?<!\w)(?<!\b::)Module(?!\w+)/,              "Asterisk::Module").
+                   gsub(/(?<!\w)(?<!\b::)SetId(?!\w+)/,               "Asterisk::SetId").
+                   gsub(/(?<!\w)(?<!\b::)SystemInfo(?!\w+)/,          "Asterisk::SystemInfo").
+                   gsub(/(?<!\w)(?<!\b::)Variable(?!\w+)/,            "Asterisk::Variable").
+                   gsub(/(?<!\w)(?<!\b::)Application(?!\w+)/,         "Applications::Application").
+                   gsub(/(?<!\w)(?<!\b::)Bridge(?!\w+)/,              "Bridges::Bridge").
+                   gsub(/(?<!\w)(?<!\b::)Channel(?!\w+)/,             "Channels::Channel").
+                   gsub(/(?<!\w)(?<!\b::)CallerID(?!\w+)/,            "Channels::CallerID").
+                   gsub(/(?<!\w)(?<!\b::)Dialed(?!\w+)/,              "Channels::Dialed").
+                   gsub(/(?<!\w)(?<!\b::)DialplanCEP(?!\w+)/,         "Channels::DialplanCEP").
+                   gsub(/(?<!\w)(?<!\b::)RTPStat(?!\w+)/,             "Channels::RTPStat").
+                   gsub(/(?<!\w)(?<!\b::)DeviceState(?!\w+)/,         "DeviceStates::DeviceState").
+                   gsub(/(?<!\w)(?<!\b::)Endpoint(?!\w+)/,            "Endpoints::Endpoint").
+                   gsub(/(?<!\w)(?<!\b::)TextMessageVariable(?!\w+)/, "Endpoints::TextMessageVariable").
+                   gsub(/(?<!\w)(?<!\b::)TextMessage(?!\w+)/,         "Endpoints::TextMessage").
+                   gsub(/(?<!\w)(?<!\b::)Mailbox(?!\w+)/,             "Mailboxes::Mailbox").
+                   gsub(/(?<!\w)(?<!\b::)Playback(?!\w+)/,            "Playbacks::Playback").
+                   gsub(/(?<!\w)(?<!\b::)LiveRecording(?!\w+)/,       "Recordings::LiveRecording").
+                   gsub(/(?<!\w)(?<!\b::)StoredRecording(?!\w+)/,     "Recordings::StoredRecording").
+                   gsub(/(?<!\w)(?<!\b::)FormatLangPair(?!\w+)/,      "Sounds::FormatLangPair").
+                   gsub(/(?<!\w)(?<!\b::)Sound(?!\w+)/,               "Sounds::Sound")
         end
 
         private def set_datatype()
