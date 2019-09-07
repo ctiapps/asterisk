@@ -17,6 +17,9 @@ module Asterisk
       struct Dialed
         include JSON::Serializable
 
+        @[JSON::Field(ignore: true)]
+        property client : ARI? = nil
+
       end
     end
   end

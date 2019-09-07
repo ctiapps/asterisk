@@ -3,6 +3,7 @@ require "./*"
 
 module Asterisk
   class AGI
+    include Commands
     # AGI response
     struct Response
       property response : String

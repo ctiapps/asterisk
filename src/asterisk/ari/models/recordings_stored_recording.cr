@@ -17,6 +17,9 @@ module Asterisk
       struct StoredRecording
         include JSON::Serializable
 
+        @[JSON::Field(ignore: true)]
+        property client : ARI? = nil
+
         property name : String
 
         property format : String

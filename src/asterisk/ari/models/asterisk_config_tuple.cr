@@ -17,6 +17,9 @@ module Asterisk
       struct ConfigTuple
         include JSON::Serializable
 
+        @[JSON::Field(ignore: true)]
+        property client : ARI? = nil
+
         # A configuration object attribute.
         property attribute : String
 

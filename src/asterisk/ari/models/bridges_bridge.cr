@@ -19,6 +19,9 @@ module Asterisk
       struct Bridge
         include JSON::Serializable
 
+        @[JSON::Field(ignore: true)]
+        property client : ARI? = nil
+
         # Unique identifier for this bridge
         property id : String
 

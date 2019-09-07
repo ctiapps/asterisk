@@ -1,7 +1,7 @@
 require "spec"
 require "uuid"
 require "./helpers/*"
-require "../src/asterisk"
+require "../src/asterisk/*"
 
 STDOUT.sync = true
 Spec.override_default_formatter(Spec::VerboseFormatter.new)

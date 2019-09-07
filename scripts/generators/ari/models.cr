@@ -5,7 +5,7 @@ module Asterisk
         getter api_data : JSON::Any
         getter! models : JSON::Any?
 
-        def filename(resource_name, model_name)
+        private def filename(resource_name, model_name)
           base_url = "%{root_dir}/src/asterisk/ari/models/%{resource_name}_%{model_name}.cr"
           base_url % {
             root_dir:      Asterisk::Generator.current_dir,
@@ -45,6 +45,10 @@ module Asterisk
                           #{klass_description ? "#{klass_description}" : ""}
                           struct #{klass}
                             include JSON::Serializable
+
+                            @[JSON::Field(ignore: true)]
+                            property client : ARI? = nil
+
                             #{parameters.struct_properties.chomp.gsub(/ +$/, "").chomp}
                           end
                         end
@@ -52,7 +56,7 @@ module Asterisk
                     end
                     END
 
-            model = model.gsub(/ +$/m, "")
+            model = model.gsub(/ +$/m, "").gsub("\n\n\n", "\n\n").strip.chomp
             file = File.open(filename(resource, klass), "w")
             file.puts model
             file.close

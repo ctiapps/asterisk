@@ -17,6 +17,9 @@ module Asterisk
       struct Playback
         include JSON::Serializable
 
+        @[JSON::Field(ignore: true)]
+        property client : ARI? = nil
+
         # ID for this playback operation
         property id : String
 

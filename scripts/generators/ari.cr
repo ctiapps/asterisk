@@ -46,7 +46,6 @@ module Asterisk
 
         resources.each do |resource_name|
           url = base_url % {resource_name: resource_name}
-          puts ">> generating #{resource_name} from #{url.inspect}"
           url = URI.parse(url)
           if username && password
             url.user = username

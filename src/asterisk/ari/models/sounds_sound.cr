@@ -17,6 +17,9 @@ module Asterisk
       struct Sound
         include JSON::Serializable
 
+        @[JSON::Field(ignore: true)]
+        property client : ARI? = nil
+
         # Sound's identifier.
         property id : String
 

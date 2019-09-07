@@ -10,6 +10,10 @@ module Asterisk
         getter parameters_json : JSON::Any
         getter model_type      : ModelType
         getter parameters      = {} of String => Parameter
+        # indicate types of parameters to build HTTP request
+        getter path_type       = [] of Parameter
+        getter query_type      = [] of Parameter
+        getter body_type       = [] of Parameter
 
         # returns a string with method arguments from parameters "def(arguments)"
         def arguments
@@ -22,6 +26,28 @@ module Asterisk
             end
           end
           result.gsub(/, $/, "")
+        end
+
+        def arguments_spec
+          if parameters_json.as_a?
+            spec = "\nArguments:\n"
+            parameters_json.as_a.sort_by! do |parameter|
+              name = parameter.as_h["name"].as_s.underscore
+              parameter = parameters[name]
+              description = parameter.description[0].downcase + parameter.description[1..2000] + "."
+              description = description.gsub(/\.\.$/, ".")
+              spec += %(- `#{name}` - #{description}\n)
+              spec += %(  - Required: #{parameter.required?.to_s},\n)
+              spec += %(  - Allow multiple (comma-separated list): #{parameter.allow_multiple?.to_s},\n)
+              spec += %(  ARI (http-client) related:\n)
+              spec += %(  - http request type: #{parameter.param_type},\n)
+              spec += %(  - param name: #{parameter.name_ari},\n)
+              spec += "\n"
+            end
+            "\n" + spec.chomp.gsub(/^/m, "      # ")
+          else
+            ""
+          end
         end
 
         def struct_properties
@@ -74,14 +100,27 @@ module Asterisk
           end
 
           if parameters_json.as_a?
-                     # sort - required first
-            # parameters_ary = parameters_json.as_a.sort_by do |parameter|
-            #   (parameter.as_h["required"]?.try &.as_bool || false) ? 1 : 2
-            # end
-            # parameters_ary.each do |parameter|
-            parameters_json.as_a.each do |parameter|
+            # sort - required first
+            parameters_ary = parameters_json.as_a.sort_by! do |parameter|
+              if parameter.as_h["paramType"]?.try &.as_s.== "path"
+                0
+              elsif parameter.as_h["required"]?.try &.as_bool
+                1
+              else
+                2
+              end
+            end
+            parameters_ary.each do |parameter|
               name = parameter.as_h["name"].as_s.underscore
-              @parameters[name] = Parameter.new(name, parameter)
+              parameter = @parameters[name] = Parameter.new(name, parameter)
+              case parameter.param_type
+              when "path"
+                @path_type.push parameter
+              when "query"
+                @query_type.push parameter
+              when "body"
+                @body_type.push parameter
+              end
             end
           else
             # parameters_ary = [] of JSON::Any

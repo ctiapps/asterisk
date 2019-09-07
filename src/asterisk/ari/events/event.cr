@@ -11,7 +11,6 @@
 #------------------------------------------------------------------------------
 require "./message.cr"
 
-
 module Asterisk
   class ARI
     class Events < Resource

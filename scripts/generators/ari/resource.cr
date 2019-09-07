@@ -3,12 +3,19 @@ module Asterisk
     class ARI
       class Resource
         getter api_data : JSON::Any
-        getter header   : String
-        getter footer   : String = "      end\n  end\nend"
+        @description : String? = ""
+
+        def filename(resource_name)
+          base_url = "%{root_dir}/src/asterisk/ari/resources/%{resource_name}.cr"
+          base_url % {
+            root_dir:      Asterisk::Generator.current_dir,
+            resource_name: resource_name.underscore
+          }
+        end
 
         def initialize(@api_data : JSON::Any)
-          klass = api_data["apis"].as_a.first["path"].to_s.split("/").last.camelcase
-          @header = <<-END
+          resource = api_data["resourcePath"].to_s.split("/").last.split(".").first.camelcase
+          model = <<-END
                   #------------------------------------------------------------------------------
                   #
                   #  WARNING !
@@ -23,52 +30,142 @@ module Asterisk
 
                   module Asterisk
                     class ARI
-                      class #{klass} < Resource
+                      class #{resource} < Resource
+                  #{operations}
+                      end
+                    end
+                  end
                   END
-          puts header
-          generate_methods
-          puts footer
+
+          model = model.gsub(/ +$/m, "").gsub("\n\n\n", "\n\n").strip.chomp
+          file = File.open(filename(resource), "w")
+          file.puts model
+          file.close
         end
 
-        def generate_methods
-          #   [{"path" => "/channels",
-          # path" => "/channels/{channelId}/answer",
-          api_data["apis"].as_a.each do |methods|
-            # next unless methods["path"].to_s =~ /answer$/i
-            # pp methods if methods["path"].to_s =~ /answer$/i
-            description = methods["description"]?
-            methods["operations"].as_a.each do |method|
-              summary = method["summary"]? || description
+        def operation(endpoint, operation)
+          summary = operation["summary"]? || @description
 
-              http_method = method["httpMethod"].to_s.downcase
+          http_operation = operation["httpMethod"].to_s.downcase
 
-              response_class = if method["responseClass"].to_s =~ /^List\[(\w+)\]$/
-                "Array(#{$1})"
-              else
-                method["responseClass"].to_s
-              end
-
-              arguments = if method["parameters"]?
-                p = Parameters.new method["parameters"]
-                p.arguments
-              else
-                ""
-              end
-
-              name = method["nickname"].to_s.underscore
-              name = %(#{methods["path"].to_s =~ /\/\S+\/{(\S+)}\/\S+/ ? "" : "self."}#{name}#{arguments.empty? ? "" : "(#{arguments})"}#{response_class =~ /void/i ? "" : " : #{response_class}"})
-              puts <<-END
-                          # #{summary}
-                          #
-                          # ARI #{http_method} resource: #{methods["path"]}
-                          def #{name}
-                            # some-logic
-                          end
-
-
-                  END
+          # convert ARI JSON path to the HTTP URL:
+          # "/channels/{channelId}/snoop/{snoopId}" =>
+          # "/channels/{channel_id}/snoop/{snoop_id}"
+          url = Array(String).new
+          endpoint.split("/").each do |slice|
+            if slice =~ /\{(.+)\}/
+              slice = "\#{" + $1.underscore + "}"
             end
+            url.push(slice)
           end
+          url = url.join("/")
+
+          response = Datatype.new(operation["responseClass"].to_s).set!
+
+          if operation["parameters"]?
+            parameters = Parameters.new operation["parameters"]
+            if parameters.body_type.size > 1
+              raise "body_type > 1"
+            end
+            arguments = parameters.arguments
+            arguments_spec = parameters.arguments_spec
+            arguments_spec += %(      #   - endpoint (#{http_operation}): #{endpoint})
+          else
+            parameters = nil
+            arguments = ""
+            arguments_spec = nil
+          end
+
+          error_responses = operation["errorResponses"]?.try &.as_a.map { |error|
+            { error.as_h["code"].to_s => error.as_h["reason"].to_s }
+          }.reduce({} of String => String) { |memo, item| memo.merge(item) }
+          error_responses = {} of String => String if error_responses.nil?
+
+          errors = if error_responses.empty?
+            nil
+          else
+            errors_ = error_responses.map { |code, reason|
+              "- #{code} - #{reason}"
+            }.join("\n")
+            errors_ = "\n" + "\nError responses:\n#{errors_}".gsub(/^/m, "      # ")
+          end
+
+          name = operation["nickname"].to_s.underscore
+
+          # name = %(#{endpoint =~ /\/\S+\/{(\S+)}\/\S+/ ? "" : "self."}#{name}#{arguments.empty? ? "" : "(#{arguments})"}#{response == "Nil" ? "" : " : #{response}"})
+          name = %(self.#{name}#{arguments.empty? ? "" : "(#{arguments})"}#{response == "Nil" ? "" : " : #{response}"})
+          <<-END
+                # #{summary}#{arguments_spec}#{errors}
+                def #{name}
+                  #{
+                    # HTTP::Params.encode({"author" => "John Doe", "offset" => "20"})
+                    if (parameters.try &.query_type.size || 0) >= 1
+                      # to avoid casting
+                      query_params = (parameters.try &.query_type).as(Array(Parameter))
+
+                      # split query_params by required value
+                      required_params = Array(Parameter).new
+                      optional_params = Array(Parameter).new
+                      query_params.each do |parameter|
+                        if parameter.required?
+                          required_params.push parameter
+                        else
+                          optional_params.push parameter
+                        end
+                      end
+
+                      # lines of code for resulting method
+                      code = Array(String).new
+
+                      # # comments, remove for production-ready generator
+                      # code.push query_params.pretty_inspect.gsub(/^/m, "# "); code.push "#"
+
+                      # # encode query parameters like:
+                      # code.push "params = HTTP::Params.encode({\"author\" => \"John Doe\", \"offset\" => \"20\"})"
+                      params_already_defined = false
+                      if required_params.size >= 1
+                        params_already_defined = true
+                        params = "params = HTTP::Params.encode({"
+                        params += required_params.map { |parameter|
+                          %("#{parameter.name_ari}" => #{parameter.name})
+                        }.join(", ")
+                        params += "})"
+                        code.push params
+                        # empty space
+                        code.push "" if optional_params.size >= 1
+                      end
+
+                      if optional_params.size >= 1
+                        code.push "# Optional parameters"
+                        code.push "params = HTTP::Params.encode({} of String => String)" unless params_already_defined
+                        optional_params.map do |parameter|
+                          code.push %(params += "&" + HTTP::Params.encode({"#{parameter.name_ari}" => #{parameter.name}}) if #{parameter.name})
+                        end
+                        # empty space
+                        code.push ""
+                      end
+
+                      body_params = parameters.try &.body_type.as(Array(Parameter)) || Array(Parameter).new
+                      code.push %(#{error_responses.empty? ? "" : "response = "}client.#{http_operation} "#{url}?" + params#{if body = body_params.first?; ",\n  body: #{body.name}.to_json"; end})
+                      code.join("\n").strip.gsub(/\n^/m, "\n        ")
+
+                    else
+                      body_params = parameters.try &.body_type.as(Array(Parameter)) || Array(Parameter).new
+                      %(#{error_responses.empty? ? "" : "response = "}client.#{http_operation} "#{url}"#{if body = body_params.first?; ",\n  body: #{body.name}.to_json"; end})
+                    end
+                  }
+                end
+          END
+        end
+
+        def operations
+          api_data["apis"].as_a.map { |operations|
+            @description = operations["description"]?.try &.to_s
+            operations["operations"].as_a.map { |operation|
+              endpoint = operations["path"].to_s
+              operation(endpoint, operation)
+            }.join("\n\n")
+          }.join("\n\n")
         end
 
       end

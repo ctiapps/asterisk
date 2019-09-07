@@ -12,9 +12,7 @@ context asterisk.cr {
   };
 
   ari => {
-		NoOp(DNID: ${CALLERID(dnid)});
-    Stasis(asterisk.cr);
-		NoOp(Stasis status ${STASISSTATUS});
+    goto ari,s,1;
   };
 
   // various test cases
@@ -25,6 +23,18 @@ context asterisk.cr {
     Wait(8);
     Hangup;
   };
-
 };
 
+context ari {
+  s => {
+    Stasis(asterisk.cr);
+    NoOp(Stasis status ${STASISSTATUS});
+  };
+
+  callerid => {
+    NoOp(DNID: ${CALLERID(DNID)});
+    Set(CALLERID(name)=Test User);
+    Set(CALLERID(num)=12345);
+    Stasis(asterisk.cr);
+  };
+};

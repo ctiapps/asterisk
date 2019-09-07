@@ -17,6 +17,9 @@ module Asterisk
       struct StatusInfo
         include JSON::Serializable
 
+        @[JSON::Field(ignore: true)]
+        property client : ARI? = nil
+
         # Time when Asterisk was started.
         property startup_time : Time
 

@@ -10,15 +10,16 @@ require "./ari/resources/*"
 require "./ari/models/*"
 require "./ari/events/*"
 
-
 module Asterisk
   class ARI
-    property logger : Logger = Asterisk.logger
+    include Callbacks
+
+    property logger : Logger = ::Asterisk.logger
 
     # ARI app-name
     getter app : String
 
-    # theres will be set by `connect`
+    # will be set by `connect`
     getter asterisk_version : String?
     getter entity_id        : String?
 
@@ -54,34 +55,43 @@ module Asterisk
       @uri = URI.parse(@url)
     end
 
+    # def self.new!(url = "http://127.0.0.1:8088/ari", app = "asterisk.cr", username = "", password = "")
+    #   ARI.ari = ARI.new url, app, username, password
+    # end
+    #
+    # @@ari = ARI.new
+    #
+    # def self.ari=(instance)
+    #   @@ari = instance
+    # end
+    #
+    # def self.ari
+    #   @@ari.not_nil!
+    # end
+
     def start
       connect
 
       ws.on_close do
-        puts "#{self.class}.on_close"
         client.close
       end
 
       ws.on_message do |message|
         # @channel_message.send message
-        puts; puts; puts
-        puts message
-        puts; puts; puts
         event = JSON.parse(message)["type"].to_s
         # TODO: undefined event
         klass = events[event]
         event_data = klass.from_json(message)
-        puts %(#{self.class}.on_message #{event}: #{event_data.inspect})
 
         # Generate case ... when ... end for ARI events
         {% begin %}
           case event
-          {% for t in Asterisk::ARI::Events.constants %}
+          {% for t in Events.constants %}
             {% event_name = t.stringify %}
             {% unless %w(Message Event).includes?(event_name) %}
-              {% klass = ("Asterisk::ARI::Events::" + t.stringify).id %}
+              {% klass = ("Events::" + t.stringify).id %}
               when {{event_name}}
-                @on_{{event_name.underscore.id}}.try &.call(event_data.as({{klass}}))
+                @on_{{event_name.underscore.id}}.try &.call(self, event_data.as({{klass}}))
               {% end %}
           {% end %}
           else
@@ -99,27 +109,16 @@ module Asterisk
     def events
       {% begin %}
         {% events = {} of String => Class %}
-        {% Asterisk::ARI::Events.constants.map do |klass|
+        {% Events.constants.map do |klass|
           klass_name = klass.stringify
           unless %w(Message Event).includes?(klass_name)
-            events[klass_name] = ("Asterisk::ARI::Events::" + klass.stringify).id
+            events[klass_name] = ("Events::" + klass.stringify).id
           end
         end %}
         {{events}}
       {% end %}
     end
 
-    # Generate callbacks per each event, i.e.:
-    # ```
-    # def on_stasis_start(&@on_stasis_start : Asterisk::ARI::Events::StasisStart ->)
-    # end
-    # ```
-    {% for klass in Asterisk::ARI::Events.constants %}
-      {% event_name = klass.stringify.underscore.id %}
-      {% klass = ("Asterisk::ARI::Events::" + klass.stringify).id %}
-      def on_{{event_name}}(&@on_{{event_name}} : {{klass}} ->)
-      end
-    {% end %}
     private def connect
       raise ConnectionError.new("Already connected") if ws? && ! ws.closed?
 
@@ -151,7 +150,11 @@ module Asterisk
 
     def close
       client.close
-      ws.close unless ws.closed?
+      ws.close unless closed?
+    end
+
+    def closed?
+      ws.closed?
     end
   end
 end

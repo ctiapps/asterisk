@@ -19,6 +19,9 @@ module Asterisk
       struct Endpoint
         include JSON::Serializable
 
+        @[JSON::Field(ignore: true)]
+        property client : ARI? = nil
+
         # Technology of the endpoint
         property technology : String
 

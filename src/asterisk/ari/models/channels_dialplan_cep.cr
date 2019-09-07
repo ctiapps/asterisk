@@ -17,6 +17,9 @@ module Asterisk
       struct DialplanCEP
         include JSON::Serializable
 
+        @[JSON::Field(ignore: true)]
+        property client : ARI? = nil
+
         # Context in the dialplan
         property context : String
 

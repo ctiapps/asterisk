@@ -17,6 +17,9 @@ module Asterisk
       struct Channel
         include JSON::Serializable
 
+        @[JSON::Field(ignore: true)]
+        property client : ARI? = nil
+
         # Unique identifier of the channel.
         #
         # This is the same as the Uniqueid field in AMI.

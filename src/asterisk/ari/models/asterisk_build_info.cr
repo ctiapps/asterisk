@@ -17,6 +17,9 @@ module Asterisk
       struct BuildInfo
         include JSON::Serializable
 
+        @[JSON::Field(ignore: true)]
+        property client : ARI? = nil
+
         # OS Asterisk was built on.
         property os : String
 

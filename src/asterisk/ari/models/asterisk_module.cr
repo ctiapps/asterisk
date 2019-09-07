@@ -17,6 +17,9 @@ module Asterisk
       struct Module
         include JSON::Serializable
 
+        @[JSON::Field(ignore: true)]
+        property client : ARI? = nil
+
         # The name of this module
         property name : String
 
