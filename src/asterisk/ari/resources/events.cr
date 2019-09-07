@@ -12,7 +12,7 @@
 
 module Asterisk
   class ARI
-    class Events < Resource
+    class Events < Resources
       # WebSocket connection for events.
       #
       # Arguments:
@@ -29,14 +29,17 @@ module Asterisk
       #   ARI (http-client) related:
       #   - http request type: query,
       #   - param name: subscribeAll,
-      #   - endpoint (get): /events
+      #
+      # API endpoint:
+      # - method: get
+      # - endpoint: /events
       def event_websocket(app : String, subscribe_all : Bool? = nil) : Message
         params = HTTP::Params.encode({"app" => app})
 
         # Optional parameters
         params += "&" + HTTP::Params.encode({"subscribeAll" => subscribe_all}) if subscribe_all
 
-        client.get "/events?" + params
+        client.get "events?" + params
       end
 
       # Generate a user event.
@@ -69,7 +72,10 @@ module Asterisk
       #   ARI (http-client) related:
       #   - http request type: body,
       #   - param name: variables,
-      #   - endpoint (post): /events/user/{eventName}
+      #
+      # API endpoint:
+      # - method: post
+      # - endpoint: /events/user/{eventName}
       #
       # Error responses:
       # - 404 - Application does not exist.
@@ -81,7 +87,7 @@ module Asterisk
         # Optional parameters
         params += "&" + HTTP::Params.encode({"source" => source}) if source
 
-        response = client.post "/events/user/#{event_name}?" + params,
+        response = client.post "events/user/#{event_name}?" + params,
           body: variables.to_json
       end
     end

@@ -28,11 +28,11 @@ describe Asterisk::AGI do
           pp agi.get_full_variable "${CALLERID(num)}"
           agi.answer
           # agi.say_alpha "Ping", "1"
-          # started_at = Time.now
+          # started_at = Time.utc
           # agi.exec "Dial", destination: "Local/answer@asterisk.cr", timeout: 60, options: "tT"
           # logger.error "Waiting!"
           sleep 1
-          # agi.logger.error "ended in #{Time.now - started_at}"
+          # agi.logger.error "ended in #{Time.utc - started_at}"
           r = agi.hangup
           pp r
           sleep 1

@@ -13,7 +13,7 @@ require "./event.cr"
 
 module Asterisk
   class ARI
-    class Events < Resource
+    class Events < Resources
       # The state of a contact on an endpoint has changed.
       struct ContactStatusChange < Event
 

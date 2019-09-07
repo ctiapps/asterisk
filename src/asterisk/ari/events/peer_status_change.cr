@@ -13,7 +13,7 @@ require "./event.cr"
 
 module Asterisk
   class ARI
-    class Events < Resource
+    class Events < Resources
       # The state of a peer associated with an endpoint has changed.
       struct PeerStatusChange < Event
 

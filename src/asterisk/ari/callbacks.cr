@@ -13,7 +13,7 @@
 module Asterisk
   class ARI
     module Callbacks
-    def on_missing_params(&@on_missing_params : ARI, Events::MissingParams ->)
+      def on_missing_params(&@on_missing_params : ARI, Events::MissingParams ->)
       end
 
       def on_contact_info(&@on_contact_info : ARI, Events::ContactInfo ->)

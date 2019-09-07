@@ -12,7 +12,7 @@
 
 module Asterisk
   class ARI
-    class Sounds < Resource
+    class Sounds < Resources
       # Identifies the format and language of a sound file
       struct FormatLangPair
         include JSON::Serializable

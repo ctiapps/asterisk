@@ -12,7 +12,7 @@
 
 module Asterisk
   class ARI
-    class DeviceStates < Resource
+    class DeviceStates < Resources
       # Represents the state of a device.
       struct DeviceState
         include JSON::Serializable

@@ -13,7 +13,7 @@ require "./message.cr"
 
 module Asterisk
   class ARI
-    class Events < Resource
+    class Events < Resources
       # Error event sent when required params are missing.
       struct MissingParams < Message
 

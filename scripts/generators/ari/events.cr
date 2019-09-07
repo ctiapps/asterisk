@@ -82,7 +82,7 @@ module Asterisk
                     }
                     module Asterisk
                       class ARI
-                        class #{resource} < Resource
+                        class #{resource} < Resources
                           #{klass_description ? "#{klass_description}" : ""}
                           #{klass_definition}
                             #{parameters.struct_properties.chomp.gsub(/ +$/, "").chomp}
@@ -116,7 +116,7 @@ module Asterisk
           module Asterisk
             class ARI
               module Callbacks
-              #{callbacks}
+                #{callbacks}
               end
             end
           end

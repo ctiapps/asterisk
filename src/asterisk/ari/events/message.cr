@@ -12,7 +12,7 @@
 
 module Asterisk
   class ARI
-    class Events < Resource
+    class Events < Resources
       # Base type for errors and events
       abstract struct Message
         include JSON::Serializable

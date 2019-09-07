@@ -12,7 +12,7 @@
 
 module Asterisk
   class ARI
-    class Sounds < Resource
+    class Sounds < Resources
       # List all sounds.
       #
       # Arguments:
@@ -29,14 +29,17 @@ module Asterisk
       #   ARI (http-client) related:
       #   - http request type: query,
       #   - param name: format,
-      #   - endpoint (get): /sounds
+      #
+      # API endpoint:
+      # - method: get
+      # - endpoint: /sounds
       def list(lang : String? = nil, format : String? = nil) : Array(Sounds::Sound)
         # Optional parameters
         params = HTTP::Params.encode({} of String => String)
         params += "&" + HTTP::Params.encode({"lang" => lang}) if lang
         params += "&" + HTTP::Params.encode({"format" => format}) if format
 
-        client.get "/sounds?" + params
+        client.get "sounds?" + params
       end
 
       # Get a sound's details.
@@ -48,9 +51,12 @@ module Asterisk
       #   ARI (http-client) related:
       #   - http request type: path,
       #   - param name: soundId,
-      #   - endpoint (get): /sounds/{soundId}
+      #
+      # API endpoint:
+      # - method: get
+      # - endpoint: /sounds/{soundId}
       def get(sound_id : String) : Sounds::Sound
-        client.get "/sounds/#{sound_id}"
+        client.get "sounds/#{sound_id}"
       end
     end
   end

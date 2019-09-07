@@ -13,7 +13,7 @@ require "./event.cr"
 
 module Asterisk
   class ARI
-    class Events < Resource
+    class Events < Resources
       # Channel changed location in the dialplan.
       struct ChannelDialplan < Event
 

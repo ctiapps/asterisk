@@ -12,10 +12,10 @@
 
 module Asterisk
   class ARI
-    class Applications < Resource
+    class Applications < Resources
       # List all applications.
       def list : Array(Applications::Application)
-        client.get "/applications"
+        client.get "applications"
       end
 
       # Get details of an application.
@@ -27,12 +27,15 @@ module Asterisk
       #   ARI (http-client) related:
       #   - http request type: path,
       #   - param name: applicationName,
-      #   - endpoint (get): /applications/{applicationName}
+      #
+      # API endpoint:
+      # - method: get
+      # - endpoint: /applications/{applicationName}
       #
       # Error responses:
       # - 404 - Application does not exist.
       def get(application_name : String) : Applications::Application
-        response = client.get "/applications/#{application_name}"
+        response = client.get "applications/#{application_name}"
       end
 
       # Subscribe an application to a event source.
@@ -51,7 +54,10 @@ module Asterisk
       #   ARI (http-client) related:
       #   - http request type: query,
       #   - param name: eventSource,
-      #   - endpoint (post): /applications/{applicationName}/subscription
+      #
+      # API endpoint:
+      # - method: post
+      # - endpoint: /applications/{applicationName}/subscription
       #
       # Error responses:
       # - 400 - Missing parameter.
@@ -59,7 +65,7 @@ module Asterisk
       # - 422 - Event source does not exist.
       def subscribe(application_name : String, event_source : String) : Applications::Application
         params = HTTP::Params.encode({"eventSource" => event_source})
-        response = client.post "/applications/#{application_name}/subscription?" + params
+        response = client.post "applications/#{application_name}/subscription?" + params
       end
 
       # Unsubscribe an application from an event source.
@@ -78,7 +84,10 @@ module Asterisk
       #   ARI (http-client) related:
       #   - http request type: query,
       #   - param name: eventSource,
-      #   - endpoint (delete): /applications/{applicationName}/subscription
+      #
+      # API endpoint:
+      # - method: delete
+      # - endpoint: /applications/{applicationName}/subscription
       #
       # Error responses:
       # - 400 - Missing parameter; event source scheme not recognized.
@@ -87,7 +96,7 @@ module Asterisk
       # - 422 - Event source does not exist.
       def unsubscribe(application_name : String, event_source : String) : Applications::Application
         params = HTTP::Params.encode({"eventSource" => event_source})
-        response = client.delete "/applications/#{application_name}/subscription?" + params
+        response = client.delete "applications/#{application_name}/subscription?" + params
       end
 
       # Filter application events types.
@@ -106,13 +115,16 @@ module Asterisk
       #   ARI (http-client) related:
       #   - http request type: body,
       #   - param name: filter,
-      #   - endpoint (put): /applications/{applicationName}/eventFilter
+      #
+      # API endpoint:
+      # - method: put
+      # - endpoint: /applications/{applicationName}/eventFilter
       #
       # Error responses:
       # - 400 - Bad request.
       # - 404 - Application does not exist.
       def filter(application_name : String, filter : Hash(String, String | Bool | Int32 | Float32)? = nil) : Applications::Application
-        response = client.put "/applications/#{application_name}/eventFilter",
+        response = client.put "applications/#{application_name}/eventFilter",
   body: filter.to_json
       end
     end

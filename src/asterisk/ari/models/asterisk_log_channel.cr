@@ -12,7 +12,7 @@
 
 module Asterisk
   class ARI
-    class Asterisk < Resource
+    class Asterisk < Resources
       # Details of an Asterisk log channel
       struct LogChannel
         include JSON::Serializable

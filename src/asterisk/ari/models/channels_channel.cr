@@ -12,7 +12,7 @@
 
 module Asterisk
   class ARI
-    class Channels < Resource
+    class Channels < Resources
       # A specific communication connection between Asterisk and an Endpoint.
       struct Channel
         include JSON::Serializable

@@ -41,7 +41,7 @@ module Asterisk
 
                     module Asterisk
                       class ARI
-                        class #{resource} < Resource
+                        class #{resource} < Resources
                           #{klass_description ? "#{klass_description}" : ""}
                           struct #{klass}
                             include JSON::Serializable

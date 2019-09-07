@@ -12,7 +12,7 @@
 
 module Asterisk
   class ARI
-    class Mailboxes < Resource
+    class Mailboxes < Resources
       # Represents the state of a mailbox.
       struct Mailbox
         include JSON::Serializable

@@ -12,10 +12,10 @@
 
 module Asterisk
   class ARI
-    class Mailboxes < Resource
+    class Mailboxes < Resources
       # List all mailboxes.
       def list : Array(Mailboxes::Mailbox)
-        client.get "/mailboxes"
+        client.get "mailboxes"
       end
 
       # Retrieve the current state of a mailbox.
@@ -27,12 +27,15 @@ module Asterisk
       #   ARI (http-client) related:
       #   - http request type: path,
       #   - param name: mailboxName,
-      #   - endpoint (get): /mailboxes/{mailboxName}
+      #
+      # API endpoint:
+      # - method: get
+      # - endpoint: /mailboxes/{mailboxName}
       #
       # Error responses:
       # - 404 - Mailbox not found
       def get(mailbox_name : String) : Mailboxes::Mailbox
-        response = client.get "/mailboxes/#{mailbox_name}"
+        response = client.get "mailboxes/#{mailbox_name}"
       end
 
       # Change the state of a mailbox. (Note - implicitly creates the mailbox).
@@ -58,13 +61,16 @@ module Asterisk
       #   ARI (http-client) related:
       #   - http request type: query,
       #   - param name: newMessages,
-      #   - endpoint (put): /mailboxes/{mailboxName}
+      #
+      # API endpoint:
+      # - method: put
+      # - endpoint: /mailboxes/{mailboxName}
       #
       # Error responses:
       # - 404 - Mailbox not found
       def update(mailbox_name : String, old_messages : Int32, new_messages : Int32)
         params = HTTP::Params.encode({"oldMessages" => old_messages, "newMessages" => new_messages})
-        response = client.put "/mailboxes/#{mailbox_name}?" + params
+        response = client.put "mailboxes/#{mailbox_name}?" + params
       end
 
       # Destroy a mailbox.
@@ -76,12 +82,15 @@ module Asterisk
       #   ARI (http-client) related:
       #   - http request type: path,
       #   - param name: mailboxName,
-      #   - endpoint (delete): /mailboxes/{mailboxName}
+      #
+      # API endpoint:
+      # - method: delete
+      # - endpoint: /mailboxes/{mailboxName}
       #
       # Error responses:
       # - 404 - Mailbox not found
       def delete(mailbox_name : String)
-        response = client.delete "/mailboxes/#{mailbox_name}"
+        response = client.delete "mailboxes/#{mailbox_name}"
       end
     end
   end

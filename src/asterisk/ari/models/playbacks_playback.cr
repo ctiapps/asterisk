@@ -12,7 +12,7 @@
 
 module Asterisk
   class ARI
-    class Playbacks < Resource
+    class Playbacks < Resources
       # Object representing the playback of media to a channel
       struct Playback
         include JSON::Serializable

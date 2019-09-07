@@ -12,7 +12,7 @@
 
 module Asterisk
   class ARI
-    class Asterisk < Resource
+    class Asterisk < Resources
       # A key/value pair that makes up part of a configuration object.
       struct ConfigTuple
         include JSON::Serializable

@@ -13,7 +13,7 @@ require "./message.cr"
 
 module Asterisk
   class ARI
-    class Events < Resource
+    class Events < Resources
       # Base type for asynchronous events from Asterisk.
       abstract struct Event < Message
 

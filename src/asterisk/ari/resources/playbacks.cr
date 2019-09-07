@@ -12,7 +12,7 @@
 
 module Asterisk
   class ARI
-    class Playbacks < Resource
+    class Playbacks < Resources
       # Get a playback's details.
       #
       # Arguments:
@@ -22,12 +22,15 @@ module Asterisk
       #   ARI (http-client) related:
       #   - http request type: path,
       #   - param name: playbackId,
-      #   - endpoint (get): /playbacks/{playbackId}
+      #
+      # API endpoint:
+      # - method: get
+      # - endpoint: /playbacks/{playbackId}
       #
       # Error responses:
       # - 404 - The playback cannot be found
       def get(playback_id : String) : Playbacks::Playback
-        response = client.get "/playbacks/#{playback_id}"
+        response = client.get "playbacks/#{playback_id}"
       end
 
       # Stop a playback.
@@ -39,12 +42,15 @@ module Asterisk
       #   ARI (http-client) related:
       #   - http request type: path,
       #   - param name: playbackId,
-      #   - endpoint (delete): /playbacks/{playbackId}
+      #
+      # API endpoint:
+      # - method: delete
+      # - endpoint: /playbacks/{playbackId}
       #
       # Error responses:
       # - 404 - The playback cannot be found
       def stop(playback_id : String)
-        response = client.delete "/playbacks/#{playback_id}"
+        response = client.delete "playbacks/#{playback_id}"
       end
 
       # Control a playback.
@@ -63,7 +69,10 @@ module Asterisk
       #   ARI (http-client) related:
       #   - http request type: query,
       #   - param name: operation,
-      #   - endpoint (post): /playbacks/{playbackId}/control
+      #
+      # API endpoint:
+      # - method: post
+      # - endpoint: /playbacks/{playbackId}/control
       #
       # Error responses:
       # - 400 - The provided operation parameter was invalid
@@ -71,7 +80,7 @@ module Asterisk
       # - 409 - The operation cannot be performed in the playback's current state
       def control(playback_id : String, operation : String)
         params = HTTP::Params.encode({"operation" => operation})
-        response = client.post "/playbacks/#{playback_id}/control?" + params
+        response = client.post "playbacks/#{playback_id}/control?" + params
       end
     end
   end

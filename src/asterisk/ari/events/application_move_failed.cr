@@ -13,7 +13,7 @@ require "./event.cr"
 
 module Asterisk
   class ARI
-    class Events < Resource
+    class Events < Resources
       # Notification that trying to move a channel to another Stasis application failed.
       struct ApplicationMoveFailed < Event
 

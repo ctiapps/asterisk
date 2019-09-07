@@ -12,10 +12,10 @@
 
 module Asterisk
   class ARI
-    class Endpoints < Resource
+    class Endpoints < Resources
       # List all endpoints.
       def list : Int32
-        client.get "/endpoints"
+        client.get "endpoints"
       end
 
       # Send a message to some technology URI or endpoint.
@@ -48,7 +48,10 @@ module Asterisk
       #   ARI (http-client) related:
       #   - http request type: body,
       #   - param name: variables,
-      #   - endpoint (put): /endpoints/sendMessage
+      #
+      # API endpoint:
+      # - method: put
+      # - endpoint: /endpoints/sendMessage
       #
       # Error responses:
       # - 400 - Invalid parameters for sending a message.
@@ -59,7 +62,7 @@ module Asterisk
         # Optional parameters
         params += "&" + HTTP::Params.encode({"body" => body}) if body
 
-        response = client.put "/endpoints/sendMessage?" + params,
+        response = client.put "endpoints/sendMessage?" + params,
           body: variables.to_json
       end
 
@@ -72,12 +75,15 @@ module Asterisk
       #   ARI (http-client) related:
       #   - http request type: path,
       #   - param name: tech,
-      #   - endpoint (get): /endpoints/{tech}
+      #
+      # API endpoint:
+      # - method: get
+      # - endpoint: /endpoints/{tech}
       #
       # Error responses:
       # - 404 - Endpoints not found
       def list_by_tech(tech : String) : Int32
-        response = client.get "/endpoints/#{tech}"
+        response = client.get "endpoints/#{tech}"
       end
 
       # Details for an endpoint.
@@ -96,13 +102,16 @@ module Asterisk
       #   ARI (http-client) related:
       #   - http request type: path,
       #   - param name: resource,
-      #   - endpoint (get): /endpoints/{tech}/{resource}
+      #
+      # API endpoint:
+      # - method: get
+      # - endpoint: /endpoints/{tech}/{resource}
       #
       # Error responses:
       # - 400 - Invalid parameters for sending a message.
       # - 404 - Endpoints not found
       def get(tech : String, resource : String) : Int32
-        response = client.get "/endpoints/#{tech}/#{resource}"
+        response = client.get "endpoints/#{tech}/#{resource}"
       end
 
       # Send a message to some endpoint in a technology.
@@ -142,7 +151,10 @@ module Asterisk
       #   ARI (http-client) related:
       #   - http request type: body,
       #   - param name: variables,
-      #   - endpoint (put): /endpoints/{tech}/{resource}/sendMessage
+      #
+      # API endpoint:
+      # - method: put
+      # - endpoint: /endpoints/{tech}/{resource}/sendMessage
       #
       # Error responses:
       # - 400 - Invalid parameters for sending a message.
@@ -153,7 +165,7 @@ module Asterisk
         # Optional parameters
         params += "&" + HTTP::Params.encode({"body" => body}) if body
 
-        response = client.put "/endpoints/#{tech}/#{resource}/sendMessage?" + params,
+        response = client.put "endpoints/#{tech}/#{resource}/sendMessage?" + params,
           body: variables.to_json
       end
     end

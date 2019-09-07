@@ -13,7 +13,7 @@ require "./event.cr"
 
 module Asterisk
   class ARI
-    class Events < Resource
+    class Events < Resources
       # A hangup was requested on the channel.
       struct ChannelHangupRequest < Event
 

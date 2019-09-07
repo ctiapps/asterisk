@@ -105,8 +105,10 @@ describe Asterisk::ARI do
       ari.on_stasis_start do |client, event|
         ari_channel.send "StasisStart"
 
-        channel = Asterisk::ARI::Channels.new(client)
-        response = channel.answer channel_id: event.channel.id
+        # channel = Asterisk::ARI::Channels.new(client)
+        # response = channel.answer channel_id: event.channel.id
+
+        response = client.channels.answer channel_id: event.channel.id
         # 2XX (normally it should be 204)
         (200..299).to_a.should contain(response.status_code)
       end

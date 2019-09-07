@@ -12,10 +12,10 @@
 
 module Asterisk
   class ARI
-    class DeviceStates < Resource
+    class DeviceStates < Resources
       # List all ARI controlled device states.
       def list : Array(DeviceStates::DeviceState)
-        client.get "/deviceStates"
+        client.get "deviceStates"
       end
 
       # Retrieve the current state of a device.
@@ -27,9 +27,12 @@ module Asterisk
       #   ARI (http-client) related:
       #   - http request type: path,
       #   - param name: deviceName,
-      #   - endpoint (get): /deviceStates/{deviceName}
+      #
+      # API endpoint:
+      # - method: get
+      # - endpoint: /deviceStates/{deviceName}
       def get(device_name : String) : DeviceStates::DeviceState
-        client.get "/deviceStates/#{device_name}"
+        client.get "deviceStates/#{device_name}"
       end
 
       # Change the state of a device controlled by ARI. (Note - implicitly creates the device state).
@@ -48,14 +51,17 @@ module Asterisk
       #   ARI (http-client) related:
       #   - http request type: query,
       #   - param name: deviceState,
-      #   - endpoint (put): /deviceStates/{deviceName}
+      #
+      # API endpoint:
+      # - method: put
+      # - endpoint: /deviceStates/{deviceName}
       #
       # Error responses:
       # - 404 - Device name is missing
       # - 409 - Uncontrolled device specified
       def update(device_name : String, device_state : String)
         params = HTTP::Params.encode({"deviceState" => device_state})
-        response = client.put "/deviceStates/#{device_name}?" + params
+        response = client.put "deviceStates/#{device_name}?" + params
       end
 
       # Destroy a device-state controlled by ARI.
@@ -67,13 +73,16 @@ module Asterisk
       #   ARI (http-client) related:
       #   - http request type: path,
       #   - param name: deviceName,
-      #   - endpoint (delete): /deviceStates/{deviceName}
+      #
+      # API endpoint:
+      # - method: delete
+      # - endpoint: /deviceStates/{deviceName}
       #
       # Error responses:
       # - 404 - Device name is missing
       # - 409 - Uncontrolled device specified
       def delete(device_name : String)
-        response = client.delete "/deviceStates/#{device_name}"
+        response = client.delete "deviceStates/#{device_name}"
       end
     end
   end

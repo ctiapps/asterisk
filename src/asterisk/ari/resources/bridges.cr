@@ -12,10 +12,10 @@
 
 module Asterisk
   class ARI
-    class Bridges < Resource
+    class Bridges < Resources
       # List all active bridges in Asterisk.
       def list : Array(Bridges::Bridge)
-        client.get "/bridges"
+        client.get "bridges"
       end
 
       # Create a new bridge.
@@ -41,7 +41,10 @@ module Asterisk
       #   ARI (http-client) related:
       #   - http request type: query,
       #   - param name: name,
-      #   - endpoint (post): /bridges
+      #
+      # API endpoint:
+      # - method: post
+      # - endpoint: /bridges
       def create(type : String? = nil, bridge_id : String? = nil, name : String? = nil) : Bridges::Bridge
         # Optional parameters
         params = HTTP::Params.encode({} of String => String)
@@ -49,7 +52,7 @@ module Asterisk
         params += "&" + HTTP::Params.encode({"bridgeId" => bridge_id}) if bridge_id
         params += "&" + HTTP::Params.encode({"name" => name}) if name
 
-        client.post "/bridges?" + params
+        client.post "bridges?" + params
       end
 
       # Create a new bridge or updates an existing one.
@@ -75,14 +78,17 @@ module Asterisk
       #   ARI (http-client) related:
       #   - http request type: query,
       #   - param name: name,
-      #   - endpoint (post): /bridges/{bridgeId}
+      #
+      # API endpoint:
+      # - method: post
+      # - endpoint: /bridges/{bridgeId}
       def create_with_id(bridge_id : String, type : String? = nil, name : String? = nil) : Bridges::Bridge
         # Optional parameters
         params = HTTP::Params.encode({} of String => String)
         params += "&" + HTTP::Params.encode({"type" => type}) if type
         params += "&" + HTTP::Params.encode({"name" => name}) if name
 
-        client.post "/bridges/#{bridge_id}?" + params
+        client.post "bridges/#{bridge_id}?" + params
       end
 
       # Get bridge details.
@@ -94,12 +100,15 @@ module Asterisk
       #   ARI (http-client) related:
       #   - http request type: path,
       #   - param name: bridgeId,
-      #   - endpoint (get): /bridges/{bridgeId}
+      #
+      # API endpoint:
+      # - method: get
+      # - endpoint: /bridges/{bridgeId}
       #
       # Error responses:
       # - 404 - Bridge not found
       def get(bridge_id : String) : Bridges::Bridge
-        response = client.get "/bridges/#{bridge_id}"
+        response = client.get "bridges/#{bridge_id}"
       end
 
       # Shut down a bridge.
@@ -111,12 +120,15 @@ module Asterisk
       #   ARI (http-client) related:
       #   - http request type: path,
       #   - param name: bridgeId,
-      #   - endpoint (delete): /bridges/{bridgeId}
+      #
+      # API endpoint:
+      # - method: delete
+      # - endpoint: /bridges/{bridgeId}
       #
       # Error responses:
       # - 404 - Bridge not found
       def destroy(bridge_id : String)
-        response = client.delete "/bridges/#{bridge_id}"
+        response = client.delete "bridges/#{bridge_id}"
       end
 
       # Add a channel to a bridge.
@@ -156,7 +168,10 @@ module Asterisk
       #   ARI (http-client) related:
       #   - http request type: query,
       #   - param name: mute,
-      #   - endpoint (post): /bridges/{bridgeId}/addChannel
+      #
+      # API endpoint:
+      # - method: post
+      # - endpoint: /bridges/{bridgeId}/addChannel
       #
       # Error responses:
       # - 400 - Channel not found
@@ -171,7 +186,7 @@ module Asterisk
         params += "&" + HTTP::Params.encode({"absorbDTMF" => absorb_dtmf}) if absorb_dtmf
         params += "&" + HTTP::Params.encode({"mute" => mute}) if mute
 
-        response = client.post "/bridges/#{bridge_id}/addChannel?" + params
+        response = client.post "bridges/#{bridge_id}/addChannel?" + params
       end
 
       # Remove a channel from a bridge.
@@ -190,7 +205,10 @@ module Asterisk
       #   ARI (http-client) related:
       #   - http request type: query,
       #   - param name: channel,
-      #   - endpoint (post): /bridges/{bridgeId}/removeChannel
+      #
+      # API endpoint:
+      # - method: post
+      # - endpoint: /bridges/{bridgeId}/removeChannel
       #
       # Error responses:
       # - 400 - Channel not found
@@ -199,7 +217,7 @@ module Asterisk
       # - 422 - Channel not in this bridge
       def remove_channel(bridge_id : String, channel : String)
         params = HTTP::Params.encode({"channel" => channel})
-        response = client.post "/bridges/#{bridge_id}/removeChannel?" + params
+        response = client.post "bridges/#{bridge_id}/removeChannel?" + params
       end
 
       # Set a channel as the video source in a multi-party mixing bridge. This operation has no effect on bridges with two or fewer participants.
@@ -218,14 +236,17 @@ module Asterisk
       #   ARI (http-client) related:
       #   - http request type: path,
       #   - param name: channelId,
-      #   - endpoint (post): /bridges/{bridgeId}/videoSource/{channelId}
+      #
+      # API endpoint:
+      # - method: post
+      # - endpoint: /bridges/{bridgeId}/videoSource/{channelId}
       #
       # Error responses:
       # - 404 - Bridge or Channel not found
       # - 409 - Channel not in Stasis application
       # - 422 - Channel not in this Bridge
       def set_video_source(bridge_id : String, channel_id : String)
-        response = client.post "/bridges/#{bridge_id}/videoSource/#{channel_id}"
+        response = client.post "bridges/#{bridge_id}/videoSource/#{channel_id}"
       end
 
       # Removes any explicit video source in a multi-party mixing bridge. This operation has no effect on bridges with two or fewer participants. When no explicit video source is set, talk detection will be used to determine the active video stream.
@@ -237,12 +258,15 @@ module Asterisk
       #   ARI (http-client) related:
       #   - http request type: path,
       #   - param name: bridgeId,
-      #   - endpoint (delete): /bridges/{bridgeId}/videoSource
+      #
+      # API endpoint:
+      # - method: delete
+      # - endpoint: /bridges/{bridgeId}/videoSource
       #
       # Error responses:
       # - 404 - Bridge not found
       def clear_video_source(bridge_id : String)
-        response = client.delete "/bridges/#{bridge_id}/videoSource"
+        response = client.delete "bridges/#{bridge_id}/videoSource"
       end
 
       # Play music on hold to a bridge or change the MOH class that is playing.
@@ -261,7 +285,10 @@ module Asterisk
       #   ARI (http-client) related:
       #   - http request type: query,
       #   - param name: mohClass,
-      #   - endpoint (post): /bridges/{bridgeId}/moh
+      #
+      # API endpoint:
+      # - method: post
+      # - endpoint: /bridges/{bridgeId}/moh
       #
       # Error responses:
       # - 404 - Bridge not found
@@ -271,7 +298,7 @@ module Asterisk
         params = HTTP::Params.encode({} of String => String)
         params += "&" + HTTP::Params.encode({"mohClass" => moh_class}) if moh_class
 
-        response = client.post "/bridges/#{bridge_id}/moh?" + params
+        response = client.post "bridges/#{bridge_id}/moh?" + params
       end
 
       # Stop playing music on hold to a bridge.
@@ -283,13 +310,16 @@ module Asterisk
       #   ARI (http-client) related:
       #   - http request type: path,
       #   - param name: bridgeId,
-      #   - endpoint (delete): /bridges/{bridgeId}/moh
+      #
+      # API endpoint:
+      # - method: delete
+      # - endpoint: /bridges/{bridgeId}/moh
       #
       # Error responses:
       # - 404 - Bridge not found
       # - 409 - Bridge not in Stasis application
       def stop_moh(bridge_id : String)
-        response = client.delete "/bridges/#{bridge_id}/moh"
+        response = client.delete "bridges/#{bridge_id}/moh"
       end
 
       # Start playback of media on a bridge.
@@ -336,7 +366,10 @@ module Asterisk
       #   ARI (http-client) related:
       #   - http request type: query,
       #   - param name: playbackId,
-      #   - endpoint (post): /bridges/{bridgeId}/play
+      #
+      # API endpoint:
+      # - method: post
+      # - endpoint: /bridges/{bridgeId}/play
       #
       # Error responses:
       # - 404 - Bridge not found
@@ -350,7 +383,7 @@ module Asterisk
         params += "&" + HTTP::Params.encode({"skipms" => skipms}) if skipms
         params += "&" + HTTP::Params.encode({"playbackId" => playback_id}) if playback_id
 
-        response = client.post "/bridges/#{bridge_id}/play?" + params
+        response = client.post "bridges/#{bridge_id}/play?" + params
       end
 
       # Start playback of media on a bridge.
@@ -397,7 +430,10 @@ module Asterisk
       #   ARI (http-client) related:
       #   - http request type: query,
       #   - param name: skipms,
-      #   - endpoint (post): /bridges/{bridgeId}/play/{playbackId}
+      #
+      # API endpoint:
+      # - method: post
+      # - endpoint: /bridges/{bridgeId}/play/{playbackId}
       #
       # Error responses:
       # - 404 - Bridge not found
@@ -410,7 +446,7 @@ module Asterisk
         params += "&" + HTTP::Params.encode({"offsetms" => offsetms}) if offsetms
         params += "&" + HTTP::Params.encode({"skipms" => skipms}) if skipms
 
-        response = client.post "/bridges/#{bridge_id}/play/#{playback_id}?" + params
+        response = client.post "bridges/#{bridge_id}/play/#{playback_id}?" + params
       end
 
       # Start a recording.
@@ -471,7 +507,10 @@ module Asterisk
       #   ARI (http-client) related:
       #   - http request type: query,
       #   - param name: terminateOn,
-      #   - endpoint (post): /bridges/{bridgeId}/record
+      #
+      # API endpoint:
+      # - method: post
+      # - endpoint: /bridges/{bridgeId}/record
       #
       # Error responses:
       # - 400 - Invalid parameters
@@ -488,7 +527,7 @@ module Asterisk
         params += "&" + HTTP::Params.encode({"beep" => beep}) if beep
         params += "&" + HTTP::Params.encode({"terminateOn" => terminate_on}) if terminate_on
 
-        response = client.post "/bridges/#{bridge_id}/record?" + params
+        response = client.post "bridges/#{bridge_id}/record?" + params
       end
     end
   end

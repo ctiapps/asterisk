@@ -12,7 +12,7 @@
 
 module Asterisk
   class ARI
-    class Asterisk < Resource
+    class Asterisk < Resources
       # The value of a channel variable
       struct Variable
         include JSON::Serializable

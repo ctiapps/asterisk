@@ -55,20 +55,6 @@ module Asterisk
       @uri = URI.parse(@url)
     end
 
-    # def self.new!(url = "http://127.0.0.1:8088/ari", app = "asterisk.cr", username = "", password = "")
-    #   ARI.ari = ARI.new url, app, username, password
-    # end
-    #
-    # @@ari = ARI.new
-    #
-    # def self.ari=(instance)
-    #   @@ari = instance
-    # end
-    #
-    # def self.ari
-    #   @@ari.not_nil!
-    # end
-
     def start
       connect
 
@@ -79,11 +65,11 @@ module Asterisk
       ws.on_message do |message|
         # @channel_message.send message
         event = JSON.parse(message)["type"].to_s
-        # TODO: undefined event
-        klass = events[event]
+        # TODO: raise on undefined event
+        klass = __events[event]
         event_data = klass.from_json(message)
 
-        # Generate case ... when ... end for ARI events
+        # Macro code that generate case ... when ... end block for ARI events
         {% begin %}
           case event
           {% for t in Events.constants %}
@@ -105,8 +91,8 @@ module Asterisk
       end
     end
 
-    # List of ARI events
-    def events
+    # List of ARI events as a hash (event_name => EventName)
+    private def __events
       {% begin %}
         {% events = {} of String => Class %}
         {% Events.constants.map do |klass|
@@ -118,6 +104,18 @@ module Asterisk
         {{events}}
       {% end %}
     end
+
+    macro resources
+      {% for t in Resources.all_subclasses %}
+        {% klass = t.stringify.split("::").last.id %}
+        {% resource = klass.stringify.underscore.id %}
+        @{{resource}} : {{klass}}? = nil
+        def {{resource}}
+          @{{resource}} ||= {{klass}}.new(client: self)
+        end
+      {% end %}
+      end
+    resources
 
     private def connect
       raise ConnectionError.new("Already connected") if ws? && ! ws.closed?

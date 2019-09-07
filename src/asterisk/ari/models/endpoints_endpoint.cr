@@ -12,7 +12,7 @@
 
 module Asterisk
   class ARI
-    class Endpoints < Resource
+    class Endpoints < Resources
       # An external device that may offer/accept calls to/from Asterisk.
 #
 # Unlike most resources, which have a single unique identifier, an endpoint is uniquely identified by the technology/resource pair.

@@ -13,7 +13,7 @@ require "./event.cr"
 
 module Asterisk
   class ARI
-    class Events < Resource
+    class Events < Resources
       # DTMF received on a channel.
 #
 # This event is sent when the DTMF ends. There is no notification about the start of DTMF

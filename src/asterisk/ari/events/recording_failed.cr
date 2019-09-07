@@ -13,7 +13,7 @@ require "./event.cr"
 
 module Asterisk
   class ARI
-    class Events < Resource
+    class Events < Resources
       # Event showing failure of a recording operation.
       struct RecordingFailed < Event
 

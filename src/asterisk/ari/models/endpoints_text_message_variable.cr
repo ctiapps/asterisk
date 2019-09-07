@@ -12,7 +12,7 @@
 
 module Asterisk
   class ARI
-    class Endpoints < Resource
+    class Endpoints < Resources
       # A key/value pair variable in a text message.
       struct TextMessageVariable
         include JSON::Serializable

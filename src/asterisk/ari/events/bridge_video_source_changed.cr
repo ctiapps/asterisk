@@ -13,7 +13,7 @@ require "./event.cr"
 
 module Asterisk
   class ARI
-    class Events < Resource
+    class Events < Resources
       # Notification that the source of video in a bridge has changed.
       struct BridgeVideoSourceChanged < Event
 

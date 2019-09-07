@@ -13,7 +13,7 @@ require "./event.cr"
 
 module Asterisk
   class ARI
-    class Events < Resource
+    class Events < Resources
       # Notification that one bridge has merged into another.
       struct BridgeMerged < Event
 

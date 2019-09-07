@@ -12,7 +12,7 @@
 
 module Asterisk
   class ARI
-    class Applications < Resource
+    class Applications < Resources
       # Details of a Stasis application
       struct Application
         include JSON::Serializable

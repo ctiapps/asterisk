@@ -13,7 +13,7 @@ require "./event.cr"
 
 module Asterisk
   class ARI
-    class Events < Resource
+    class Events < Resources
       # Notification that a channel has entered a Stasis application.
       struct StasisStart < Event
 

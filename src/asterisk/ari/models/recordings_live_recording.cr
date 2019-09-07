@@ -12,7 +12,7 @@
 
 module Asterisk
   class ARI
-    class Recordings < Resource
+    class Recordings < Resources
       # A recording that is in progress
       struct LiveRecording
         include JSON::Serializable

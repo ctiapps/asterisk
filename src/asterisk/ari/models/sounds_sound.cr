@@ -12,7 +12,7 @@
 
 module Asterisk
   class ARI
-    class Sounds < Resource
+    class Sounds < Resources
       # A media file that may be played back.
       struct Sound
         include JSON::Serializable

@@ -13,7 +13,7 @@ require "./event.cr"
 
 module Asterisk
   class ARI
-    class Events < Resource
+    class Events < Resources
       # Notification of a channel's state change.
       struct ChannelStateChange < Event
 

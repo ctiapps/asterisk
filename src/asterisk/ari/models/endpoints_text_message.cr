@@ -12,7 +12,7 @@
 
 module Asterisk
   class ARI
-    class Endpoints < Resource
+    class Endpoints < Resources
       # A text message.
       struct TextMessage
         include JSON::Serializable

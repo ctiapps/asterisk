@@ -1,6 +1,6 @@
 module Asterisk
   class ARI
-    abstract class Resource
+    abstract class Resources
       getter client : ARI
 
       def initialize(@client)
@@ -8,3 +8,5 @@ module Asterisk
     end
   end
 end
+
+require "./resources/*"

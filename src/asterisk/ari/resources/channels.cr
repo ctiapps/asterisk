@@ -12,10 +12,10 @@
 
 module Asterisk
   class ARI
-    class Channels < Resource
+    class Channels < Resources
       # List all active channels in Asterisk.
       def list : Array(Channels::Channel)
-        client.get "/channels"
+        client.get "channels"
       end
 
       # Create a new channel (originate).
@@ -118,7 +118,10 @@ module Asterisk
       #   ARI (http-client) related:
       #   - http request type: query,
       #   - param name: formats,
-      #   - endpoint (post): /channels
+      #
+      # API endpoint:
+      # - method: post
+      # - endpoint: /channels
       #
       # Error responses:
       # - 400 - Invalid parameters for originating a channel.
@@ -140,7 +143,7 @@ module Asterisk
         params += "&" + HTTP::Params.encode({"originator" => originator}) if originator
         params += "&" + HTTP::Params.encode({"formats" => formats}) if formats
 
-        response = client.post "/channels?" + params,
+        response = client.post "channels?" + params,
           body: variables.to_json
       end
 
@@ -195,7 +198,10 @@ module Asterisk
       #   ARI (http-client) related:
       #   - http request type: query,
       #   - param name: formats,
-      #   - endpoint (post): /channels/create
+      #
+      # API endpoint:
+      # - method: post
+      # - endpoint: /channels/create
       #
       # Error responses:
       # - 409 - Channel with given unique ID already exists.
@@ -209,7 +215,7 @@ module Asterisk
         params += "&" + HTTP::Params.encode({"originator" => originator}) if originator
         params += "&" + HTTP::Params.encode({"formats" => formats}) if formats
 
-        response = client.post "/channels/create?" + params
+        response = client.post "channels/create?" + params
       end
 
       # Channel details.
@@ -221,12 +227,15 @@ module Asterisk
       #   ARI (http-client) related:
       #   - http request type: path,
       #   - param name: channelId,
-      #   - endpoint (get): /channels/{channelId}
+      #
+      # API endpoint:
+      # - method: get
+      # - endpoint: /channels/{channelId}
       #
       # Error responses:
       # - 404 - Channel not found
       def get(channel_id : String) : Channels::Channel
-        response = client.get "/channels/#{channel_id}"
+        response = client.get "channels/#{channel_id}"
       end
 
       # Create a new channel (originate with id).
@@ -329,7 +338,10 @@ module Asterisk
       #   ARI (http-client) related:
       #   - http request type: query,
       #   - param name: formats,
-      #   - endpoint (post): /channels/{channelId}
+      #
+      # API endpoint:
+      # - method: post
+      # - endpoint: /channels/{channelId}
       #
       # Error responses:
       # - 400 - Invalid parameters for originating a channel.
@@ -350,7 +362,7 @@ module Asterisk
         params += "&" + HTTP::Params.encode({"originator" => originator}) if originator
         params += "&" + HTTP::Params.encode({"formats" => formats}) if formats
 
-        response = client.post "/channels/#{channel_id}?" + params,
+        response = client.post "channels/#{channel_id}?" + params,
           body: variables.to_json
       end
 
@@ -370,7 +382,10 @@ module Asterisk
       #   ARI (http-client) related:
       #   - http request type: query,
       #   - param name: reason,
-      #   - endpoint (delete): /channels/{channelId}
+      #
+      # API endpoint:
+      # - method: delete
+      # - endpoint: /channels/{channelId}
       #
       # Error responses:
       # - 400 - Invalid reason for hangup provided
@@ -380,7 +395,7 @@ module Asterisk
         params = HTTP::Params.encode({} of String => String)
         params += "&" + HTTP::Params.encode({"reason" => reason}) if reason
 
-        response = client.delete "/channels/#{channel_id}?" + params
+        response = client.delete "channels/#{channel_id}?" + params
       end
 
       # Exit application; continue execution in the dialplan.
@@ -420,7 +435,10 @@ module Asterisk
       #   ARI (http-client) related:
       #   - http request type: query,
       #   - param name: label,
-      #   - endpoint (post): /channels/{channelId}/continue
+      #
+      # API endpoint:
+      # - method: post
+      # - endpoint: /channels/{channelId}/continue
       #
       # Error responses:
       # - 404 - Channel not found
@@ -434,7 +452,7 @@ module Asterisk
         params += "&" + HTTP::Params.encode({"priority" => priority}) if priority
         params += "&" + HTTP::Params.encode({"label" => label}) if label
 
-        response = client.post "/channels/#{channel_id}/continue?" + params
+        response = client.post "channels/#{channel_id}/continue?" + params
       end
 
       # Move the channel from one Stasis application to another.
@@ -460,7 +478,10 @@ module Asterisk
       #   ARI (http-client) related:
       #   - http request type: query,
       #   - param name: appArgs,
-      #   - endpoint (post): /channels/{channelId}/move
+      #
+      # API endpoint:
+      # - method: post
+      # - endpoint: /channels/{channelId}/move
       #
       # Error responses:
       # - 404 - Channel not found
@@ -471,7 +492,7 @@ module Asterisk
         # Optional parameters
         params += "&" + HTTP::Params.encode({"appArgs" => app_args}) if app_args
 
-        response = client.post "/channels/#{channel_id}/move?" + params
+        response = client.post "channels/#{channel_id}/move?" + params
       end
 
       # Redirect the channel to a different location.
@@ -490,7 +511,10 @@ module Asterisk
       #   ARI (http-client) related:
       #   - http request type: query,
       #   - param name: endpoint,
-      #   - endpoint (post): /channels/{channelId}/redirect
+      #
+      # API endpoint:
+      # - method: post
+      # - endpoint: /channels/{channelId}/redirect
       #
       # Error responses:
       # - 400 - Endpoint parameter not provided
@@ -500,7 +524,7 @@ module Asterisk
       # - 412 - Channel in invalid state
       def redirect(channel_id : String, endpoint : String)
         params = HTTP::Params.encode({"endpoint" => endpoint})
-        response = client.post "/channels/#{channel_id}/redirect?" + params
+        response = client.post "channels/#{channel_id}/redirect?" + params
       end
 
       # Answer a channel.
@@ -512,7 +536,10 @@ module Asterisk
       #   ARI (http-client) related:
       #   - http request type: path,
       #   - param name: channelId,
-      #   - endpoint (post): /channels/{channelId}/answer
+      #
+      # API endpoint:
+      # - method: post
+      # - endpoint: /channels/{channelId}/answer
       #
       # Error responses:
       # - 404 - Channel not found
@@ -520,8 +547,6 @@ module Asterisk
       # - 412 - Channel in invalid state
       def answer(channel_id : String)
         response = client.post "channels/#{channel_id}/answer"
-        pp response
-        response
       end
 
       # Indicate ringing to a channel.
@@ -533,14 +558,17 @@ module Asterisk
       #   ARI (http-client) related:
       #   - http request type: path,
       #   - param name: channelId,
-      #   - endpoint (post): /channels/{channelId}/ring
+      #
+      # API endpoint:
+      # - method: post
+      # - endpoint: /channels/{channelId}/ring
       #
       # Error responses:
       # - 404 - Channel not found
       # - 409 - Channel not in a Stasis application
       # - 412 - Channel in invalid state
       def ring(channel_id : String)
-        response = client.post "/channels/#{channel_id}/ring"
+        response = client.post "channels/#{channel_id}/ring"
       end
 
       # Stop ringing indication on a channel if locally generated.
@@ -552,14 +580,17 @@ module Asterisk
       #   ARI (http-client) related:
       #   - http request type: path,
       #   - param name: channelId,
-      #   - endpoint (delete): /channels/{channelId}/ring
+      #
+      # API endpoint:
+      # - method: delete
+      # - endpoint: /channels/{channelId}/ring
       #
       # Error responses:
       # - 404 - Channel not found
       # - 409 - Channel not in a Stasis application
       # - 412 - Channel in invalid state
       def ring_stop(channel_id : String)
-        response = client.delete "/channels/#{channel_id}/ring"
+        response = client.delete "channels/#{channel_id}/ring"
       end
 
       # Send provided DTMF to a given channel.
@@ -606,7 +637,10 @@ module Asterisk
       #   ARI (http-client) related:
       #   - http request type: query,
       #   - param name: after,
-      #   - endpoint (post): /channels/{channelId}/dtmf
+      #
+      # API endpoint:
+      # - method: post
+      # - endpoint: /channels/{channelId}/dtmf
       #
       # Error responses:
       # - 400 - DTMF is required
@@ -622,7 +656,7 @@ module Asterisk
         params += "&" + HTTP::Params.encode({"duration" => duration}) if duration
         params += "&" + HTTP::Params.encode({"after" => after}) if after
 
-        response = client.post "/channels/#{channel_id}/dtmf?" + params
+        response = client.post "channels/#{channel_id}/dtmf?" + params
       end
 
       # Mute a channel.
@@ -641,7 +675,10 @@ module Asterisk
       #   ARI (http-client) related:
       #   - http request type: query,
       #   - param name: direction,
-      #   - endpoint (post): /channels/{channelId}/mute
+      #
+      # API endpoint:
+      # - method: post
+      # - endpoint: /channels/{channelId}/mute
       #
       # Error responses:
       # - 404 - Channel not found
@@ -652,7 +689,7 @@ module Asterisk
         params = HTTP::Params.encode({} of String => String)
         params += "&" + HTTP::Params.encode({"direction" => direction}) if direction
 
-        response = client.post "/channels/#{channel_id}/mute?" + params
+        response = client.post "channels/#{channel_id}/mute?" + params
       end
 
       # Unmute a channel.
@@ -671,7 +708,10 @@ module Asterisk
       #   ARI (http-client) related:
       #   - http request type: query,
       #   - param name: direction,
-      #   - endpoint (delete): /channels/{channelId}/mute
+      #
+      # API endpoint:
+      # - method: delete
+      # - endpoint: /channels/{channelId}/mute
       #
       # Error responses:
       # - 404 - Channel not found
@@ -682,7 +722,7 @@ module Asterisk
         params = HTTP::Params.encode({} of String => String)
         params += "&" + HTTP::Params.encode({"direction" => direction}) if direction
 
-        response = client.delete "/channels/#{channel_id}/mute?" + params
+        response = client.delete "channels/#{channel_id}/mute?" + params
       end
 
       # Hold a channel.
@@ -694,14 +734,17 @@ module Asterisk
       #   ARI (http-client) related:
       #   - http request type: path,
       #   - param name: channelId,
-      #   - endpoint (post): /channels/{channelId}/hold
+      #
+      # API endpoint:
+      # - method: post
+      # - endpoint: /channels/{channelId}/hold
       #
       # Error responses:
       # - 404 - Channel not found
       # - 409 - Channel not in a Stasis application
       # - 412 - Channel in invalid state
       def hold(channel_id : String)
-        response = client.post "/channels/#{channel_id}/hold"
+        response = client.post "channels/#{channel_id}/hold"
       end
 
       # Remove a channel from hold.
@@ -713,14 +756,17 @@ module Asterisk
       #   ARI (http-client) related:
       #   - http request type: path,
       #   - param name: channelId,
-      #   - endpoint (delete): /channels/{channelId}/hold
+      #
+      # API endpoint:
+      # - method: delete
+      # - endpoint: /channels/{channelId}/hold
       #
       # Error responses:
       # - 404 - Channel not found
       # - 409 - Channel not in a Stasis application
       # - 412 - Channel in invalid state
       def unhold(channel_id : String)
-        response = client.delete "/channels/#{channel_id}/hold"
+        response = client.delete "channels/#{channel_id}/hold"
       end
 
       # Play music on hold to a channel.
@@ -739,7 +785,10 @@ module Asterisk
       #   ARI (http-client) related:
       #   - http request type: query,
       #   - param name: mohClass,
-      #   - endpoint (post): /channels/{channelId}/moh
+      #
+      # API endpoint:
+      # - method: post
+      # - endpoint: /channels/{channelId}/moh
       #
       # Error responses:
       # - 404 - Channel not found
@@ -750,7 +799,7 @@ module Asterisk
         params = HTTP::Params.encode({} of String => String)
         params += "&" + HTTP::Params.encode({"mohClass" => moh_class}) if moh_class
 
-        response = client.post "/channels/#{channel_id}/moh?" + params
+        response = client.post "channels/#{channel_id}/moh?" + params
       end
 
       # Stop playing music on hold to a channel.
@@ -762,14 +811,17 @@ module Asterisk
       #   ARI (http-client) related:
       #   - http request type: path,
       #   - param name: channelId,
-      #   - endpoint (delete): /channels/{channelId}/moh
+      #
+      # API endpoint:
+      # - method: delete
+      # - endpoint: /channels/{channelId}/moh
       #
       # Error responses:
       # - 404 - Channel not found
       # - 409 - Channel not in a Stasis application
       # - 412 - Channel in invalid state
       def stop_moh(channel_id : String)
-        response = client.delete "/channels/#{channel_id}/moh"
+        response = client.delete "channels/#{channel_id}/moh"
       end
 
       # Play silence to a channel.
@@ -781,14 +833,17 @@ module Asterisk
       #   ARI (http-client) related:
       #   - http request type: path,
       #   - param name: channelId,
-      #   - endpoint (post): /channels/{channelId}/silence
+      #
+      # API endpoint:
+      # - method: post
+      # - endpoint: /channels/{channelId}/silence
       #
       # Error responses:
       # - 404 - Channel not found
       # - 409 - Channel not in a Stasis application
       # - 412 - Channel in invalid state
       def start_silence(channel_id : String)
-        response = client.post "/channels/#{channel_id}/silence"
+        response = client.post "channels/#{channel_id}/silence"
       end
 
       # Stop playing silence to a channel.
@@ -800,14 +855,17 @@ module Asterisk
       #   ARI (http-client) related:
       #   - http request type: path,
       #   - param name: channelId,
-      #   - endpoint (delete): /channels/{channelId}/silence
+      #
+      # API endpoint:
+      # - method: delete
+      # - endpoint: /channels/{channelId}/silence
       #
       # Error responses:
       # - 404 - Channel not found
       # - 409 - Channel not in a Stasis application
       # - 412 - Channel in invalid state
       def stop_silence(channel_id : String)
-        response = client.delete "/channels/#{channel_id}/silence"
+        response = client.delete "channels/#{channel_id}/silence"
       end
 
       # Start playback of media.
@@ -854,7 +912,10 @@ module Asterisk
       #   ARI (http-client) related:
       #   - http request type: query,
       #   - param name: playbackId,
-      #   - endpoint (post): /channels/{channelId}/play
+      #
+      # API endpoint:
+      # - method: post
+      # - endpoint: /channels/{channelId}/play
       #
       # Error responses:
       # - 404 - Channel not found
@@ -869,7 +930,7 @@ module Asterisk
         params += "&" + HTTP::Params.encode({"skipms" => skipms}) if skipms
         params += "&" + HTTP::Params.encode({"playbackId" => playback_id}) if playback_id
 
-        response = client.post "/channels/#{channel_id}/play?" + params
+        response = client.post "channels/#{channel_id}/play?" + params
       end
 
       # Start playback of media and specify the playbackId.
@@ -916,7 +977,10 @@ module Asterisk
       #   ARI (http-client) related:
       #   - http request type: query,
       #   - param name: skipms,
-      #   - endpoint (post): /channels/{channelId}/play/{playbackId}
+      #
+      # API endpoint:
+      # - method: post
+      # - endpoint: /channels/{channelId}/play/{playbackId}
       #
       # Error responses:
       # - 404 - Channel not found
@@ -930,7 +994,7 @@ module Asterisk
         params += "&" + HTTP::Params.encode({"offsetms" => offsetms}) if offsetms
         params += "&" + HTTP::Params.encode({"skipms" => skipms}) if skipms
 
-        response = client.post "/channels/#{channel_id}/play/#{playback_id}?" + params
+        response = client.post "channels/#{channel_id}/play/#{playback_id}?" + params
       end
 
       # Start a recording.
@@ -991,7 +1055,10 @@ module Asterisk
       #   ARI (http-client) related:
       #   - http request type: query,
       #   - param name: terminateOn,
-      #   - endpoint (post): /channels/{channelId}/record
+      #
+      # API endpoint:
+      # - method: post
+      # - endpoint: /channels/{channelId}/record
       #
       # Error responses:
       # - 400 - Invalid parameters
@@ -1008,7 +1075,7 @@ module Asterisk
         params += "&" + HTTP::Params.encode({"beep" => beep}) if beep
         params += "&" + HTTP::Params.encode({"terminateOn" => terminate_on}) if terminate_on
 
-        response = client.post "/channels/#{channel_id}/record?" + params
+        response = client.post "channels/#{channel_id}/record?" + params
       end
 
       # Get the value of a channel variable or function.
@@ -1027,7 +1094,10 @@ module Asterisk
       #   ARI (http-client) related:
       #   - http request type: query,
       #   - param name: variable,
-      #   - endpoint (get): /channels/{channelId}/variable
+      #
+      # API endpoint:
+      # - method: get
+      # - endpoint: /channels/{channelId}/variable
       #
       # Error responses:
       # - 400 - Missing variable parameter.
@@ -1035,7 +1105,7 @@ module Asterisk
       # - 409 - Channel not in a Stasis application
       def get_channel_var(channel_id : String, variable : String) : Asterisk::Variable
         params = HTTP::Params.encode({"variable" => variable})
-        response = client.get "/channels/#{channel_id}/variable?" + params
+        response = client.get "channels/#{channel_id}/variable?" + params
       end
 
       # Set the value of a channel variable or function.
@@ -1061,7 +1131,10 @@ module Asterisk
       #   ARI (http-client) related:
       #   - http request type: query,
       #   - param name: value,
-      #   - endpoint (post): /channels/{channelId}/variable
+      #
+      # API endpoint:
+      # - method: post
+      # - endpoint: /channels/{channelId}/variable
       #
       # Error responses:
       # - 400 - Missing variable parameter.
@@ -1073,7 +1146,7 @@ module Asterisk
         # Optional parameters
         params += "&" + HTTP::Params.encode({"value" => value}) if value
 
-        response = client.post "/channels/#{channel_id}/variable?" + params
+        response = client.post "channels/#{channel_id}/variable?" + params
       end
 
       # Start snooping.
@@ -1120,7 +1193,10 @@ module Asterisk
       #   ARI (http-client) related:
       #   - http request type: query,
       #   - param name: snoopId,
-      #   - endpoint (post): /channels/{channelId}/snoop
+      #
+      # API endpoint:
+      # - method: post
+      # - endpoint: /channels/{channelId}/snoop
       #
       # Error responses:
       # - 400 - Invalid parameters
@@ -1134,7 +1210,7 @@ module Asterisk
         params += "&" + HTTP::Params.encode({"appArgs" => app_args}) if app_args
         params += "&" + HTTP::Params.encode({"snoopId" => snoop_id}) if snoop_id
 
-        response = client.post "/channels/#{channel_id}/snoop?" + params
+        response = client.post "channels/#{channel_id}/snoop?" + params
       end
 
       # Start snooping.
@@ -1181,7 +1257,10 @@ module Asterisk
       #   ARI (http-client) related:
       #   - http request type: query,
       #   - param name: appArgs,
-      #   - endpoint (post): /channels/{channelId}/snoop/{snoopId}
+      #
+      # API endpoint:
+      # - method: post
+      # - endpoint: /channels/{channelId}/snoop/{snoopId}
       #
       # Error responses:
       # - 400 - Invalid parameters
@@ -1194,7 +1273,7 @@ module Asterisk
         params += "&" + HTTP::Params.encode({"whisper" => whisper}) if whisper
         params += "&" + HTTP::Params.encode({"appArgs" => app_args}) if app_args
 
-        response = client.post "/channels/#{channel_id}/snoop/#{snoop_id}?" + params
+        response = client.post "channels/#{channel_id}/snoop/#{snoop_id}?" + params
       end
 
       # Dial a created channel.
@@ -1220,7 +1299,10 @@ module Asterisk
       #   ARI (http-client) related:
       #   - http request type: query,
       #   - param name: timeout,
-      #   - endpoint (post): /channels/{channelId}/dial
+      #
+      # API endpoint:
+      # - method: post
+      # - endpoint: /channels/{channelId}/dial
       #
       # Error responses:
       # - 404 - Channel cannot be found.
@@ -1231,7 +1313,7 @@ module Asterisk
         params += "&" + HTTP::Params.encode({"caller" => caller}) if caller
         params += "&" + HTTP::Params.encode({"timeout" => timeout}) if timeout
 
-        response = client.post "/channels/#{channel_id}/dial?" + params
+        response = client.post "channels/#{channel_id}/dial?" + params
       end
 
       # RTP stats on a channel.
@@ -1243,12 +1325,15 @@ module Asterisk
       #   ARI (http-client) related:
       #   - http request type: path,
       #   - param name: channelId,
-      #   - endpoint (get): /channels/{channelId}/rtp_statistics
+      #
+      # API endpoint:
+      # - method: get
+      # - endpoint: /channels/{channelId}/rtp_statistics
       #
       # Error responses:
       # - 404 - Channel cannot be found.
       def rtpstatistics(channel_id : String) : RTPstat
-        response = client.get "/channels/#{channel_id}/rtp_statistics"
+        response = client.get "channels/#{channel_id}/rtp_statistics"
       end
     end
   end

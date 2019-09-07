@@ -12,7 +12,7 @@
 
 module Asterisk
   class ARI
-    class Recordings < Resource
+    class Recordings < Resources
       # A past recording that may be played back.
       struct StoredRecording
         include JSON::Serializable

@@ -13,7 +13,7 @@ require "./event.cr"
 
 module Asterisk
   class ARI
-    class Events < Resource
+    class Events < Resources
       # A channel initiated a media unhold.
       struct ChannelUnhold < Event
 

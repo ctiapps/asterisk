@@ -12,7 +12,7 @@
 
 module Asterisk
   class ARI
-    class Channels < Resource
+    class Channels < Resources
       # Dialplan location (context/extension/priority)
       struct DialplanCEP
         include JSON::Serializable

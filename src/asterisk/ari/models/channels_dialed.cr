@@ -12,7 +12,7 @@
 
 module Asterisk
   class ARI
-    class Channels < Resource
+    class Channels < Resources
       # Dialed channel information.
       struct Dialed
         include JSON::Serializable

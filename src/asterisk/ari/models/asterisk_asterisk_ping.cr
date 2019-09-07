@@ -12,7 +12,7 @@
 
 module Asterisk
   class ARI
-    class Asterisk < Resource
+    class Asterisk < Resources
       # Asterisk ping information
       struct AsteriskPing
         include JSON::Serializable

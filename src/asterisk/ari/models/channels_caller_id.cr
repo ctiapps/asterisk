@@ -12,7 +12,7 @@
 
 module Asterisk
   class ARI
-    class Channels < Resource
+    class Channels < Resources
       # Caller identification
       struct CallerID
         include JSON::Serializable

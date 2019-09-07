@@ -13,7 +13,7 @@ require "./event.cr"
 
 module Asterisk
   class ARI
-    class Events < Resource
+    class Events < Resources
       # Talking was detected on the channel.
       struct ChannelTalkingStarted < Event
 

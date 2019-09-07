@@ -12,7 +12,7 @@
 
 module Asterisk
   class ARI
-    class Channels < Resource
+    class Channels < Resources
       # A statistics of a RTP.
       struct RTPstat
         include JSON::Serializable

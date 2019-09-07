@@ -30,7 +30,7 @@ module Asterisk
 
                   module Asterisk
                     class ARI
-                      class #{resource} < Resource
+                      class #{resource} < Resources
                   #{operations}
                       end
                     end
@@ -50,7 +50,7 @@ module Asterisk
 
           # convert ARI JSON path to the HTTP URL:
           # "/channels/{channelId}/snoop/{snoopId}" =>
-          # "/channels/{channel_id}/snoop/{snoop_id}"
+          # "channels/{channel_id}/snoop/{snoop_id}"
           url = Array(String).new
           endpoint.split("/").each do |slice|
             if slice =~ /\{(.+)\}/
@@ -58,7 +58,7 @@ module Asterisk
             end
             url.push(slice)
           end
-          url = url.join("/")
+          url = url.join("/").gsub(/^\//, "")
 
           response = Datatype.new(operation["responseClass"].to_s).set!
 
@@ -69,7 +69,10 @@ module Asterisk
             end
             arguments = parameters.arguments
             arguments_spec = parameters.arguments_spec
-            arguments_spec += %(      #   - endpoint (#{http_operation}): #{endpoint})
+            arguments_spec += %(      #\n)
+            arguments_spec += %(      # API endpoint: \n)
+            arguments_spec += %(      # - method: #{http_operation}\n)
+            arguments_spec += %(      # - endpoint: #{endpoint})
           else
             parameters = nil
             arguments = ""

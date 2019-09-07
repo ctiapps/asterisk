@@ -13,7 +13,7 @@ require "./event.cr"
 
 module Asterisk
   class ARI
-    class Events < Resource
+    class Events < Resources
       # User-generated event with additional user-defined fields in the object.
       struct ChannelUserevent < Event
 

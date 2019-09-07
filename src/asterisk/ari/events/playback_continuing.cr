@@ -13,7 +13,7 @@ require "./event.cr"
 
 module Asterisk
   class ARI
-    class Events < Resource
+    class Events < Resources
       # Event showing the continuation of a media playback operation from one media URI to the next in the list.
       struct PlaybackContinuing < Event
 
