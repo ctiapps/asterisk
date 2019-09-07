@@ -1,0 +1,40 @@
+context asterisk.cr {
+  agi => {
+    AGI(/var/lib/asterisk/agi-bin/basic,1,2,3,4,5);
+  };
+
+  fastagi => {
+    AGI(agi://localhost:4573);
+  };
+
+  asyncagi => {
+    AGI(agi:async);
+  };
+
+  ari => {
+    goto ari,s,1;
+  };
+
+  // various test cases
+
+  // answer call, then hangup
+  answer => {
+    Answer;
+    Wait(8);
+    Hangup;
+  };
+};
+
+context ari {
+  s => {
+    Stasis(asterisk.cr);
+    NoOp(Stasis status ${STASISSTATUS});
+  };
+
+  callerid => {
+    NoOp(DNID: ${CALLERID(DNID)});
+    Set(CALLERID(name)=Test User);
+    Set(CALLERID(num)=12345);
+    Stasis(asterisk.cr);
+  };
+};

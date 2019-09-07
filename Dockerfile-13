@@ -12,7 +12,7 @@ FROM andrius/crystal-lang:asterisk-13
 #        /var/tmp/* \
 #        /var/lib/apt/lists/*
 
-COPY ./spec/asterisk_configs/*.conf /etc/asterisk/
+COPY ./spec/asterisk_configs/* /etc/asterisk/
 
 WORKDIR /src
 

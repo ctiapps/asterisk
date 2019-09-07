@@ -1,7 +1,7 @@
 require "spec"
 require "uuid"
 require "./helpers/*"
-require "../src/asterisk"
+require "../src/asterisk/*"
 
 STDOUT.sync = true
 Spec.override_default_formatter(Spec::VerboseFormatter.new)
@@ -17,6 +17,7 @@ Spec.override_default_formatter(Spec::VerboseFormatter.new)
 def logger
   Asterisk.logger
 end
+
 logger.level = LOG_LEVEL
 
 module TestHelpers
@@ -33,6 +34,18 @@ module TestHelpers
     yield ami
 
     ami.logoff
+  end
+
+  def with_agi
+    unless Asterisk::Server.running?
+      Asterisk::Server.start
+      # let Asterisk boot
+      sleep 3.seconds
+    end
+
+    agi = Asterisk::FastAGI.new # host: "127.0.0.1", port: 4573
+    yield agi
+    agi.close
   end
 end
 
