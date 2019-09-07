@@ -17,9 +17,6 @@ module Asterisk
       struct Mailbox
         include JSON::Serializable
 
-        @[JSON::Field(ignore: true)]
-        property client : ARI? = nil
-
         # Name of the mailbox.
         property name : String
 

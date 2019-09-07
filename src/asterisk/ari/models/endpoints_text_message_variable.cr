@@ -17,9 +17,6 @@ module Asterisk
       struct TextMessageVariable
         include JSON::Serializable
 
-        @[JSON::Field(ignore: true)]
-        property client : ARI? = nil
-
         # A unique key identifying the variable.
         property key : String
 

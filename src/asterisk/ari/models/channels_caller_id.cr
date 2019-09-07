@@ -17,9 +17,6 @@ module Asterisk
       struct CallerID
         include JSON::Serializable
 
-        @[JSON::Field(ignore: true)]
-        property client : ARI? = nil
-
         property name : String
 
         property number : String

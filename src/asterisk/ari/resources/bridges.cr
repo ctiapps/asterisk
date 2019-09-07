@@ -14,7 +14,7 @@ module Asterisk
   class ARI
     class Bridges < Resource
       # List all active bridges in Asterisk.
-      def self.list : Array(Bridges::Bridge)
+      def list : Array(Bridges::Bridge)
         client.get "/bridges"
       end
 
@@ -42,7 +42,7 @@ module Asterisk
       #   - http request type: query,
       #   - param name: name,
       #   - endpoint (post): /bridges
-      def self.create(type : String? = nil, bridge_id : String? = nil, name : String? = nil) : Bridges::Bridge
+      def create(type : String? = nil, bridge_id : String? = nil, name : String? = nil) : Bridges::Bridge
         # Optional parameters
         params = HTTP::Params.encode({} of String => String)
         params += "&" + HTTP::Params.encode({"type" => type}) if type
@@ -76,7 +76,7 @@ module Asterisk
       #   - http request type: query,
       #   - param name: name,
       #   - endpoint (post): /bridges/{bridgeId}
-      def self.create_with_id(bridge_id : String, type : String? = nil, name : String? = nil) : Bridges::Bridge
+      def create_with_id(bridge_id : String, type : String? = nil, name : String? = nil) : Bridges::Bridge
         # Optional parameters
         params = HTTP::Params.encode({} of String => String)
         params += "&" + HTTP::Params.encode({"type" => type}) if type
@@ -98,7 +98,7 @@ module Asterisk
       #
       # Error responses:
       # - 404 - Bridge not found
-      def self.get(bridge_id : String) : Bridges::Bridge
+      def get(bridge_id : String) : Bridges::Bridge
         response = client.get "/bridges/#{bridge_id}"
       end
 
@@ -115,7 +115,7 @@ module Asterisk
       #
       # Error responses:
       # - 404 - Bridge not found
-      def self.destroy(bridge_id : String)
+      def destroy(bridge_id : String)
         response = client.delete "/bridges/#{bridge_id}"
       end
 
@@ -163,7 +163,7 @@ module Asterisk
       # - 404 - Bridge not found
       # - 409 - Bridge not in Stasis application; Channel currently recording
       # - 422 - Channel not in Stasis application
-      def self.add_channel(bridge_id : String, channel : String, role : String? = nil, absorb_dtmf : Bool? = false, mute : Bool? = false)
+      def add_channel(bridge_id : String, channel : String, role : String? = nil, absorb_dtmf : Bool? = false, mute : Bool? = false)
         params = HTTP::Params.encode({"channel" => channel})
 
         # Optional parameters
@@ -197,7 +197,7 @@ module Asterisk
       # - 404 - Bridge not found
       # - 409 - Bridge not in Stasis application
       # - 422 - Channel not in this bridge
-      def self.remove_channel(bridge_id : String, channel : String)
+      def remove_channel(bridge_id : String, channel : String)
         params = HTTP::Params.encode({"channel" => channel})
         response = client.post "/bridges/#{bridge_id}/removeChannel?" + params
       end
@@ -224,7 +224,7 @@ module Asterisk
       # - 404 - Bridge or Channel not found
       # - 409 - Channel not in Stasis application
       # - 422 - Channel not in this Bridge
-      def self.set_video_source(bridge_id : String, channel_id : String)
+      def set_video_source(bridge_id : String, channel_id : String)
         response = client.post "/bridges/#{bridge_id}/videoSource/#{channel_id}"
       end
 
@@ -241,7 +241,7 @@ module Asterisk
       #
       # Error responses:
       # - 404 - Bridge not found
-      def self.clear_video_source(bridge_id : String)
+      def clear_video_source(bridge_id : String)
         response = client.delete "/bridges/#{bridge_id}/videoSource"
       end
 
@@ -266,7 +266,7 @@ module Asterisk
       # Error responses:
       # - 404 - Bridge not found
       # - 409 - Bridge not in Stasis application
-      def self.start_moh(bridge_id : String, moh_class : String? = nil)
+      def start_moh(bridge_id : String, moh_class : String? = nil)
         # Optional parameters
         params = HTTP::Params.encode({} of String => String)
         params += "&" + HTTP::Params.encode({"mohClass" => moh_class}) if moh_class
@@ -288,7 +288,7 @@ module Asterisk
       # Error responses:
       # - 404 - Bridge not found
       # - 409 - Bridge not in Stasis application
-      def self.stop_moh(bridge_id : String)
+      def stop_moh(bridge_id : String)
         response = client.delete "/bridges/#{bridge_id}/moh"
       end
 
@@ -341,7 +341,7 @@ module Asterisk
       # Error responses:
       # - 404 - Bridge not found
       # - 409 - Bridge not in a Stasis application
-      def self.play(bridge_id : String, media : String, lang : String? = nil, offsetms : Int32? = 0, skipms : Int32? = 3000, playback_id : String? = nil) : Playbacks::Playback
+      def play(bridge_id : String, media : String, lang : String? = nil, offsetms : Int32? = 0, skipms : Int32? = 3000, playback_id : String? = nil) : Playbacks::Playback
         params = HTTP::Params.encode({"media" => media})
 
         # Optional parameters
@@ -402,7 +402,7 @@ module Asterisk
       # Error responses:
       # - 404 - Bridge not found
       # - 409 - Bridge not in a Stasis application
-      def self.play_with_id(bridge_id : String, playback_id : String, media : String, lang : String? = nil, offsetms : Int32? = 0, skipms : Int32? = 3000) : Playbacks::Playback
+      def play_with_id(bridge_id : String, playback_id : String, media : String, lang : String? = nil, offsetms : Int32? = 0, skipms : Int32? = 3000) : Playbacks::Playback
         params = HTTP::Params.encode({"media" => media})
 
         # Optional parameters
@@ -478,7 +478,7 @@ module Asterisk
       # - 404 - Bridge not found
       # - 409 - Bridge is not in a Stasis application; A recording with the same name already exists on the system and can not be overwritten because it is in progress or ifExists=fail
       # - 422 - The format specified is unknown on this system
-      def self.record(bridge_id : String, name : String, format : String, max_duration_seconds : Int32? = 0, max_silence_seconds : Int32? = 0, if_exists : String? = fail, beep : Bool? = false, terminate_on : String? = none) : Recordings::LiveRecording
+      def record(bridge_id : String, name : String, format : String, max_duration_seconds : Int32? = 0, max_silence_seconds : Int32? = 0, if_exists : String? = fail, beep : Bool? = false, terminate_on : String? = none) : Recordings::LiveRecording
         params = HTTP::Params.encode({"name" => name, "format" => format})
 
         # Optional parameters

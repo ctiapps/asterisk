@@ -14,7 +14,7 @@ module Asterisk
   class ARI
     class Endpoints < Resource
       # List all endpoints.
-      def self.list : Int32
+      def list : Int32
         client.get "/endpoints"
       end
 
@@ -53,7 +53,7 @@ module Asterisk
       # Error responses:
       # - 400 - Invalid parameters for sending a message.
       # - 404 - Endpoint not found
-      def self.send_message(to : String, from : String, body : String? = nil, variables : Hash(String, String | Bool | Int32 | Float32)? = nil)
+      def send_message(to : String, from : String, body : String? = nil, variables : Hash(String, String | Bool | Int32 | Float32)? = nil)
         params = HTTP::Params.encode({"to" => to, "from" => from})
 
         # Optional parameters
@@ -76,7 +76,7 @@ module Asterisk
       #
       # Error responses:
       # - 404 - Endpoints not found
-      def self.list_by_tech(tech : String) : Int32
+      def list_by_tech(tech : String) : Int32
         response = client.get "/endpoints/#{tech}"
       end
 
@@ -101,7 +101,7 @@ module Asterisk
       # Error responses:
       # - 400 - Invalid parameters for sending a message.
       # - 404 - Endpoints not found
-      def self.get(tech : String, resource : String) : Int32
+      def get(tech : String, resource : String) : Int32
         response = client.get "/endpoints/#{tech}/#{resource}"
       end
 
@@ -147,7 +147,7 @@ module Asterisk
       # Error responses:
       # - 400 - Invalid parameters for sending a message.
       # - 404 - Endpoint not found
-      def self.send_message_to_endpoint(tech : String, resource : String, from : String, body : String? = nil, variables : Hash(String, String | Bool | Int32 | Float32)? = nil)
+      def send_message_to_endpoint(tech : String, resource : String, from : String, body : String? = nil, variables : Hash(String, String | Bool | Int32 | Float32)? = nil)
         params = HTTP::Params.encode({"from" => from})
 
         # Optional parameters

@@ -17,9 +17,6 @@ module Asterisk
       struct TextMessage
         include JSON::Serializable
 
-        @[JSON::Field(ignore: true)]
-        property client : ARI? = nil
-
         # A technology specific URI specifying the source of the message. For sip and pjsip technologies, any SIP URI can be specified. For xmpp, the URI must correspond to the client connection being used to send the message.
         property from : String
 

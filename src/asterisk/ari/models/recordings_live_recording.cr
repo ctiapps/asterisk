@@ -17,9 +17,6 @@ module Asterisk
       struct LiveRecording
         include JSON::Serializable
 
-        @[JSON::Field(ignore: true)]
-        property client : ARI? = nil
-
         # Base name for the recording
         property name : String
 

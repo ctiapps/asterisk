@@ -17,9 +17,6 @@ module Asterisk
       struct LogChannel
         include JSON::Serializable
 
-        @[JSON::Field(ignore: true)]
-        property client : ARI? = nil
-
         # The log channel path
         property channel : String
 

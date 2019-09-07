@@ -17,9 +17,6 @@ module Asterisk
       struct Variable
         include JSON::Serializable
 
-        @[JSON::Field(ignore: true)]
-        property client : ARI? = nil
-
         # The value of the variable requested
         property value : String
       end

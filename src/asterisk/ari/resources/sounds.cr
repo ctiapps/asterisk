@@ -30,7 +30,7 @@ module Asterisk
       #   - http request type: query,
       #   - param name: format,
       #   - endpoint (get): /sounds
-      def self.list(lang : String? = nil, format : String? = nil) : Array(Sounds::Sound)
+      def list(lang : String? = nil, format : String? = nil) : Array(Sounds::Sound)
         # Optional parameters
         params = HTTP::Params.encode({} of String => String)
         params += "&" + HTTP::Params.encode({"lang" => lang}) if lang
@@ -49,7 +49,7 @@ module Asterisk
       #   - http request type: path,
       #   - param name: soundId,
       #   - endpoint (get): /sounds/{soundId}
-      def self.get(sound_id : String) : Sounds::Sound
+      def get(sound_id : String) : Sounds::Sound
         client.get "/sounds/#{sound_id}"
       end
     end

@@ -93,7 +93,7 @@ module Asterisk
           name = operation["nickname"].to_s.underscore
 
           # name = %(#{endpoint =~ /\/\S+\/{(\S+)}\/\S+/ ? "" : "self."}#{name}#{arguments.empty? ? "" : "(#{arguments})"}#{response == "Nil" ? "" : " : #{response}"})
-          name = %(self.#{name}#{arguments.empty? ? "" : "(#{arguments})"}#{response == "Nil" ? "" : " : #{response}"})
+          name = %(#{name}#{arguments.empty? ? "" : "(#{arguments})"}#{response == "Nil" ? "" : " : #{response}"})
           <<-END
                 # #{summary}#{arguments_spec}#{errors}
                 def #{name}

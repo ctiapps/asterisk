@@ -56,11 +56,10 @@ describe Asterisk::ARI do
       ari.close
     end
 
-    # Call will be generated and should enter to the stasis, then hangup
-    # request will be sent. ARI events should be triggered in following
-    # sequence:
+    # Generated voice call should enter to the stasis app, then hangup request
+    # will be invoked. ARI events should be triggered in followin sequence:
     # - StasisStart
-    # - ChannelHangupRequest
+    # - ChannelHangupRequest (when asterisk terminate the call)
     # - StasisEnd
     it "should receive ARI events" do
       ari_channel = Channel(String).new
@@ -75,51 +74,70 @@ describe Asterisk::ARI do
 
       # Trigger asterisk execute
       Asterisk::Server.exec "originate Local/ari@asterisk.cr application Wait 8"
+
+      # Wait until call appear in stasis
       ari_channel.receive.should eq("StasisStart")
+
+      # Request to terminate all the calls
       Asterisk::Server.exec "hangup request all"
+
       sleep 0.25
       ari_channel.receive.should eq("ChannelHangupRequest")
+
       sleep 0.25
       ari_channel.receive.should eq("StasisEnd")
+
       ari.close
     end
-    #
-    # it "should execute ARI commands" do
-    #   ari_channel = Channel(String).new
-    #   stasis_channel : Asterisk::ARI::Channels::Channel? = nil
-    #   stasis_channel_id = nil
-    #
-    #   ari = Asterisk::ARI.new app: "asterisk.cr",
-    #                           username: "asterisk.cr",
-    #                           password: "asterisk.cr"
-    #
-    #   ari.on_stasis_end   { ari_channel.send "StasisEnd" }
-    #   ari.on_stasis_start do |event|
-    #     stasis_channel    = event.channel
-    #     stasis_channel_id = event.channel.id
-    #     ari_channel.send "StasisStart"
-    #   end
-    #   ari.start
-    #   # Asterisk::ARI.ari = ari
-    #
-    #   # Trigger asterisk execute
-    #   Asterisk::Server.exec "originate Local/ari@asterisk.cr application Wait 8"
-    #   ari_channel.receive.should eq("StasisStart")
-    #
-    #   if stasis_channel
-    #     channel_id = stasis_channel.not_nil!.id
-    #     puts
-    #     puts "answering call for #{channel_id}"
-    #     Asterisk::ARI::Channels.answer channel_id: channel_id
-    #   end
-    #
-    #   sleep 5
-    #
-    #   Asterisk::Server.exec "hangup request all"
-    #   ari_channel.receive
-    #   sleep 0.2
-    #   ari.close
-    # end
+
+    # Generated call should enter to the stasis app, then channl answer should
+    # be requested and validated. Then hangup request will be invoked.
+    # Following events are expected:
+    # - StasisStart
+    # - ChannelStateChange (after channel get answered)
+    it "should execute ARI commands" do
+      ari_channel = Channel(String).new
+
+      ari = Asterisk::ARI.new app: "asterisk.cr",
+                              username: "asterisk.cr",
+                              password: "asterisk.cr"
+
+      ari.on_stasis_start do |client, event|
+        ari_channel.send "StasisStart"
+
+        channel = Asterisk::ARI::Channels.new(client)
+        response = channel.answer channel_id: event.channel.id
+        # 2XX (normally it should be 204)
+        (200..299).to_a.should contain(response.status_code)
+      end
+
+      ari.on_channel_state_change do |_, event|
+        event.channel.state.should eq("Up")
+        ari_channel.send "ChannelStateChange"
+      end
+
+      ari.on_stasis_end do
+        ari_channel.send "StasisEnd"
+      end
+
+      ari.start
+
+      # Trigger asterisk execute
+      Asterisk::Server.exec "originate Local/ari@asterisk.cr application Wait 8"
+
+      # Wait until call appear in stasis
+      ari_channel.receive.should eq("StasisStart")
+
+      # Wait until call state get changed (expected to be "Up" (answer)
+      ari_channel.receive.should eq("ChannelStateChange")
+
+      # request call hangup
+      sleep 0.25
+      Asterisk::Server.exec "hangup request all"
+      ari_channel.receive
+      sleep 0.25
+      ari.close
+    end
 
   end
 end

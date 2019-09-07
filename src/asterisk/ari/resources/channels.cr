@@ -14,7 +14,7 @@ module Asterisk
   class ARI
     class Channels < Resource
       # List all active channels in Asterisk.
-      def self.list : Array(Channels::Channel)
+      def list : Array(Channels::Channel)
         client.get "/channels"
       end
 
@@ -123,7 +123,7 @@ module Asterisk
       # Error responses:
       # - 400 - Invalid parameters for originating a channel.
       # - 409 - Channel with given unique ID already exists.
-      def self.originate(endpoint : String, extension : String? = nil, context : String? = nil, priority : Int64? = nil, label : String? = nil, app : String? = nil, app_args : String? = nil, caller_id : String? = nil, timeout : Int32? = 30, variables : Hash(String, String | Bool | Int32 | Float32)? = nil, channel_id : String? = nil, other_channel_id : String? = nil, originator : String? = nil, formats : String? = nil) : Channels::Channel
+      def originate(endpoint : String, extension : String? = nil, context : String? = nil, priority : Int64? = nil, label : String? = nil, app : String? = nil, app_args : String? = nil, caller_id : String? = nil, timeout : Int32? = 30, variables : Hash(String, String | Bool | Int32 | Float32)? = nil, channel_id : String? = nil, other_channel_id : String? = nil, originator : String? = nil, formats : String? = nil) : Channels::Channel
         params = HTTP::Params.encode({"endpoint" => endpoint})
 
         # Optional parameters
@@ -199,7 +199,7 @@ module Asterisk
       #
       # Error responses:
       # - 409 - Channel with given unique ID already exists.
-      def self.create(endpoint : String, app : String, app_args : String? = nil, channel_id : String? = nil, other_channel_id : String? = nil, originator : String? = nil, formats : String? = nil) : Channels::Channel
+      def create(endpoint : String, app : String, app_args : String? = nil, channel_id : String? = nil, other_channel_id : String? = nil, originator : String? = nil, formats : String? = nil) : Channels::Channel
         params = HTTP::Params.encode({"endpoint" => endpoint, "app" => app})
 
         # Optional parameters
@@ -225,7 +225,7 @@ module Asterisk
       #
       # Error responses:
       # - 404 - Channel not found
-      def self.get(channel_id : String) : Channels::Channel
+      def get(channel_id : String) : Channels::Channel
         response = client.get "/channels/#{channel_id}"
       end
 
@@ -334,7 +334,7 @@ module Asterisk
       # Error responses:
       # - 400 - Invalid parameters for originating a channel.
       # - 409 - Channel with given unique ID already exists.
-      def self.originate_with_id(channel_id : String, endpoint : String, extension : String? = nil, context : String? = nil, priority : Int64? = nil, label : String? = nil, app : String? = nil, app_args : String? = nil, caller_id : String? = nil, timeout : Int32? = 30, variables : Hash(String, String | Bool | Int32 | Float32)? = nil, other_channel_id : String? = nil, originator : String? = nil, formats : String? = nil) : Channels::Channel
+      def originate_with_id(channel_id : String, endpoint : String, extension : String? = nil, context : String? = nil, priority : Int64? = nil, label : String? = nil, app : String? = nil, app_args : String? = nil, caller_id : String? = nil, timeout : Int32? = 30, variables : Hash(String, String | Bool | Int32 | Float32)? = nil, other_channel_id : String? = nil, originator : String? = nil, formats : String? = nil) : Channels::Channel
         params = HTTP::Params.encode({"endpoint" => endpoint})
 
         # Optional parameters
@@ -375,7 +375,7 @@ module Asterisk
       # Error responses:
       # - 400 - Invalid reason for hangup provided
       # - 404 - Channel not found
-      def self.hangup(channel_id : String, reason : String? = nil)
+      def hangup(channel_id : String, reason : String? = nil)
         # Optional parameters
         params = HTTP::Params.encode({} of String => String)
         params += "&" + HTTP::Params.encode({"reason" => reason}) if reason
@@ -426,7 +426,7 @@ module Asterisk
       # - 404 - Channel not found
       # - 409 - Channel not in a Stasis application
       # - 412 - Channel in invalid state
-      def self.continue_in_dialplan(channel_id : String, context : String? = nil, extension : String? = nil, priority : Int32? = nil, label : String? = nil)
+      def continue_in_dialplan(channel_id : String, context : String? = nil, extension : String? = nil, priority : Int32? = nil, label : String? = nil)
         # Optional parameters
         params = HTTP::Params.encode({} of String => String)
         params += "&" + HTTP::Params.encode({"context" => context}) if context
@@ -465,7 +465,7 @@ module Asterisk
       # Error responses:
       # - 404 - Channel not found
       # - 409 - Channel not in a Stasis application
-      def self.move(channel_id : String, app : String, app_args : String? = nil)
+      def move(channel_id : String, app : String, app_args : String? = nil)
         params = HTTP::Params.encode({"app" => app})
 
         # Optional parameters
@@ -498,7 +498,7 @@ module Asterisk
       # - 409 - Channel not in a Stasis application
       # - 422 - Endpoint is not the same type as the channel
       # - 412 - Channel in invalid state
-      def self.redirect(channel_id : String, endpoint : String)
+      def redirect(channel_id : String, endpoint : String)
         params = HTTP::Params.encode({"endpoint" => endpoint})
         response = client.post "/channels/#{channel_id}/redirect?" + params
       end
@@ -518,8 +518,10 @@ module Asterisk
       # - 404 - Channel not found
       # - 409 - Channel not in a Stasis application
       # - 412 - Channel in invalid state
-      def self.answer(channel_id : String)
-        response = client.post "/channels/#{channel_id}/answer"
+      def answer(channel_id : String)
+        response = client.post "channels/#{channel_id}/answer"
+        pp response
+        response
       end
 
       # Indicate ringing to a channel.
@@ -537,7 +539,7 @@ module Asterisk
       # - 404 - Channel not found
       # - 409 - Channel not in a Stasis application
       # - 412 - Channel in invalid state
-      def self.ring(channel_id : String)
+      def ring(channel_id : String)
         response = client.post "/channels/#{channel_id}/ring"
       end
 
@@ -556,7 +558,7 @@ module Asterisk
       # - 404 - Channel not found
       # - 409 - Channel not in a Stasis application
       # - 412 - Channel in invalid state
-      def self.ring_stop(channel_id : String)
+      def ring_stop(channel_id : String)
         response = client.delete "/channels/#{channel_id}/ring"
       end
 
@@ -611,7 +613,7 @@ module Asterisk
       # - 404 - Channel not found
       # - 409 - Channel not in a Stasis application
       # - 412 - Channel in invalid state
-      def self.send_dtmf(channel_id : String, dtmf : String? = nil, before : Int32? = 0, between : Int32? = 100, duration : Int32? = 100, after : Int32? = 0)
+      def send_dtmf(channel_id : String, dtmf : String? = nil, before : Int32? = 0, between : Int32? = 100, duration : Int32? = 100, after : Int32? = 0)
         # Optional parameters
         params = HTTP::Params.encode({} of String => String)
         params += "&" + HTTP::Params.encode({"dtmf" => dtmf}) if dtmf
@@ -645,7 +647,7 @@ module Asterisk
       # - 404 - Channel not found
       # - 409 - Channel not in a Stasis application
       # - 412 - Channel in invalid state
-      def self.mute(channel_id : String, direction : String? = both)
+      def mute(channel_id : String, direction : String? = both)
         # Optional parameters
         params = HTTP::Params.encode({} of String => String)
         params += "&" + HTTP::Params.encode({"direction" => direction}) if direction
@@ -675,7 +677,7 @@ module Asterisk
       # - 404 - Channel not found
       # - 409 - Channel not in a Stasis application
       # - 412 - Channel in invalid state
-      def self.unmute(channel_id : String, direction : String? = both)
+      def unmute(channel_id : String, direction : String? = both)
         # Optional parameters
         params = HTTP::Params.encode({} of String => String)
         params += "&" + HTTP::Params.encode({"direction" => direction}) if direction
@@ -698,7 +700,7 @@ module Asterisk
       # - 404 - Channel not found
       # - 409 - Channel not in a Stasis application
       # - 412 - Channel in invalid state
-      def self.hold(channel_id : String)
+      def hold(channel_id : String)
         response = client.post "/channels/#{channel_id}/hold"
       end
 
@@ -717,7 +719,7 @@ module Asterisk
       # - 404 - Channel not found
       # - 409 - Channel not in a Stasis application
       # - 412 - Channel in invalid state
-      def self.unhold(channel_id : String)
+      def unhold(channel_id : String)
         response = client.delete "/channels/#{channel_id}/hold"
       end
 
@@ -743,7 +745,7 @@ module Asterisk
       # - 404 - Channel not found
       # - 409 - Channel not in a Stasis application
       # - 412 - Channel in invalid state
-      def self.start_moh(channel_id : String, moh_class : String? = nil)
+      def start_moh(channel_id : String, moh_class : String? = nil)
         # Optional parameters
         params = HTTP::Params.encode({} of String => String)
         params += "&" + HTTP::Params.encode({"mohClass" => moh_class}) if moh_class
@@ -766,7 +768,7 @@ module Asterisk
       # - 404 - Channel not found
       # - 409 - Channel not in a Stasis application
       # - 412 - Channel in invalid state
-      def self.stop_moh(channel_id : String)
+      def stop_moh(channel_id : String)
         response = client.delete "/channels/#{channel_id}/moh"
       end
 
@@ -785,7 +787,7 @@ module Asterisk
       # - 404 - Channel not found
       # - 409 - Channel not in a Stasis application
       # - 412 - Channel in invalid state
-      def self.start_silence(channel_id : String)
+      def start_silence(channel_id : String)
         response = client.post "/channels/#{channel_id}/silence"
       end
 
@@ -804,7 +806,7 @@ module Asterisk
       # - 404 - Channel not found
       # - 409 - Channel not in a Stasis application
       # - 412 - Channel in invalid state
-      def self.stop_silence(channel_id : String)
+      def stop_silence(channel_id : String)
         response = client.delete "/channels/#{channel_id}/silence"
       end
 
@@ -858,7 +860,7 @@ module Asterisk
       # - 404 - Channel not found
       # - 409 - Channel not in a Stasis application
       # - 412 - Channel in invalid state
-      def self.play(channel_id : String, media : String, lang : String? = nil, offsetms : Int32? = nil, skipms : Int32? = 3000, playback_id : String? = nil) : Playbacks::Playback
+      def play(channel_id : String, media : String, lang : String? = nil, offsetms : Int32? = nil, skipms : Int32? = 3000, playback_id : String? = nil) : Playbacks::Playback
         params = HTTP::Params.encode({"media" => media})
 
         # Optional parameters
@@ -920,7 +922,7 @@ module Asterisk
       # - 404 - Channel not found
       # - 409 - Channel not in a Stasis application
       # - 412 - Channel in invalid state
-      def self.play_with_id(channel_id : String, playback_id : String, media : String, lang : String? = nil, offsetms : Int32? = nil, skipms : Int32? = 3000) : Playbacks::Playback
+      def play_with_id(channel_id : String, playback_id : String, media : String, lang : String? = nil, offsetms : Int32? = nil, skipms : Int32? = 3000) : Playbacks::Playback
         params = HTTP::Params.encode({"media" => media})
 
         # Optional parameters
@@ -996,7 +998,7 @@ module Asterisk
       # - 404 - Channel not found
       # - 409 - Channel is not in a Stasis application; the channel is currently bridged with other hcannels; A recording with the same name already exists on the system and can not be overwritten because it is in progress or ifExists=fail
       # - 422 - The format specified is unknown on this system
-      def self.record(channel_id : String, name : String, format : String, max_duration_seconds : Int32? = 0, max_silence_seconds : Int32? = 0, if_exists : String? = fail, beep : Bool? = false, terminate_on : String? = none) : Recordings::LiveRecording
+      def record(channel_id : String, name : String, format : String, max_duration_seconds : Int32? = 0, max_silence_seconds : Int32? = 0, if_exists : String? = fail, beep : Bool? = false, terminate_on : String? = none) : Recordings::LiveRecording
         params = HTTP::Params.encode({"name" => name, "format" => format})
 
         # Optional parameters
@@ -1031,7 +1033,7 @@ module Asterisk
       # - 400 - Missing variable parameter.
       # - 404 - Channel or variable not found
       # - 409 - Channel not in a Stasis application
-      def self.get_channel_var(channel_id : String, variable : String) : Asterisk::Variable
+      def get_channel_var(channel_id : String, variable : String) : Asterisk::Variable
         params = HTTP::Params.encode({"variable" => variable})
         response = client.get "/channels/#{channel_id}/variable?" + params
       end
@@ -1065,7 +1067,7 @@ module Asterisk
       # - 400 - Missing variable parameter.
       # - 404 - Channel not found
       # - 409 - Channel not in a Stasis application
-      def self.set_channel_var(channel_id : String, variable : String, value : String? = nil)
+      def set_channel_var(channel_id : String, variable : String, value : String? = nil)
         params = HTTP::Params.encode({"variable" => variable})
 
         # Optional parameters
@@ -1123,7 +1125,7 @@ module Asterisk
       # Error responses:
       # - 400 - Invalid parameters
       # - 404 - Channel not found
-      def self.snoop_channel(channel_id : String, app : String, spy : String? = none, whisper : String? = none, app_args : String? = nil, snoop_id : String? = nil) : Channels::Channel
+      def snoop_channel(channel_id : String, app : String, spy : String? = none, whisper : String? = none, app_args : String? = nil, snoop_id : String? = nil) : Channels::Channel
         params = HTTP::Params.encode({"app" => app})
 
         # Optional parameters
@@ -1184,7 +1186,7 @@ module Asterisk
       # Error responses:
       # - 400 - Invalid parameters
       # - 404 - Channel not found
-      def self.snoop_channel_with_id(channel_id : String, snoop_id : String, app : String, spy : String? = none, whisper : String? = none, app_args : String? = nil) : Channels::Channel
+      def snoop_channel_with_id(channel_id : String, snoop_id : String, app : String, spy : String? = none, whisper : String? = none, app_args : String? = nil) : Channels::Channel
         params = HTTP::Params.encode({"app" => app})
 
         # Optional parameters
@@ -1223,7 +1225,7 @@ module Asterisk
       # Error responses:
       # - 404 - Channel cannot be found.
       # - 409 - Channel cannot be dialed.
-      def self.dial(channel_id : String, caller : String? = nil, timeout : Int32? = 0)
+      def dial(channel_id : String, caller : String? = nil, timeout : Int32? = 0)
         # Optional parameters
         params = HTTP::Params.encode({} of String => String)
         params += "&" + HTTP::Params.encode({"caller" => caller}) if caller
@@ -1245,7 +1247,7 @@ module Asterisk
       #
       # Error responses:
       # - 404 - Channel cannot be found.
-      def self.rtpstatistics(channel_id : String) : RTPstat
+      def rtpstatistics(channel_id : String) : RTPstat
         response = client.get "/channels/#{channel_id}/rtp_statistics"
       end
     end

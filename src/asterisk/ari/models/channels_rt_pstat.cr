@@ -17,9 +17,6 @@ module Asterisk
       struct RTPstat
         include JSON::Serializable
 
-        @[JSON::Field(ignore: true)]
-        property client : ARI? = nil
-
         # Number of packets transmitted.
         property txcount : Int32
 

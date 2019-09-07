@@ -14,7 +14,7 @@ module Asterisk
   class ARI
     class Mailboxes < Resource
       # List all mailboxes.
-      def self.list : Array(Mailboxes::Mailbox)
+      def list : Array(Mailboxes::Mailbox)
         client.get "/mailboxes"
       end
 
@@ -31,7 +31,7 @@ module Asterisk
       #
       # Error responses:
       # - 404 - Mailbox not found
-      def self.get(mailbox_name : String) : Mailboxes::Mailbox
+      def get(mailbox_name : String) : Mailboxes::Mailbox
         response = client.get "/mailboxes/#{mailbox_name}"
       end
 
@@ -62,7 +62,7 @@ module Asterisk
       #
       # Error responses:
       # - 404 - Mailbox not found
-      def self.update(mailbox_name : String, old_messages : Int32, new_messages : Int32)
+      def update(mailbox_name : String, old_messages : Int32, new_messages : Int32)
         params = HTTP::Params.encode({"oldMessages" => old_messages, "newMessages" => new_messages})
         response = client.put "/mailboxes/#{mailbox_name}?" + params
       end
@@ -80,7 +80,7 @@ module Asterisk
       #
       # Error responses:
       # - 404 - Mailbox not found
-      def self.delete(mailbox_name : String)
+      def delete(mailbox_name : String)
         response = client.delete "/mailboxes/#{mailbox_name}"
       end
     end

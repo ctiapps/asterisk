@@ -46,9 +46,6 @@ module Asterisk
                           struct #{klass}
                             include JSON::Serializable
 
-                            @[JSON::Field(ignore: true)]
-                            property client : ARI? = nil
-
                             #{parameters.struct_properties.chomp.gsub(/ +$/, "").chomp}
                           end
                         end

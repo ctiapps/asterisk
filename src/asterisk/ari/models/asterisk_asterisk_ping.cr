@@ -17,9 +17,6 @@ module Asterisk
       struct AsteriskPing
         include JSON::Serializable
 
-        @[JSON::Field(ignore: true)]
-        property client : ARI? = nil
-
         # Asterisk id info
         property asterisk_id : String
 

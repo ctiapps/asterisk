@@ -17,9 +17,6 @@ module Asterisk
       struct ConfigInfo
         include JSON::Serializable
 
-        @[JSON::Field(ignore: true)]
-        property client : ARI? = nil
-
         # Asterisk system name.
         property name : String
 

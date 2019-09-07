@@ -30,7 +30,7 @@ module Asterisk
       #   - http request type: query,
       #   - param name: subscribeAll,
       #   - endpoint (get): /events
-      def self.event_websocket(app : String, subscribe_all : Bool? = nil) : Message
+      def event_websocket(app : String, subscribe_all : Bool? = nil) : Message
         params = HTTP::Params.encode({"app" => app})
 
         # Optional parameters
@@ -75,7 +75,7 @@ module Asterisk
       # - 404 - Application does not exist.
       # - 422 - Event source not found.
       # - 400 - Invalid even tsource URI or userevent data.
-      def self.user_event(event_name : String, application : String, source : String? = nil, variables : Hash(String, String | Bool | Int32 | Float32)? = nil)
+      def user_event(event_name : String, application : String, source : String? = nil, variables : Hash(String, String | Bool | Int32 | Float32)? = nil)
         params = HTTP::Params.encode({"application" => application})
 
         # Optional parameters

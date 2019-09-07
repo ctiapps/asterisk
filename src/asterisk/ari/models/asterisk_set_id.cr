@@ -17,9 +17,6 @@ module Asterisk
       struct SetId
         include JSON::Serializable
 
-        @[JSON::Field(ignore: true)]
-        property client : ARI? = nil
-
         # Effective user id.
         property user : String
 

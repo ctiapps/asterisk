@@ -17,9 +17,6 @@ module Asterisk
       struct FormatLangPair
         include JSON::Serializable
 
-        @[JSON::Field(ignore: true)]
-        property client : ARI? = nil
-
         property language : String
 
         property format : String

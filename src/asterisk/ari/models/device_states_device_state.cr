@@ -17,9 +17,6 @@ module Asterisk
       struct DeviceState
         include JSON::Serializable
 
-        @[JSON::Field(ignore: true)]
-        property client : ARI? = nil
-
         # Name of the device.
         property name : String
 

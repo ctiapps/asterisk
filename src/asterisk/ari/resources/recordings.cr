@@ -14,7 +14,7 @@ module Asterisk
   class ARI
     class Recordings < Resource
       # List recordings that are complete.
-      def self.list_stored : Array(Recordings::StoredRecording)
+      def list_stored : Array(Recordings::StoredRecording)
         client.get "/recordings/stored"
       end
 
@@ -31,7 +31,7 @@ module Asterisk
       #
       # Error responses:
       # - 404 - Recording not found
-      def self.get_stored(recording_name : String) : Recordings::StoredRecording
+      def get_stored(recording_name : String) : Recordings::StoredRecording
         response = client.get "/recordings/stored/#{recording_name}"
       end
 
@@ -48,7 +48,7 @@ module Asterisk
       #
       # Error responses:
       # - 404 - Recording not found
-      def self.delete_stored(recording_name : String)
+      def delete_stored(recording_name : String)
         response = client.delete "/recordings/stored/#{recording_name}"
       end
 
@@ -66,7 +66,7 @@ module Asterisk
       # Error responses:
       # - 403 - The recording file could not be opened
       # - 404 - Recording not found
-      def self.get_stored_file(recording_name : String) : Binary
+      def get_stored_file(recording_name : String) : Binary
         response = client.get "/recordings/stored/#{recording_name}/file"
       end
 
@@ -91,7 +91,7 @@ module Asterisk
       # Error responses:
       # - 404 - Recording not found
       # - 409 - A recording with the same name already exists on the system
-      def self.copy_stored(recording_name : String, destination_recording_name : String) : Recordings::StoredRecording
+      def copy_stored(recording_name : String, destination_recording_name : String) : Recordings::StoredRecording
         params = HTTP::Params.encode({"destinationRecordingName" => destination_recording_name})
         response = client.post "/recordings/stored/#{recording_name}/copy?" + params
       end
@@ -109,7 +109,7 @@ module Asterisk
       #
       # Error responses:
       # - 404 - Recording not found
-      def self.get_live(recording_name : String) : Recordings::LiveRecording
+      def get_live(recording_name : String) : Recordings::LiveRecording
         response = client.get "/recordings/live/#{recording_name}"
       end
 
@@ -126,7 +126,7 @@ module Asterisk
       #
       # Error responses:
       # - 404 - Recording not found
-      def self.cancel(recording_name : String)
+      def cancel(recording_name : String)
         response = client.delete "/recordings/live/#{recording_name}"
       end
 
@@ -143,7 +143,7 @@ module Asterisk
       #
       # Error responses:
       # - 404 - Recording not found
-      def self.stop(recording_name : String)
+      def stop(recording_name : String)
         response = client.post "/recordings/live/#{recording_name}/stop"
       end
 
@@ -161,7 +161,7 @@ module Asterisk
       # Error responses:
       # - 404 - Recording not found
       # - 409 - Recording not in session
-      def self.pause(recording_name : String)
+      def pause(recording_name : String)
         response = client.post "/recordings/live/#{recording_name}/pause"
       end
 
@@ -179,7 +179,7 @@ module Asterisk
       # Error responses:
       # - 404 - Recording not found
       # - 409 - Recording not in session
-      def self.unpause(recording_name : String)
+      def unpause(recording_name : String)
         response = client.delete "/recordings/live/#{recording_name}/pause"
       end
 
@@ -197,7 +197,7 @@ module Asterisk
       # Error responses:
       # - 404 - Recording not found
       # - 409 - Recording not in session
-      def self.mute(recording_name : String)
+      def mute(recording_name : String)
         response = client.post "/recordings/live/#{recording_name}/mute"
       end
 
@@ -215,7 +215,7 @@ module Asterisk
       # Error responses:
       # - 404 - Recording not found
       # - 409 - Recording not in session
-      def self.unmute(recording_name : String)
+      def unmute(recording_name : String)
         response = client.delete "/recordings/live/#{recording_name}/mute"
       end
     end

@@ -26,7 +26,7 @@ module Asterisk
       #
       # Error responses:
       # - 404 - The playback cannot be found
-      def self.get(playback_id : String) : Playbacks::Playback
+      def get(playback_id : String) : Playbacks::Playback
         response = client.get "/playbacks/#{playback_id}"
       end
 
@@ -43,7 +43,7 @@ module Asterisk
       #
       # Error responses:
       # - 404 - The playback cannot be found
-      def self.stop(playback_id : String)
+      def stop(playback_id : String)
         response = client.delete "/playbacks/#{playback_id}"
       end
 
@@ -69,7 +69,7 @@ module Asterisk
       # - 400 - The provided operation parameter was invalid
       # - 404 - The playback cannot be found
       # - 409 - The operation cannot be performed in the playback's current state
-      def self.control(playback_id : String, operation : String)
+      def control(playback_id : String, operation : String)
         params = HTTP::Params.encode({"operation" => operation})
         response = client.post "/playbacks/#{playback_id}/control?" + params
       end
