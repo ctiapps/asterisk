@@ -39,7 +39,8 @@ module Asterisk
         # Optional parameters
         params += "&" + HTTP::Params.encode({"subscribeAll" => subscribe_all.to_s}) if subscribe_all
 
-        client.get "events?" + params
+        response = client.get "events?" + params
+        response.status_code.to_s =~ /^[23]\d\d$/ ? Message.from_json(response.body_io.gets) : response
       end
 
       # Generate a user event.
@@ -87,8 +88,7 @@ module Asterisk
         # Optional parameters
         params += "&" + HTTP::Params.encode({"source" => source}) if source
 
-        response = client.post "events/user/#{event_name}?" + params,
-          body: variables.to_json
+        client.post "events/user/#{event_name}?" + params, body: variables.to_json
       end
     end
   end

@@ -31,6 +31,7 @@ module Asterisk
       # - 404 - The playback cannot be found
       def get(playback_id : String) : HTTP::Client::Response | Playbacks::Playback
         response = client.get "playbacks/#{playback_id}"
+        response.status_code.to_s =~ /^[23]\d\d$/ ? Playbacks::Playback.from_json(response.body_io.gets) : response
       end
 
       # Stop a playback.
@@ -50,7 +51,7 @@ module Asterisk
       # Error responses:
       # - 404 - The playback cannot be found
       def stop(playback_id : String)
-        response = client.delete "playbacks/#{playback_id}"
+        client.delete "playbacks/#{playback_id}"
       end
 
       # Control a playback.
@@ -80,7 +81,7 @@ module Asterisk
       # - 409 - The operation cannot be performed in the playback's current state
       def control(playback_id : String, operation : String)
         params = HTTP::Params.encode({"operation" => operation})
-        response = client.post "playbacks/#{playback_id}/control?" + params
+        client.post "playbacks/#{playback_id}/control?" + params
       end
     end
   end

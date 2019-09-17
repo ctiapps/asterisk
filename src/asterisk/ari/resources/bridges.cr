@@ -15,7 +15,8 @@ module Asterisk
     class Bridges < Resources
       # List all active bridges in Asterisk.
       def list : HTTP::Client::Response | Array(Bridges::Bridge)
-        client.get "bridges"
+        response = client.get "bridges"
+        response.status_code.to_s =~ /^[23]\d\d$/ ? Array(Bridges::Bridge).from_json(response.body_io.gets) : response
       end
 
       # Create a new bridge.
@@ -52,7 +53,8 @@ module Asterisk
         params += "&" + HTTP::Params.encode({"bridgeId" => bridge_id}) if bridge_id
         params += "&" + HTTP::Params.encode({"name" => name}) if name
 
-        client.post "bridges?" + params
+        response = client.post "bridges?" + params
+        response.status_code.to_s =~ /^[23]\d\d$/ ? Bridges::Bridge.from_json(response.body_io.gets) : response
       end
 
       # Create a new bridge or updates an existing one.
@@ -88,7 +90,8 @@ module Asterisk
         params += "&" + HTTP::Params.encode({"type" => type}) if type
         params += "&" + HTTP::Params.encode({"name" => name}) if name
 
-        client.post "bridges/#{bridge_id}?" + params
+        response = client.post "bridges/#{bridge_id}?" + params
+        response.status_code.to_s =~ /^[23]\d\d$/ ? Bridges::Bridge.from_json(response.body_io.gets) : response
       end
 
       # Get bridge details.
@@ -109,6 +112,7 @@ module Asterisk
       # - 404 - Bridge not found
       def get(bridge_id : String) : HTTP::Client::Response | Bridges::Bridge
         response = client.get "bridges/#{bridge_id}"
+        response.status_code.to_s =~ /^[23]\d\d$/ ? Bridges::Bridge.from_json(response.body_io.gets) : response
       end
 
       # Shut down a bridge.
@@ -128,7 +132,7 @@ module Asterisk
       # Error responses:
       # - 404 - Bridge not found
       def destroy(bridge_id : String)
-        response = client.delete "bridges/#{bridge_id}"
+        client.delete "bridges/#{bridge_id}"
       end
 
       # Add a channel to a bridge.
@@ -186,7 +190,7 @@ module Asterisk
         params += "&" + HTTP::Params.encode({"absorbDTMF" => absorb_dtmf.to_s}) if absorb_dtmf
         params += "&" + HTTP::Params.encode({"mute" => mute.to_s}) if mute
 
-        response = client.post "bridges/#{bridge_id}/addChannel?" + params
+        client.post "bridges/#{bridge_id}/addChannel?" + params
       end
 
       # Remove a channel from a bridge.
@@ -217,7 +221,7 @@ module Asterisk
       # - 422 - Channel not in this bridge
       def remove_channel(bridge_id : String, channel : String)
         params = HTTP::Params.encode({"channel" => channel})
-        response = client.post "bridges/#{bridge_id}/removeChannel?" + params
+        client.post "bridges/#{bridge_id}/removeChannel?" + params
       end
 
       # Set a channel as the video source in a multi-party mixing bridge. This operation has no effect on bridges with two or fewer participants.
@@ -246,7 +250,7 @@ module Asterisk
       # - 409 - Channel not in Stasis application
       # - 422 - Channel not in this Bridge
       def set_video_source(bridge_id : String, channel_id : String)
-        response = client.post "bridges/#{bridge_id}/videoSource/#{channel_id}"
+        client.post "bridges/#{bridge_id}/videoSource/#{channel_id}"
       end
 
       # Removes any explicit video source in a multi-party mixing bridge. This operation has no effect on bridges with two or fewer participants. When no explicit video source is set, talk detection will be used to determine the active video stream.
@@ -266,7 +270,7 @@ module Asterisk
       # Error responses:
       # - 404 - Bridge not found
       def clear_video_source(bridge_id : String)
-        response = client.delete "bridges/#{bridge_id}/videoSource"
+        client.delete "bridges/#{bridge_id}/videoSource"
       end
 
       # Play music on hold to a bridge or change the MOH class that is playing.
@@ -298,7 +302,7 @@ module Asterisk
         params = HTTP::Params.encode({} of String => String)
         params += "&" + HTTP::Params.encode({"mohClass" => moh_class}) if moh_class
 
-        response = client.post "bridges/#{bridge_id}/moh?" + params
+        client.post "bridges/#{bridge_id}/moh?" + params
       end
 
       # Stop playing music on hold to a bridge.
@@ -319,7 +323,7 @@ module Asterisk
       # - 404 - Bridge not found
       # - 409 - Bridge not in Stasis application
       def stop_moh(bridge_id : String)
-        response = client.delete "bridges/#{bridge_id}/moh"
+        client.delete "bridges/#{bridge_id}/moh"
       end
 
       # Start playback of media on a bridge.
@@ -384,6 +388,7 @@ module Asterisk
         params += "&" + HTTP::Params.encode({"playbackId" => playback_id}) if playback_id
 
         response = client.post "bridges/#{bridge_id}/play?" + params
+        response.status_code.to_s =~ /^[23]\d\d$/ ? Playbacks::Playback.from_json(response.body_io.gets) : response
       end
 
       # Start playback of media on a bridge.
@@ -447,6 +452,7 @@ module Asterisk
         params += "&" + HTTP::Params.encode({"skipms" => skipms.to_s}) if skipms
 
         response = client.post "bridges/#{bridge_id}/play/#{playback_id}?" + params
+        response.status_code.to_s =~ /^[23]\d\d$/ ? Playbacks::Playback.from_json(response.body_io.gets) : response
       end
 
       # Start a recording.
@@ -528,6 +534,7 @@ module Asterisk
         params += "&" + HTTP::Params.encode({"terminateOn" => terminate_on}) if terminate_on
 
         response = client.post "bridges/#{bridge_id}/record?" + params
+        response.status_code.to_s =~ /^[23]\d\d$/ ? Recordings::LiveRecording.from_json(response.body_io.gets) : response
       end
     end
   end

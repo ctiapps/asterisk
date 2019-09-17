@@ -15,7 +15,8 @@ module Asterisk
     class Mailboxes < Resources
       # List all mailboxes.
       def list : HTTP::Client::Response | Array(Mailboxes::Mailbox)
-        client.get "mailboxes"
+        response = client.get "mailboxes"
+        response.status_code.to_s =~ /^[23]\d\d$/ ? Array(Mailboxes::Mailbox).from_json(response.body_io.gets) : response
       end
 
       # Retrieve the current state of a mailbox.
@@ -36,6 +37,7 @@ module Asterisk
       # - 404 - Mailbox not found
       def get(mailbox_name : String) : HTTP::Client::Response | Mailboxes::Mailbox
         response = client.get "mailboxes/#{mailbox_name}"
+        response.status_code.to_s =~ /^[23]\d\d$/ ? Mailboxes::Mailbox.from_json(response.body_io.gets) : response
       end
 
       # Change the state of a mailbox. (Note - implicitly creates the mailbox).
@@ -69,8 +71,8 @@ module Asterisk
       # Error responses:
       # - 404 - Mailbox not found
       def update(mailbox_name : String, old_messages : Int32, new_messages : Int32)
-        params = HTTP::Params.encode({"oldMessages" => old_messages, "newMessages" => new_messages})
-        response = client.put "mailboxes/#{mailbox_name}?" + params
+        params = HTTP::Params.encode({"oldMessages" => old_messages.to_s, "newMessages" => new_messages.to_s})
+        client.put "mailboxes/#{mailbox_name}?" + params
       end
 
       # Destroy a mailbox.
@@ -90,7 +92,7 @@ module Asterisk
       # Error responses:
       # - 404 - Mailbox not found
       def delete(mailbox_name : String)
-        response = client.delete "mailboxes/#{mailbox_name}"
+        client.delete "mailboxes/#{mailbox_name}"
       end
     end
   end

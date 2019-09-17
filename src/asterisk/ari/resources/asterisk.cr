@@ -45,6 +45,7 @@ module Asterisk
       # - 404 - {configClass|objectType|id} not found
       def get_object(config_class : String, object_type : String, id : String) : HTTP::Client::Response | Array(Asterisk::ConfigTuple)
         response = client.get "asterisk/config/dynamic/#{config_class}/#{object_type}/#{id}"
+        response.status_code.to_s =~ /^[23]\d\d$/ ? Array(Asterisk::ConfigTuple).from_json(response.body_io.gets) : response
       end
 
       # Create or update a dynamic configuration object.
@@ -87,8 +88,8 @@ module Asterisk
       # - 403 - Could not create or update object
       # - 404 - {configClass|objectType} not found
       def update_object(config_class : String, object_type : String, id : String, fields : Hash(String, String | Bool | Int32 | Float32)? = nil) : HTTP::Client::Response | Array(Asterisk::ConfigTuple)
-        response = client.put "asterisk/config/dynamic/#{config_class}/#{object_type}/#{id}",
-  body: fields.to_json
+        response = client.put "asterisk/config/dynamic/#{config_class}/#{object_type}/#{id}", body: fields.to_json
+        response.status_code.to_s =~ /^[23]\d\d$/ ? Array(Asterisk::ConfigTuple).from_json(response.body_io.gets) : response
       end
 
       # Delete a dynamic configuration object.
@@ -123,7 +124,7 @@ module Asterisk
       # - 403 - Could not delete object
       # - 404 - {configClass|objectType|id} not found
       def delete_object(config_class : String, object_type : String, id : String)
-        response = client.delete "asterisk/config/dynamic/#{config_class}/#{object_type}/#{id}"
+        client.delete "asterisk/config/dynamic/#{config_class}/#{object_type}/#{id}"
       end
 
       # Gets Asterisk system information.
@@ -144,17 +145,20 @@ module Asterisk
         params = HTTP::Params.encode({} of String => String)
         params += "&" + HTTP::Params.encode({"only" => only}) if only
 
-        client.get "asterisk/info?" + params
+        response = client.get "asterisk/info?" + params
+        response.status_code.to_s =~ /^[23]\d\d$/ ? Asterisk::AsteriskInfo.from_json(response.body_io.gets) : response
       end
 
       # Response pong message.
       def ping : HTTP::Client::Response | Asterisk::AsteriskPing
-        client.get "asterisk/ping"
+        response = client.get "asterisk/ping"
+        response.status_code.to_s =~ /^[23]\d\d$/ ? Asterisk::AsteriskPing.from_json(response.body_io.gets) : response
       end
 
       # List Asterisk modules.
       def list_modules : HTTP::Client::Response | Array(Asterisk::Module)
-        client.get "asterisk/modules"
+        response = client.get "asterisk/modules"
+        response.status_code.to_s =~ /^[23]\d\d$/ ? Array(Asterisk::Module).from_json(response.body_io.gets) : response
       end
 
       # Get Asterisk module information.
@@ -176,6 +180,7 @@ module Asterisk
       # - 409 - Module information could not be retrieved.
       def get_module(module_name : String) : HTTP::Client::Response | Asterisk::Module
         response = client.get "asterisk/modules/#{module_name}"
+        response.status_code.to_s =~ /^[23]\d\d$/ ? Asterisk::Module.from_json(response.body_io.gets) : response
       end
 
       # Load an Asterisk module.
@@ -195,7 +200,7 @@ module Asterisk
       # Error responses:
       # - 409 - Module could not be loaded.
       def load_module(module_name : String)
-        response = client.post "asterisk/modules/#{module_name}"
+        client.post "asterisk/modules/#{module_name}"
       end
 
       # Unload an Asterisk module.
@@ -216,7 +221,7 @@ module Asterisk
       # - 404 - Module not found in running modules.
       # - 409 - Module could not be unloaded.
       def unload_module(module_name : String)
-        response = client.delete "asterisk/modules/#{module_name}"
+        client.delete "asterisk/modules/#{module_name}"
       end
 
       # Reload an Asterisk module.
@@ -237,12 +242,13 @@ module Asterisk
       # - 404 - Module not found in running modules.
       # - 409 - Module could not be reloaded.
       def reload_module(module_name : String)
-        response = client.put "asterisk/modules/#{module_name}"
+        client.put "asterisk/modules/#{module_name}"
       end
 
       # Gets Asterisk log channel information.
       def list_log_channels : HTTP::Client::Response | Array(Asterisk::LogChannel)
-        client.get "asterisk/logging"
+        response = client.get "asterisk/logging"
+        response.status_code.to_s =~ /^[23]\d\d$/ ? Array(Asterisk::LogChannel).from_json(response.body_io.gets) : response
       end
 
       # Adds a log channel.
@@ -271,7 +277,7 @@ module Asterisk
       # - 409 - Log channel could not be created.
       def add_log(log_channel_name : String, configuration : String)
         params = HTTP::Params.encode({"configuration" => configuration})
-        response = client.post "asterisk/logging/#{log_channel_name}?" + params
+        client.post "asterisk/logging/#{log_channel_name}?" + params
       end
 
       # Deletes a log channel.
@@ -291,7 +297,7 @@ module Asterisk
       # Error responses:
       # - 404 - Log channel does not exist.
       def delete_log(log_channel_name : String)
-        response = client.delete "asterisk/logging/#{log_channel_name}"
+        client.delete "asterisk/logging/#{log_channel_name}"
       end
 
       # Rotates a log channel.
@@ -311,7 +317,7 @@ module Asterisk
       # Error responses:
       # - 404 - Log channel does not exist.
       def rotate_log(log_channel_name : String)
-        response = client.put "asterisk/logging/#{log_channel_name}/rotate"
+        client.put "asterisk/logging/#{log_channel_name}/rotate"
       end
 
       # Get the value of a global variable.
@@ -333,6 +339,7 @@ module Asterisk
       def get_global_var(variable : String) : HTTP::Client::Response | Asterisk::Variable
         params = HTTP::Params.encode({"variable" => variable})
         response = client.get "asterisk/variable?" + params
+        response.status_code.to_s =~ /^[23]\d\d$/ ? Asterisk::Variable.from_json(response.body_io.gets) : response
       end
 
       # Set the value of a global variable.
@@ -364,7 +371,7 @@ module Asterisk
         # Optional parameters
         params += "&" + HTTP::Params.encode({"value" => value}) if value
 
-        response = client.post "asterisk/variable?" + params
+        client.post "asterisk/variable?" + params
       end
     end
   end

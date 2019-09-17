@@ -15,7 +15,8 @@ module Asterisk
     class Recordings < Resources
       # List recordings that are complete.
       def list_stored : HTTP::Client::Response | Array(Recordings::StoredRecording)
-        client.get "recordings/stored"
+        response = client.get "recordings/stored"
+        response.status_code.to_s =~ /^[23]\d\d$/ ? Array(Recordings::StoredRecording).from_json(response.body_io.gets) : response
       end
 
       # Get a stored recording's details.
@@ -36,6 +37,7 @@ module Asterisk
       # - 404 - Recording not found
       def get_stored(recording_name : String) : HTTP::Client::Response | Recordings::StoredRecording
         response = client.get "recordings/stored/#{recording_name}"
+        response.status_code.to_s =~ /^[23]\d\d$/ ? Recordings::StoredRecording.from_json(response.body_io.gets) : response
       end
 
       # Delete a stored recording.
@@ -55,7 +57,7 @@ module Asterisk
       # Error responses:
       # - 404 - Recording not found
       def delete_stored(recording_name : String)
-        response = client.delete "recordings/stored/#{recording_name}"
+        client.delete "recordings/stored/#{recording_name}"
       end
 
       # Get the file associated with the stored recording.
@@ -77,6 +79,7 @@ module Asterisk
       # - 404 - Recording not found
       def get_stored_file(recording_name : String) : HTTP::Client::Response | Binary
         response = client.get "recordings/stored/#{recording_name}/file"
+        response.status_code.to_s =~ /^[23]\d\d$/ ? Binary.from_json(response.body_io.gets) : response
       end
 
       # Copy a stored recording.
@@ -106,6 +109,7 @@ module Asterisk
       def copy_stored(recording_name : String, destination_recording_name : String) : HTTP::Client::Response | Recordings::StoredRecording
         params = HTTP::Params.encode({"destinationRecordingName" => destination_recording_name})
         response = client.post "recordings/stored/#{recording_name}/copy?" + params
+        response.status_code.to_s =~ /^[23]\d\d$/ ? Recordings::StoredRecording.from_json(response.body_io.gets) : response
       end
 
       # List live recordings.
@@ -126,6 +130,7 @@ module Asterisk
       # - 404 - Recording not found
       def get_live(recording_name : String) : HTTP::Client::Response | Recordings::LiveRecording
         response = client.get "recordings/live/#{recording_name}"
+        response.status_code.to_s =~ /^[23]\d\d$/ ? Recordings::LiveRecording.from_json(response.body_io.gets) : response
       end
 
       # Stop a live recording and discard it.
@@ -145,7 +150,7 @@ module Asterisk
       # Error responses:
       # - 404 - Recording not found
       def cancel(recording_name : String)
-        response = client.delete "recordings/live/#{recording_name}"
+        client.delete "recordings/live/#{recording_name}"
       end
 
       # Stop a live recording and store it.
@@ -165,7 +170,7 @@ module Asterisk
       # Error responses:
       # - 404 - Recording not found
       def stop(recording_name : String)
-        response = client.post "recordings/live/#{recording_name}/stop"
+        client.post "recordings/live/#{recording_name}/stop"
       end
 
       # Pause a live recording.
@@ -186,7 +191,7 @@ module Asterisk
       # - 404 - Recording not found
       # - 409 - Recording not in session
       def pause(recording_name : String)
-        response = client.post "recordings/live/#{recording_name}/pause"
+        client.post "recordings/live/#{recording_name}/pause"
       end
 
       # Unpause a live recording.
@@ -207,7 +212,7 @@ module Asterisk
       # - 404 - Recording not found
       # - 409 - Recording not in session
       def unpause(recording_name : String)
-        response = client.delete "recordings/live/#{recording_name}/pause"
+        client.delete "recordings/live/#{recording_name}/pause"
       end
 
       # Mute a live recording.
@@ -228,7 +233,7 @@ module Asterisk
       # - 404 - Recording not found
       # - 409 - Recording not in session
       def mute(recording_name : String)
-        response = client.post "recordings/live/#{recording_name}/mute"
+        client.post "recordings/live/#{recording_name}/mute"
       end
 
       # Unmute a live recording.
@@ -249,7 +254,7 @@ module Asterisk
       # - 404 - Recording not found
       # - 409 - Recording not in session
       def unmute(recording_name : String)
-        response = client.delete "recordings/live/#{recording_name}/mute"
+        client.delete "recordings/live/#{recording_name}/mute"
       end
     end
   end

@@ -15,7 +15,8 @@ module Asterisk
     class Applications < Resources
       # List all applications.
       def list : HTTP::Client::Response | Array(Applications::Application)
-        client.get "applications"
+        response = client.get "applications"
+        response.status_code.to_s =~ /^[23]\d\d$/ ? Array(Applications::Application).from_json(response.body_io.gets) : response
       end
 
       # Get details of an application.
@@ -36,6 +37,7 @@ module Asterisk
       # - 404 - Application does not exist.
       def get(application_name : String) : HTTP::Client::Response | Applications::Application
         response = client.get "applications/#{application_name}"
+        response.status_code.to_s =~ /^[23]\d\d$/ ? Applications::Application.from_json(response.body_io.gets) : response
       end
 
       # Subscribe an application to a event source.
@@ -66,6 +68,7 @@ module Asterisk
       def subscribe(application_name : String, event_source : String) : HTTP::Client::Response | Applications::Application
         params = HTTP::Params.encode({"eventSource" => event_source})
         response = client.post "applications/#{application_name}/subscription?" + params
+        response.status_code.to_s =~ /^[23]\d\d$/ ? Applications::Application.from_json(response.body_io.gets) : response
       end
 
       # Unsubscribe an application from an event source.
@@ -97,6 +100,7 @@ module Asterisk
       def unsubscribe(application_name : String, event_source : String) : HTTP::Client::Response | Applications::Application
         params = HTTP::Params.encode({"eventSource" => event_source})
         response = client.delete "applications/#{application_name}/subscription?" + params
+        response.status_code.to_s =~ /^[23]\d\d$/ ? Applications::Application.from_json(response.body_io.gets) : response
       end
 
       # Filter application events types.
@@ -124,8 +128,8 @@ module Asterisk
       # - 400 - Bad request.
       # - 404 - Application does not exist.
       def filter(application_name : String, filter : Hash(String, String | Bool | Int32 | Float32)? = nil) : HTTP::Client::Response | Applications::Application
-        response = client.put "applications/#{application_name}/eventFilter",
-  body: filter.to_json
+        response = client.put "applications/#{application_name}/eventFilter", body: filter.to_json
+        response.status_code.to_s =~ /^[23]\d\d$/ ? Applications::Application.from_json(response.body_io.gets) : response
       end
     end
   end

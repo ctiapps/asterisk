@@ -15,7 +15,8 @@ module Asterisk
     class DeviceStates < Resources
       # List all ARI controlled device states.
       def list : HTTP::Client::Response | Array(DeviceStates::DeviceState)
-        client.get "deviceStates"
+        response = client.get "deviceStates"
+        response.status_code.to_s =~ /^[23]\d\d$/ ? Array(DeviceStates::DeviceState).from_json(response.body_io.gets) : response
       end
 
       # Retrieve the current state of a device.
@@ -32,7 +33,8 @@ module Asterisk
       # - method: get
       # - endpoint: /deviceStates/{deviceName}
       def get(device_name : String) : HTTP::Client::Response | DeviceStates::DeviceState
-        client.get "deviceStates/#{device_name}"
+        response = client.get "deviceStates/#{device_name}"
+        response.status_code.to_s =~ /^[23]\d\d$/ ? DeviceStates::DeviceState.from_json(response.body_io.gets) : response
       end
 
       # Change the state of a device controlled by ARI. (Note - implicitly creates the device state).
@@ -61,7 +63,7 @@ module Asterisk
       # - 409 - Uncontrolled device specified
       def update(device_name : String, device_state : String)
         params = HTTP::Params.encode({"deviceState" => device_state})
-        response = client.put "deviceStates/#{device_name}?" + params
+        client.put "deviceStates/#{device_name}?" + params
       end
 
       # Destroy a device-state controlled by ARI.
@@ -82,7 +84,7 @@ module Asterisk
       # - 404 - Device name is missing
       # - 409 - Uncontrolled device specified
       def delete(device_name : String)
-        response = client.delete "deviceStates/#{device_name}"
+        client.delete "deviceStates/#{device_name}"
       end
     end
   end

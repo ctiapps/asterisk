@@ -149,12 +149,26 @@ module Asterisk
                       end
 
                       body_params = parameters.try &.body_type.as(Array(Parameter)) || Array(Parameter).new
-                      code.push %(#{error_responses.empty? ? "" : "response = "}client.#{http_operation} "#{url}?" + params#{if body = body_params.first?; ",\n  body: #{body.name}.to_json"; end})
+                      if response == "Nil"
+                        code.push %(client.#{http_operation} "#{url}?" + params#{if body = body_params.first?; ", body: #{body.name}.to_json"; end})
+                      else
+                        code.push %(response = client.#{http_operation} "#{url}?" + params#{if body = body_params.first?; ", body: #{body.name}.to_json"; end})
+                        code.push %(response.status_code.to_s =~ /^[23]\\d\\d$/ ? #{response}.from_json(response.body_io.gets) : response)
+                      end
+
                       code.join("\n").strip.gsub(/\n^/m, "\n        ")
 
                     else
                       body_params = parameters.try &.body_type.as(Array(Parameter)) || Array(Parameter).new
-                      %(#{error_responses.empty? ? "" : "response = "}client.#{http_operation} "#{url}"#{if body = body_params.first?; ",\n  body: #{body.name}.to_json"; end})
+                      if response == "Nil"
+                        %(client.#{http_operation} "#{url}"#{if body = body_params.first?; ",\n  body: #{body.name}.to_json"; end})
+                      else
+                        # lines of code for resulting method
+                        code = Array(String).new
+                        code.push %(response = client.#{http_operation} "#{url}"#{if body = body_params.first?; ", body: #{body.name}.to_json"; end})
+                        code.push %(response.status_code.to_s =~ /^[23]\\d\\d$/ ? #{response}.from_json(response.body_io.gets) : response)
+                        code.join("\n").strip.gsub(/\n^/m, "\n        ")
+                      end
                     end
                   }
                 end
