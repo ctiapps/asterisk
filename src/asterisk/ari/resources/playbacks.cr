@@ -6,7 +6,7 @@
 #  be lost the next time this file is regenerated.
 #
 #  This file was generated using ctiapps/asterisk crystal shard from the
-#  Asterisk PBX version 16.5.0.
+#  Asterisk PBX version 16.5.1.
 #
 #------------------------------------------------------------------------------
 
@@ -29,7 +29,7 @@ module Asterisk
       #
       # Error responses:
       # - 404 - The playback cannot be found
-      def get(playback_id : String) : Playbacks::Playback
+      def get(playback_id : String) : HTTP::Client::Response | Playbacks::Playback
         response = client.get "playbacks/#{playback_id}"
       end
 

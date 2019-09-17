@@ -6,7 +6,7 @@
 #  be lost the next time this file is regenerated.
 #
 #  This file was generated using ctiapps/asterisk crystal shard from the
-#  Asterisk PBX version 16.5.0.
+#  Asterisk PBX version 16.5.1.
 #
 #------------------------------------------------------------------------------
 
@@ -43,7 +43,7 @@ module Asterisk
       #
       # Error responses:
       # - 404 - {configClass|objectType|id} not found
-      def get_object(config_class : String, object_type : String, id : String) : Array(Asterisk::ConfigTuple)
+      def get_object(config_class : String, object_type : String, id : String) : HTTP::Client::Response | Array(Asterisk::ConfigTuple)
         response = client.get "asterisk/config/dynamic/#{config_class}/#{object_type}/#{id}"
       end
 
@@ -86,7 +86,7 @@ module Asterisk
       # - 400 - Bad request body
       # - 403 - Could not create or update object
       # - 404 - {configClass|objectType} not found
-      def update_object(config_class : String, object_type : String, id : String, fields : Hash(String, String | Bool | Int32 | Float32)? = nil) : Array(Asterisk::ConfigTuple)
+      def update_object(config_class : String, object_type : String, id : String, fields : Hash(String, String | Bool | Int32 | Float32)? = nil) : HTTP::Client::Response | Array(Asterisk::ConfigTuple)
         response = client.put "asterisk/config/dynamic/#{config_class}/#{object_type}/#{id}",
   body: fields.to_json
       end
@@ -139,7 +139,7 @@ module Asterisk
       # API endpoint:
       # - method: get
       # - endpoint: /asterisk/info
-      def get_info(only : String? = nil) : Asterisk::AsteriskInfo
+      def get_info(only : String? = nil) : HTTP::Client::Response | Asterisk::AsteriskInfo
         # Optional parameters
         params = HTTP::Params.encode({} of String => String)
         params += "&" + HTTP::Params.encode({"only" => only}) if only
@@ -148,12 +148,12 @@ module Asterisk
       end
 
       # Response pong message.
-      def ping : Asterisk::AsteriskPing
+      def ping : HTTP::Client::Response | Asterisk::AsteriskPing
         client.get "asterisk/ping"
       end
 
       # List Asterisk modules.
-      def list_modules : Array(Asterisk::Module)
+      def list_modules : HTTP::Client::Response | Array(Asterisk::Module)
         client.get "asterisk/modules"
       end
 
@@ -174,7 +174,7 @@ module Asterisk
       # Error responses:
       # - 404 - Module could not be found in running modules.
       # - 409 - Module information could not be retrieved.
-      def get_module(module_name : String) : Asterisk::Module
+      def get_module(module_name : String) : HTTP::Client::Response | Asterisk::Module
         response = client.get "asterisk/modules/#{module_name}"
       end
 
@@ -241,7 +241,7 @@ module Asterisk
       end
 
       # Gets Asterisk log channel information.
-      def list_log_channels : Array(Asterisk::LogChannel)
+      def list_log_channels : HTTP::Client::Response | Array(Asterisk::LogChannel)
         client.get "asterisk/logging"
       end
 
@@ -330,7 +330,7 @@ module Asterisk
       #
       # Error responses:
       # - 400 - Missing variable parameter.
-      def get_global_var(variable : String) : Asterisk::Variable
+      def get_global_var(variable : String) : HTTP::Client::Response | Asterisk::Variable
         params = HTTP::Params.encode({"variable" => variable})
         response = client.get "asterisk/variable?" + params
       end

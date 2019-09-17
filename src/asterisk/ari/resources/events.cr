@@ -6,7 +6,7 @@
 #  be lost the next time this file is regenerated.
 #
 #  This file was generated using ctiapps/asterisk crystal shard from the
-#  Asterisk PBX version 16.5.0.
+#  Asterisk PBX version 16.5.1.
 #
 #------------------------------------------------------------------------------
 
@@ -33,11 +33,11 @@ module Asterisk
       # API endpoint:
       # - method: get
       # - endpoint: /events
-      def event_websocket(app : String, subscribe_all : Bool? = nil) : Message
+      def event_websocket(app : String, subscribe_all : Bool? = nil) : HTTP::Client::Response | Message
         params = HTTP::Params.encode({"app" => app})
 
         # Optional parameters
-        params += "&" + HTTP::Params.encode({"subscribeAll" => subscribe_all}) if subscribe_all
+        params += "&" + HTTP::Params.encode({"subscribeAll" => subscribe_all.to_s}) if subscribe_all
 
         client.get "events?" + params
       end

@@ -6,7 +6,7 @@
 #  be lost the next time this file is regenerated.
 #
 #  This file was generated using ctiapps/asterisk crystal shard from the
-#  Asterisk PBX version 16.5.0.
+#  Asterisk PBX version 16.5.1.
 #
 #------------------------------------------------------------------------------
 
@@ -33,7 +33,7 @@ module Asterisk
       # API endpoint:
       # - method: get
       # - endpoint: /sounds
-      def list(lang : String? = nil, format : String? = nil) : Array(Sounds::Sound)
+      def list(lang : String? = nil, format : String? = nil) : HTTP::Client::Response | Array(Sounds::Sound)
         # Optional parameters
         params = HTTP::Params.encode({} of String => String)
         params += "&" + HTTP::Params.encode({"lang" => lang}) if lang
@@ -55,7 +55,7 @@ module Asterisk
       # API endpoint:
       # - method: get
       # - endpoint: /sounds/{soundId}
-      def get(sound_id : String) : Sounds::Sound
+      def get(sound_id : String) : HTTP::Client::Response | Sounds::Sound
         client.get "sounds/#{sound_id}"
       end
     end

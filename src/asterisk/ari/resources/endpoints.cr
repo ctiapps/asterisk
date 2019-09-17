@@ -6,7 +6,7 @@
 #  be lost the next time this file is regenerated.
 #
 #  This file was generated using ctiapps/asterisk crystal shard from the
-#  Asterisk PBX version 16.5.0.
+#  Asterisk PBX version 16.5.1.
 #
 #------------------------------------------------------------------------------
 
@@ -14,7 +14,7 @@ module Asterisk
   class ARI
     class Endpoints < Resources
       # List all endpoints.
-      def list : Int32
+      def list : HTTP::Client::Response | Int32
         client.get "endpoints"
       end
 
@@ -82,7 +82,7 @@ module Asterisk
       #
       # Error responses:
       # - 404 - Endpoints not found
-      def list_by_tech(tech : String) : Int32
+      def list_by_tech(tech : String) : HTTP::Client::Response | Int32
         response = client.get "endpoints/#{tech}"
       end
 
@@ -110,7 +110,7 @@ module Asterisk
       # Error responses:
       # - 400 - Invalid parameters for sending a message.
       # - 404 - Endpoints not found
-      def get(tech : String, resource : String) : Int32
+      def get(tech : String, resource : String) : HTTP::Client::Response | Int32
         response = client.get "endpoints/#{tech}/#{resource}"
       end
 

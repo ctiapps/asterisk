@@ -6,7 +6,7 @@
 #  be lost the next time this file is regenerated.
 #
 #  This file was generated using ctiapps/asterisk crystal shard from the
-#  Asterisk PBX version 16.5.0.
+#  Asterisk PBX version 16.5.1.
 #
 #------------------------------------------------------------------------------
 
@@ -14,7 +14,7 @@ module Asterisk
   class ARI
     class Mailboxes < Resources
       # List all mailboxes.
-      def list : Array(Mailboxes::Mailbox)
+      def list : HTTP::Client::Response | Array(Mailboxes::Mailbox)
         client.get "mailboxes"
       end
 
@@ -34,7 +34,7 @@ module Asterisk
       #
       # Error responses:
       # - 404 - Mailbox not found
-      def get(mailbox_name : String) : Mailboxes::Mailbox
+      def get(mailbox_name : String) : HTTP::Client::Response | Mailboxes::Mailbox
         response = client.get "mailboxes/#{mailbox_name}"
       end
 

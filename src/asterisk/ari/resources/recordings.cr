@@ -6,7 +6,7 @@
 #  be lost the next time this file is regenerated.
 #
 #  This file was generated using ctiapps/asterisk crystal shard from the
-#  Asterisk PBX version 16.5.0.
+#  Asterisk PBX version 16.5.1.
 #
 #------------------------------------------------------------------------------
 
@@ -14,7 +14,7 @@ module Asterisk
   class ARI
     class Recordings < Resources
       # List recordings that are complete.
-      def list_stored : Array(Recordings::StoredRecording)
+      def list_stored : HTTP::Client::Response | Array(Recordings::StoredRecording)
         client.get "recordings/stored"
       end
 
@@ -34,7 +34,7 @@ module Asterisk
       #
       # Error responses:
       # - 404 - Recording not found
-      def get_stored(recording_name : String) : Recordings::StoredRecording
+      def get_stored(recording_name : String) : HTTP::Client::Response | Recordings::StoredRecording
         response = client.get "recordings/stored/#{recording_name}"
       end
 
@@ -75,7 +75,7 @@ module Asterisk
       # Error responses:
       # - 403 - The recording file could not be opened
       # - 404 - Recording not found
-      def get_stored_file(recording_name : String) : Binary
+      def get_stored_file(recording_name : String) : HTTP::Client::Response | Binary
         response = client.get "recordings/stored/#{recording_name}/file"
       end
 
@@ -103,7 +103,7 @@ module Asterisk
       # Error responses:
       # - 404 - Recording not found
       # - 409 - A recording with the same name already exists on the system
-      def copy_stored(recording_name : String, destination_recording_name : String) : Recordings::StoredRecording
+      def copy_stored(recording_name : String, destination_recording_name : String) : HTTP::Client::Response | Recordings::StoredRecording
         params = HTTP::Params.encode({"destinationRecordingName" => destination_recording_name})
         response = client.post "recordings/stored/#{recording_name}/copy?" + params
       end
@@ -124,7 +124,7 @@ module Asterisk
       #
       # Error responses:
       # - 404 - Recording not found
-      def get_live(recording_name : String) : Recordings::LiveRecording
+      def get_live(recording_name : String) : HTTP::Client::Response | Recordings::LiveRecording
         response = client.get "recordings/live/#{recording_name}"
       end
 

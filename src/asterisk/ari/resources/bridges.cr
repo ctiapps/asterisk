@@ -6,7 +6,7 @@
 #  be lost the next time this file is regenerated.
 #
 #  This file was generated using ctiapps/asterisk crystal shard from the
-#  Asterisk PBX version 16.5.0.
+#  Asterisk PBX version 16.5.1.
 #
 #------------------------------------------------------------------------------
 
@@ -14,7 +14,7 @@ module Asterisk
   class ARI
     class Bridges < Resources
       # List all active bridges in Asterisk.
-      def list : Array(Bridges::Bridge)
+      def list : HTTP::Client::Response | Array(Bridges::Bridge)
         client.get "bridges"
       end
 
@@ -45,7 +45,7 @@ module Asterisk
       # API endpoint:
       # - method: post
       # - endpoint: /bridges
-      def create(type : String? = nil, bridge_id : String? = nil, name : String? = nil) : Bridges::Bridge
+      def create(type : String? = nil, bridge_id : String? = nil, name : String? = nil) : HTTP::Client::Response | Bridges::Bridge
         # Optional parameters
         params = HTTP::Params.encode({} of String => String)
         params += "&" + HTTP::Params.encode({"type" => type}) if type
@@ -82,7 +82,7 @@ module Asterisk
       # API endpoint:
       # - method: post
       # - endpoint: /bridges/{bridgeId}
-      def create_with_id(bridge_id : String, type : String? = nil, name : String? = nil) : Bridges::Bridge
+      def create_with_id(bridge_id : String, type : String? = nil, name : String? = nil) : HTTP::Client::Response | Bridges::Bridge
         # Optional parameters
         params = HTTP::Params.encode({} of String => String)
         params += "&" + HTTP::Params.encode({"type" => type}) if type
@@ -107,7 +107,7 @@ module Asterisk
       #
       # Error responses:
       # - 404 - Bridge not found
-      def get(bridge_id : String) : Bridges::Bridge
+      def get(bridge_id : String) : HTTP::Client::Response | Bridges::Bridge
         response = client.get "bridges/#{bridge_id}"
       end
 
@@ -183,8 +183,8 @@ module Asterisk
 
         # Optional parameters
         params += "&" + HTTP::Params.encode({"role" => role}) if role
-        params += "&" + HTTP::Params.encode({"absorbDTMF" => absorb_dtmf}) if absorb_dtmf
-        params += "&" + HTTP::Params.encode({"mute" => mute}) if mute
+        params += "&" + HTTP::Params.encode({"absorbDTMF" => absorb_dtmf.to_s}) if absorb_dtmf
+        params += "&" + HTTP::Params.encode({"mute" => mute.to_s}) if mute
 
         response = client.post "bridges/#{bridge_id}/addChannel?" + params
       end
@@ -374,13 +374,13 @@ module Asterisk
       # Error responses:
       # - 404 - Bridge not found
       # - 409 - Bridge not in a Stasis application
-      def play(bridge_id : String, media : String, lang : String? = nil, offsetms : Int32? = 0, skipms : Int32? = 3000, playback_id : String? = nil) : Playbacks::Playback
+      def play(bridge_id : String, media : String, lang : String? = nil, offsetms : Int32? = 0, skipms : Int32? = 3000, playback_id : String? = nil) : HTTP::Client::Response | Playbacks::Playback
         params = HTTP::Params.encode({"media" => media})
 
         # Optional parameters
         params += "&" + HTTP::Params.encode({"lang" => lang}) if lang
-        params += "&" + HTTP::Params.encode({"offsetms" => offsetms}) if offsetms
-        params += "&" + HTTP::Params.encode({"skipms" => skipms}) if skipms
+        params += "&" + HTTP::Params.encode({"offsetms" => offsetms.to_s}) if offsetms
+        params += "&" + HTTP::Params.encode({"skipms" => skipms.to_s}) if skipms
         params += "&" + HTTP::Params.encode({"playbackId" => playback_id}) if playback_id
 
         response = client.post "bridges/#{bridge_id}/play?" + params
@@ -438,13 +438,13 @@ module Asterisk
       # Error responses:
       # - 404 - Bridge not found
       # - 409 - Bridge not in a Stasis application
-      def play_with_id(bridge_id : String, playback_id : String, media : String, lang : String? = nil, offsetms : Int32? = 0, skipms : Int32? = 3000) : Playbacks::Playback
+      def play_with_id(bridge_id : String, playback_id : String, media : String, lang : String? = nil, offsetms : Int32? = 0, skipms : Int32? = 3000) : HTTP::Client::Response | Playbacks::Playback
         params = HTTP::Params.encode({"media" => media})
 
         # Optional parameters
         params += "&" + HTTP::Params.encode({"lang" => lang}) if lang
-        params += "&" + HTTP::Params.encode({"offsetms" => offsetms}) if offsetms
-        params += "&" + HTTP::Params.encode({"skipms" => skipms}) if skipms
+        params += "&" + HTTP::Params.encode({"offsetms" => offsetms.to_s}) if offsetms
+        params += "&" + HTTP::Params.encode({"skipms" => skipms.to_s}) if skipms
 
         response = client.post "bridges/#{bridge_id}/play/#{playback_id}?" + params
       end
@@ -517,14 +517,14 @@ module Asterisk
       # - 404 - Bridge not found
       # - 409 - Bridge is not in a Stasis application; A recording with the same name already exists on the system and can not be overwritten because it is in progress or ifExists=fail
       # - 422 - The format specified is unknown on this system
-      def record(bridge_id : String, name : String, format : String, max_duration_seconds : Int32? = 0, max_silence_seconds : Int32? = 0, if_exists : String? = fail, beep : Bool? = false, terminate_on : String? = none) : Recordings::LiveRecording
+      def record(bridge_id : String, name : String, format : String, max_duration_seconds : Int32? = 0, max_silence_seconds : Int32? = 0, if_exists : String? = fail, beep : Bool? = false, terminate_on : String? = none) : HTTP::Client::Response | Recordings::LiveRecording
         params = HTTP::Params.encode({"name" => name, "format" => format})
 
         # Optional parameters
-        params += "&" + HTTP::Params.encode({"maxDurationSeconds" => max_duration_seconds}) if max_duration_seconds
-        params += "&" + HTTP::Params.encode({"maxSilenceSeconds" => max_silence_seconds}) if max_silence_seconds
+        params += "&" + HTTP::Params.encode({"maxDurationSeconds" => max_duration_seconds.to_s}) if max_duration_seconds
+        params += "&" + HTTP::Params.encode({"maxSilenceSeconds" => max_silence_seconds.to_s}) if max_silence_seconds
         params += "&" + HTTP::Params.encode({"ifExists" => if_exists}) if if_exists
-        params += "&" + HTTP::Params.encode({"beep" => beep}) if beep
+        params += "&" + HTTP::Params.encode({"beep" => beep.to_s}) if beep
         params += "&" + HTTP::Params.encode({"terminateOn" => terminate_on}) if terminate_on
 
         response = client.post "bridges/#{bridge_id}/record?" + params

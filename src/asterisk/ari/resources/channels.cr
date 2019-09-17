@@ -6,7 +6,7 @@
 #  be lost the next time this file is regenerated.
 #
 #  This file was generated using ctiapps/asterisk crystal shard from the
-#  Asterisk PBX version 16.5.0.
+#  Asterisk PBX version 16.5.1.
 #
 #------------------------------------------------------------------------------
 
@@ -14,7 +14,7 @@ module Asterisk
   class ARI
     class Channels < Resources
       # List all active channels in Asterisk.
-      def list : Array(Channels::Channel)
+      def list : HTTP::Client::Response | Array(Channels::Channel)
         client.get "channels"
       end
 
@@ -126,18 +126,18 @@ module Asterisk
       # Error responses:
       # - 400 - Invalid parameters for originating a channel.
       # - 409 - Channel with given unique ID already exists.
-      def originate(endpoint : String, extension : String? = nil, context : String? = nil, priority : Int64? = nil, label : String? = nil, app : String? = nil, app_args : String? = nil, caller_id : String? = nil, timeout : Int32? = 30, variables : Hash(String, String | Bool | Int32 | Float32)? = nil, channel_id : String? = nil, other_channel_id : String? = nil, originator : String? = nil, formats : String? = nil) : Channels::Channel
+      def originate(endpoint : String, extension : String? = nil, context : String? = nil, priority : Int64? = nil, label : String? = nil, app : String? = nil, app_args : String? = nil, caller_id : String? = nil, timeout : Int32? = 30, variables : Hash(String, String | Bool | Int32 | Float32)? = nil, channel_id : String? = nil, other_channel_id : String? = nil, originator : String? = nil, formats : String? = nil) : HTTP::Client::Response | Channels::Channel
         params = HTTP::Params.encode({"endpoint" => endpoint})
 
         # Optional parameters
         params += "&" + HTTP::Params.encode({"extension" => extension}) if extension
         params += "&" + HTTP::Params.encode({"context" => context}) if context
-        params += "&" + HTTP::Params.encode({"priority" => priority}) if priority
+        params += "&" + HTTP::Params.encode({"priority" => priority.to_s}) if priority
         params += "&" + HTTP::Params.encode({"label" => label}) if label
         params += "&" + HTTP::Params.encode({"app" => app}) if app
         params += "&" + HTTP::Params.encode({"appArgs" => app_args}) if app_args
         params += "&" + HTTP::Params.encode({"callerId" => caller_id}) if caller_id
-        params += "&" + HTTP::Params.encode({"timeout" => timeout}) if timeout
+        params += "&" + HTTP::Params.encode({"timeout" => timeout.to_s}) if timeout
         params += "&" + HTTP::Params.encode({"channelId" => channel_id}) if channel_id
         params += "&" + HTTP::Params.encode({"otherChannelId" => other_channel_id}) if other_channel_id
         params += "&" + HTTP::Params.encode({"originator" => originator}) if originator
@@ -205,7 +205,7 @@ module Asterisk
       #
       # Error responses:
       # - 409 - Channel with given unique ID already exists.
-      def create(endpoint : String, app : String, app_args : String? = nil, channel_id : String? = nil, other_channel_id : String? = nil, originator : String? = nil, formats : String? = nil) : Channels::Channel
+      def create(endpoint : String, app : String, app_args : String? = nil, channel_id : String? = nil, other_channel_id : String? = nil, originator : String? = nil, formats : String? = nil) : HTTP::Client::Response | Channels::Channel
         params = HTTP::Params.encode({"endpoint" => endpoint, "app" => app})
 
         # Optional parameters
@@ -234,7 +234,7 @@ module Asterisk
       #
       # Error responses:
       # - 404 - Channel not found
-      def get(channel_id : String) : Channels::Channel
+      def get(channel_id : String) : HTTP::Client::Response | Channels::Channel
         response = client.get "channels/#{channel_id}"
       end
 
@@ -346,18 +346,18 @@ module Asterisk
       # Error responses:
       # - 400 - Invalid parameters for originating a channel.
       # - 409 - Channel with given unique ID already exists.
-      def originate_with_id(channel_id : String, endpoint : String, extension : String? = nil, context : String? = nil, priority : Int64? = nil, label : String? = nil, app : String? = nil, app_args : String? = nil, caller_id : String? = nil, timeout : Int32? = 30, variables : Hash(String, String | Bool | Int32 | Float32)? = nil, other_channel_id : String? = nil, originator : String? = nil, formats : String? = nil) : Channels::Channel
+      def originate_with_id(channel_id : String, endpoint : String, extension : String? = nil, context : String? = nil, priority : Int64? = nil, label : String? = nil, app : String? = nil, app_args : String? = nil, caller_id : String? = nil, timeout : Int32? = 30, variables : Hash(String, String | Bool | Int32 | Float32)? = nil, other_channel_id : String? = nil, originator : String? = nil, formats : String? = nil) : HTTP::Client::Response | Channels::Channel
         params = HTTP::Params.encode({"endpoint" => endpoint})
 
         # Optional parameters
         params += "&" + HTTP::Params.encode({"extension" => extension}) if extension
         params += "&" + HTTP::Params.encode({"context" => context}) if context
-        params += "&" + HTTP::Params.encode({"priority" => priority}) if priority
+        params += "&" + HTTP::Params.encode({"priority" => priority.to_s}) if priority
         params += "&" + HTTP::Params.encode({"label" => label}) if label
         params += "&" + HTTP::Params.encode({"app" => app}) if app
         params += "&" + HTTP::Params.encode({"appArgs" => app_args}) if app_args
         params += "&" + HTTP::Params.encode({"callerId" => caller_id}) if caller_id
-        params += "&" + HTTP::Params.encode({"timeout" => timeout}) if timeout
+        params += "&" + HTTP::Params.encode({"timeout" => timeout.to_s}) if timeout
         params += "&" + HTTP::Params.encode({"otherChannelId" => other_channel_id}) if other_channel_id
         params += "&" + HTTP::Params.encode({"originator" => originator}) if originator
         params += "&" + HTTP::Params.encode({"formats" => formats}) if formats
@@ -449,7 +449,7 @@ module Asterisk
         params = HTTP::Params.encode({} of String => String)
         params += "&" + HTTP::Params.encode({"context" => context}) if context
         params += "&" + HTTP::Params.encode({"extension" => extension}) if extension
-        params += "&" + HTTP::Params.encode({"priority" => priority}) if priority
+        params += "&" + HTTP::Params.encode({"priority" => priority.to_s}) if priority
         params += "&" + HTTP::Params.encode({"label" => label}) if label
 
         response = client.post "channels/#{channel_id}/continue?" + params
@@ -651,10 +651,10 @@ module Asterisk
         # Optional parameters
         params = HTTP::Params.encode({} of String => String)
         params += "&" + HTTP::Params.encode({"dtmf" => dtmf}) if dtmf
-        params += "&" + HTTP::Params.encode({"before" => before}) if before
-        params += "&" + HTTP::Params.encode({"between" => between}) if between
-        params += "&" + HTTP::Params.encode({"duration" => duration}) if duration
-        params += "&" + HTTP::Params.encode({"after" => after}) if after
+        params += "&" + HTTP::Params.encode({"before" => before.to_s}) if before
+        params += "&" + HTTP::Params.encode({"between" => between.to_s}) if between
+        params += "&" + HTTP::Params.encode({"duration" => duration.to_s}) if duration
+        params += "&" + HTTP::Params.encode({"after" => after.to_s}) if after
 
         response = client.post "channels/#{channel_id}/dtmf?" + params
       end
@@ -921,13 +921,13 @@ module Asterisk
       # - 404 - Channel not found
       # - 409 - Channel not in a Stasis application
       # - 412 - Channel in invalid state
-      def play(channel_id : String, media : String, lang : String? = nil, offsetms : Int32? = nil, skipms : Int32? = 3000, playback_id : String? = nil) : Playbacks::Playback
+      def play(channel_id : String, media : String, lang : String? = nil, offsetms : Int32? = nil, skipms : Int32? = 3000, playback_id : String? = nil) : HTTP::Client::Response | Playbacks::Playback
         params = HTTP::Params.encode({"media" => media})
 
         # Optional parameters
         params += "&" + HTTP::Params.encode({"lang" => lang}) if lang
-        params += "&" + HTTP::Params.encode({"offsetms" => offsetms}) if offsetms
-        params += "&" + HTTP::Params.encode({"skipms" => skipms}) if skipms
+        params += "&" + HTTP::Params.encode({"offsetms" => offsetms.to_s}) if offsetms
+        params += "&" + HTTP::Params.encode({"skipms" => skipms.to_s}) if skipms
         params += "&" + HTTP::Params.encode({"playbackId" => playback_id}) if playback_id
 
         response = client.post "channels/#{channel_id}/play?" + params
@@ -986,13 +986,13 @@ module Asterisk
       # - 404 - Channel not found
       # - 409 - Channel not in a Stasis application
       # - 412 - Channel in invalid state
-      def play_with_id(channel_id : String, playback_id : String, media : String, lang : String? = nil, offsetms : Int32? = nil, skipms : Int32? = 3000) : Playbacks::Playback
+      def play_with_id(channel_id : String, playback_id : String, media : String, lang : String? = nil, offsetms : Int32? = nil, skipms : Int32? = 3000) : HTTP::Client::Response | Playbacks::Playback
         params = HTTP::Params.encode({"media" => media})
 
         # Optional parameters
         params += "&" + HTTP::Params.encode({"lang" => lang}) if lang
-        params += "&" + HTTP::Params.encode({"offsetms" => offsetms}) if offsetms
-        params += "&" + HTTP::Params.encode({"skipms" => skipms}) if skipms
+        params += "&" + HTTP::Params.encode({"offsetms" => offsetms.to_s}) if offsetms
+        params += "&" + HTTP::Params.encode({"skipms" => skipms.to_s}) if skipms
 
         response = client.post "channels/#{channel_id}/play/#{playback_id}?" + params
       end
@@ -1065,14 +1065,14 @@ module Asterisk
       # - 404 - Channel not found
       # - 409 - Channel is not in a Stasis application; the channel is currently bridged with other hcannels; A recording with the same name already exists on the system and can not be overwritten because it is in progress or ifExists=fail
       # - 422 - The format specified is unknown on this system
-      def record(channel_id : String, name : String, format : String, max_duration_seconds : Int32? = 0, max_silence_seconds : Int32? = 0, if_exists : String? = fail, beep : Bool? = false, terminate_on : String? = none) : Recordings::LiveRecording
+      def record(channel_id : String, name : String, format : String, max_duration_seconds : Int32? = 0, max_silence_seconds : Int32? = 0, if_exists : String? = fail, beep : Bool? = false, terminate_on : String? = none) : HTTP::Client::Response | Recordings::LiveRecording
         params = HTTP::Params.encode({"name" => name, "format" => format})
 
         # Optional parameters
-        params += "&" + HTTP::Params.encode({"maxDurationSeconds" => max_duration_seconds}) if max_duration_seconds
-        params += "&" + HTTP::Params.encode({"maxSilenceSeconds" => max_silence_seconds}) if max_silence_seconds
+        params += "&" + HTTP::Params.encode({"maxDurationSeconds" => max_duration_seconds.to_s}) if max_duration_seconds
+        params += "&" + HTTP::Params.encode({"maxSilenceSeconds" => max_silence_seconds.to_s}) if max_silence_seconds
         params += "&" + HTTP::Params.encode({"ifExists" => if_exists}) if if_exists
-        params += "&" + HTTP::Params.encode({"beep" => beep}) if beep
+        params += "&" + HTTP::Params.encode({"beep" => beep.to_s}) if beep
         params += "&" + HTTP::Params.encode({"terminateOn" => terminate_on}) if terminate_on
 
         response = client.post "channels/#{channel_id}/record?" + params
@@ -1103,7 +1103,7 @@ module Asterisk
       # - 400 - Missing variable parameter.
       # - 404 - Channel or variable not found
       # - 409 - Channel not in a Stasis application
-      def get_channel_var(channel_id : String, variable : String) : Asterisk::Variable
+      def get_channel_var(channel_id : String, variable : String) : HTTP::Client::Response | Asterisk::Variable
         params = HTTP::Params.encode({"variable" => variable})
         response = client.get "channels/#{channel_id}/variable?" + params
       end
@@ -1201,7 +1201,7 @@ module Asterisk
       # Error responses:
       # - 400 - Invalid parameters
       # - 404 - Channel not found
-      def snoop_channel(channel_id : String, app : String, spy : String? = none, whisper : String? = none, app_args : String? = nil, snoop_id : String? = nil) : Channels::Channel
+      def snoop_channel(channel_id : String, app : String, spy : String? = none, whisper : String? = none, app_args : String? = nil, snoop_id : String? = nil) : HTTP::Client::Response | Channels::Channel
         params = HTTP::Params.encode({"app" => app})
 
         # Optional parameters
@@ -1265,7 +1265,7 @@ module Asterisk
       # Error responses:
       # - 400 - Invalid parameters
       # - 404 - Channel not found
-      def snoop_channel_with_id(channel_id : String, snoop_id : String, app : String, spy : String? = none, whisper : String? = none, app_args : String? = nil) : Channels::Channel
+      def snoop_channel_with_id(channel_id : String, snoop_id : String, app : String, spy : String? = none, whisper : String? = none, app_args : String? = nil) : HTTP::Client::Response | Channels::Channel
         params = HTTP::Params.encode({"app" => app})
 
         # Optional parameters
@@ -1311,7 +1311,7 @@ module Asterisk
         # Optional parameters
         params = HTTP::Params.encode({} of String => String)
         params += "&" + HTTP::Params.encode({"caller" => caller}) if caller
-        params += "&" + HTTP::Params.encode({"timeout" => timeout}) if timeout
+        params += "&" + HTTP::Params.encode({"timeout" => timeout.to_s}) if timeout
 
         response = client.post "channels/#{channel_id}/dial?" + params
       end
@@ -1332,7 +1332,7 @@ module Asterisk
       #
       # Error responses:
       # - 404 - Channel cannot be found.
-      def rtpstatistics(channel_id : String) : RTPstat
+      def rtpstatistics(channel_id : String) : HTTP::Client::Response | RTPstat
         response = client.get "channels/#{channel_id}/rtp_statistics"
       end
     end

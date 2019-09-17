@@ -6,7 +6,7 @@
 #  be lost the next time this file is regenerated.
 #
 #  This file was generated using ctiapps/asterisk crystal shard from the
-#  Asterisk PBX version 16.5.0.
+#  Asterisk PBX version 16.5.1.
 #
 #------------------------------------------------------------------------------
 
@@ -14,7 +14,7 @@ module Asterisk
   class ARI
     class Applications < Resources
       # List all applications.
-      def list : Array(Applications::Application)
+      def list : HTTP::Client::Response | Array(Applications::Application)
         client.get "applications"
       end
 
@@ -34,7 +34,7 @@ module Asterisk
       #
       # Error responses:
       # - 404 - Application does not exist.
-      def get(application_name : String) : Applications::Application
+      def get(application_name : String) : HTTP::Client::Response | Applications::Application
         response = client.get "applications/#{application_name}"
       end
 
@@ -63,7 +63,7 @@ module Asterisk
       # - 400 - Missing parameter.
       # - 404 - Application does not exist.
       # - 422 - Event source does not exist.
-      def subscribe(application_name : String, event_source : String) : Applications::Application
+      def subscribe(application_name : String, event_source : String) : HTTP::Client::Response | Applications::Application
         params = HTTP::Params.encode({"eventSource" => event_source})
         response = client.post "applications/#{application_name}/subscription?" + params
       end
@@ -94,7 +94,7 @@ module Asterisk
       # - 404 - Application does not exist.
       # - 409 - Application not subscribed to event source.
       # - 422 - Event source does not exist.
-      def unsubscribe(application_name : String, event_source : String) : Applications::Application
+      def unsubscribe(application_name : String, event_source : String) : HTTP::Client::Response | Applications::Application
         params = HTTP::Params.encode({"eventSource" => event_source})
         response = client.delete "applications/#{application_name}/subscription?" + params
       end
@@ -123,7 +123,7 @@ module Asterisk
       # Error responses:
       # - 400 - Bad request.
       # - 404 - Application does not exist.
-      def filter(application_name : String, filter : Hash(String, String | Bool | Int32 | Float32)? = nil) : Applications::Application
+      def filter(application_name : String, filter : Hash(String, String | Bool | Int32 | Float32)? = nil) : HTTP::Client::Response | Applications::Application
         response = client.put "applications/#{application_name}/eventFilter",
   body: filter.to_json
       end

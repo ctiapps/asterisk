@@ -6,7 +6,7 @@
 #  be lost the next time this file is regenerated.
 #
 #  This file was generated using ctiapps/asterisk crystal shard from the
-#  Asterisk PBX version 16.5.0.
+#  Asterisk PBX version 16.5.1.
 #
 #------------------------------------------------------------------------------
 
@@ -14,7 +14,7 @@ module Asterisk
   class ARI
     class DeviceStates < Resources
       # List all ARI controlled device states.
-      def list : Array(DeviceStates::DeviceState)
+      def list : HTTP::Client::Response | Array(DeviceStates::DeviceState)
         client.get "deviceStates"
       end
 
@@ -31,7 +31,7 @@ module Asterisk
       # API endpoint:
       # - method: get
       # - endpoint: /deviceStates/{deviceName}
-      def get(device_name : String) : DeviceStates::DeviceState
+      def get(device_name : String) : HTTP::Client::Response | DeviceStates::DeviceState
         client.get "deviceStates/#{device_name}"
       end
 

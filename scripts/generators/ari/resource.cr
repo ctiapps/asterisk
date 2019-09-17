@@ -96,7 +96,7 @@ module Asterisk
           name = operation["nickname"].to_s.underscore
 
           # name = %(#{endpoint =~ /\/\S+\/{(\S+)}\/\S+/ ? "" : "self."}#{name}#{arguments.empty? ? "" : "(#{arguments})"}#{response == "Nil" ? "" : " : #{response}"})
-          name = %(#{name}#{arguments.empty? ? "" : "(#{arguments})"}#{response == "Nil" ? "" : " : #{response}"})
+          name = %(#{name}#{arguments.empty? ? "" : "(#{arguments})"}#{response == "Nil" ? "" : " : HTTP::Client::Response | #{response}"})
           <<-END
                 # #{summary}#{arguments_spec}#{errors}
                 def #{name}
@@ -130,7 +130,7 @@ module Asterisk
                         params_already_defined = true
                         params = "params = HTTP::Params.encode({"
                         params += required_params.map { |parameter|
-                          %("#{parameter.name_ari}" => #{parameter.name})
+                          %("#{parameter.name_ari}" => #{parameter.name}#{".to_s" unless parameter.datatype =~ /String/})
                         }.join(", ")
                         params += "})"
                         code.push params
@@ -142,7 +142,7 @@ module Asterisk
                         code.push "# Optional parameters"
                         code.push "params = HTTP::Params.encode({} of String => String)" unless params_already_defined
                         optional_params.map do |parameter|
-                          code.push %(params += "&" + HTTP::Params.encode({"#{parameter.name_ari}" => #{parameter.name}}) if #{parameter.name})
+                          code.push %(params += "&" + HTTP::Params.encode({"#{parameter.name_ari}" => #{parameter.name}#{".to_s" unless parameter.datatype =~ /String/}}) if #{parameter.name})
                         end
                         # empty space
                         code.push ""
