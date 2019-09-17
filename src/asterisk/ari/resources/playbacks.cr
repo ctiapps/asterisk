@@ -31,7 +31,7 @@ module Asterisk
       # - 404 - The playback cannot be found
       def get(playback_id : String) : HTTP::Client::Response | Playbacks::Playback
         response = client.get "playbacks/#{playback_id}"
-        response.status_code.to_s =~ /^[23]\d\d$/ ? Playbacks::Playback.from_json(response.body_io.gets) : response
+        response.status_code.to_s =~ /^[23]\d\d$/ ? Playbacks::Playback.from_json(response.body.to_s) : response
       end
 
       # Stop a playback.

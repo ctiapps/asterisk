@@ -16,7 +16,7 @@ module Asterisk
       # List all endpoints.
       def list : HTTP::Client::Response | Int32
         response = client.get "endpoints"
-        response.status_code.to_s =~ /^[23]\d\d$/ ? Int32.from_json(response.body_io.gets) : response
+        response.status_code.to_s =~ /^[23]\d\d$/ ? Int32.from_json(response.body.to_s) : response
       end
 
       # Send a message to some technology URI or endpoint.
@@ -84,7 +84,7 @@ module Asterisk
       # - 404 - Endpoints not found
       def list_by_tech(tech : String) : HTTP::Client::Response | Int32
         response = client.get "endpoints/#{tech}"
-        response.status_code.to_s =~ /^[23]\d\d$/ ? Int32.from_json(response.body_io.gets) : response
+        response.status_code.to_s =~ /^[23]\d\d$/ ? Int32.from_json(response.body.to_s) : response
       end
 
       # Details for an endpoint.
@@ -113,7 +113,7 @@ module Asterisk
       # - 404 - Endpoints not found
       def get(tech : String, resource : String) : HTTP::Client::Response | Int32
         response = client.get "endpoints/#{tech}/#{resource}"
-        response.status_code.to_s =~ /^[23]\d\d$/ ? Int32.from_json(response.body_io.gets) : response
+        response.status_code.to_s =~ /^[23]\d\d$/ ? Int32.from_json(response.body.to_s) : response
       end
 
       # Send a message to some endpoint in a technology.

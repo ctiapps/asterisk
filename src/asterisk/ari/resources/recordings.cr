@@ -16,7 +16,7 @@ module Asterisk
       # List recordings that are complete.
       def list_stored : HTTP::Client::Response | Array(Recordings::StoredRecording)
         response = client.get "recordings/stored"
-        response.status_code.to_s =~ /^[23]\d\d$/ ? Array(Recordings::StoredRecording).from_json(response.body_io.gets) : response
+        response.status_code.to_s =~ /^[23]\d\d$/ ? Array(Recordings::StoredRecording).from_json(response.body.to_s) : response
       end
 
       # Get a stored recording's details.
@@ -37,7 +37,7 @@ module Asterisk
       # - 404 - Recording not found
       def get_stored(recording_name : String) : HTTP::Client::Response | Recordings::StoredRecording
         response = client.get "recordings/stored/#{recording_name}"
-        response.status_code.to_s =~ /^[23]\d\d$/ ? Recordings::StoredRecording.from_json(response.body_io.gets) : response
+        response.status_code.to_s =~ /^[23]\d\d$/ ? Recordings::StoredRecording.from_json(response.body.to_s) : response
       end
 
       # Delete a stored recording.
@@ -79,7 +79,7 @@ module Asterisk
       # - 404 - Recording not found
       def get_stored_file(recording_name : String) : HTTP::Client::Response | Binary
         response = client.get "recordings/stored/#{recording_name}/file"
-        response.status_code.to_s =~ /^[23]\d\d$/ ? Binary.from_json(response.body_io.gets) : response
+        response.status_code.to_s =~ /^[23]\d\d$/ ? Binary.from_json(response.body.to_s) : response
       end
 
       # Copy a stored recording.
@@ -109,7 +109,7 @@ module Asterisk
       def copy_stored(recording_name : String, destination_recording_name : String) : HTTP::Client::Response | Recordings::StoredRecording
         params = HTTP::Params.encode({"destinationRecordingName" => destination_recording_name})
         response = client.post "recordings/stored/#{recording_name}/copy?" + params
-        response.status_code.to_s =~ /^[23]\d\d$/ ? Recordings::StoredRecording.from_json(response.body_io.gets) : response
+        response.status_code.to_s =~ /^[23]\d\d$/ ? Recordings::StoredRecording.from_json(response.body.to_s) : response
       end
 
       # List live recordings.
@@ -130,7 +130,7 @@ module Asterisk
       # - 404 - Recording not found
       def get_live(recording_name : String) : HTTP::Client::Response | Recordings::LiveRecording
         response = client.get "recordings/live/#{recording_name}"
-        response.status_code.to_s =~ /^[23]\d\d$/ ? Recordings::LiveRecording.from_json(response.body_io.gets) : response
+        response.status_code.to_s =~ /^[23]\d\d$/ ? Recordings::LiveRecording.from_json(response.body.to_s) : response
       end
 
       # Stop a live recording and discard it.

@@ -16,7 +16,7 @@ module Asterisk
       # List all ARI controlled device states.
       def list : HTTP::Client::Response | Array(DeviceStates::DeviceState)
         response = client.get "deviceStates"
-        response.status_code.to_s =~ /^[23]\d\d$/ ? Array(DeviceStates::DeviceState).from_json(response.body_io.gets) : response
+        response.status_code.to_s =~ /^[23]\d\d$/ ? Array(DeviceStates::DeviceState).from_json(response.body.to_s) : response
       end
 
       # Retrieve the current state of a device.
@@ -34,7 +34,7 @@ module Asterisk
       # - endpoint: /deviceStates/{deviceName}
       def get(device_name : String) : HTTP::Client::Response | DeviceStates::DeviceState
         response = client.get "deviceStates/#{device_name}"
-        response.status_code.to_s =~ /^[23]\d\d$/ ? DeviceStates::DeviceState.from_json(response.body_io.gets) : response
+        response.status_code.to_s =~ /^[23]\d\d$/ ? DeviceStates::DeviceState.from_json(response.body.to_s) : response
       end
 
       # Change the state of a device controlled by ARI. (Note - implicitly creates the device state).

@@ -40,7 +40,7 @@ module Asterisk
         params += "&" + HTTP::Params.encode({"subscribeAll" => subscribe_all.to_s}) if subscribe_all
 
         response = client.get "events?" + params
-        response.status_code.to_s =~ /^[23]\d\d$/ ? Message.from_json(response.body_io.gets) : response
+        response.status_code.to_s =~ /^[23]\d\d$/ ? Message.from_json(response.body.to_s) : response
       end
 
       # Generate a user event.

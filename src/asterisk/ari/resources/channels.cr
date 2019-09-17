@@ -16,7 +16,7 @@ module Asterisk
       # List all active channels in Asterisk.
       def list : HTTP::Client::Response | Array(Channels::Channel)
         response = client.get "channels"
-        response.status_code.to_s =~ /^[23]\d\d$/ ? Array(Channels::Channel).from_json(response.body_io.gets) : response
+        response.status_code.to_s =~ /^[23]\d\d$/ ? Array(Channels::Channel).from_json(response.body.to_s) : response
       end
 
       # Create a new channel (originate).
@@ -145,7 +145,7 @@ module Asterisk
         params += "&" + HTTP::Params.encode({"formats" => formats}) if formats
 
         response = client.post "channels?" + params, body: variables.to_json
-        response.status_code.to_s =~ /^[23]\d\d$/ ? Channels::Channel.from_json(response.body_io.gets) : response
+        response.status_code.to_s =~ /^[23]\d\d$/ ? Channels::Channel.from_json(response.body.to_s) : response
       end
 
       # Create channel.
@@ -217,7 +217,7 @@ module Asterisk
         params += "&" + HTTP::Params.encode({"formats" => formats}) if formats
 
         response = client.post "channels/create?" + params
-        response.status_code.to_s =~ /^[23]\d\d$/ ? Channels::Channel.from_json(response.body_io.gets) : response
+        response.status_code.to_s =~ /^[23]\d\d$/ ? Channels::Channel.from_json(response.body.to_s) : response
       end
 
       # Channel details.
@@ -238,7 +238,7 @@ module Asterisk
       # - 404 - Channel not found
       def get(channel_id : String) : HTTP::Client::Response | Channels::Channel
         response = client.get "channels/#{channel_id}"
-        response.status_code.to_s =~ /^[23]\d\d$/ ? Channels::Channel.from_json(response.body_io.gets) : response
+        response.status_code.to_s =~ /^[23]\d\d$/ ? Channels::Channel.from_json(response.body.to_s) : response
       end
 
       # Create a new channel (originate with id).
@@ -366,7 +366,7 @@ module Asterisk
         params += "&" + HTTP::Params.encode({"formats" => formats}) if formats
 
         response = client.post "channels/#{channel_id}?" + params, body: variables.to_json
-        response.status_code.to_s =~ /^[23]\d\d$/ ? Channels::Channel.from_json(response.body_io.gets) : response
+        response.status_code.to_s =~ /^[23]\d\d$/ ? Channels::Channel.from_json(response.body.to_s) : response
       end
 
       # Delete (i.e. hangup) a channel.
@@ -934,7 +934,7 @@ module Asterisk
         params += "&" + HTTP::Params.encode({"playbackId" => playback_id}) if playback_id
 
         response = client.post "channels/#{channel_id}/play?" + params
-        response.status_code.to_s =~ /^[23]\d\d$/ ? Playbacks::Playback.from_json(response.body_io.gets) : response
+        response.status_code.to_s =~ /^[23]\d\d$/ ? Playbacks::Playback.from_json(response.body.to_s) : response
       end
 
       # Start playback of media and specify the playbackId.
@@ -999,7 +999,7 @@ module Asterisk
         params += "&" + HTTP::Params.encode({"skipms" => skipms.to_s}) if skipms
 
         response = client.post "channels/#{channel_id}/play/#{playback_id}?" + params
-        response.status_code.to_s =~ /^[23]\d\d$/ ? Playbacks::Playback.from_json(response.body_io.gets) : response
+        response.status_code.to_s =~ /^[23]\d\d$/ ? Playbacks::Playback.from_json(response.body.to_s) : response
       end
 
       # Start a recording.
@@ -1081,7 +1081,7 @@ module Asterisk
         params += "&" + HTTP::Params.encode({"terminateOn" => terminate_on}) if terminate_on
 
         response = client.post "channels/#{channel_id}/record?" + params
-        response.status_code.to_s =~ /^[23]\d\d$/ ? Recordings::LiveRecording.from_json(response.body_io.gets) : response
+        response.status_code.to_s =~ /^[23]\d\d$/ ? Recordings::LiveRecording.from_json(response.body.to_s) : response
       end
 
       # Get the value of a channel variable or function.
@@ -1112,7 +1112,7 @@ module Asterisk
       def get_channel_var(channel_id : String, variable : String) : HTTP::Client::Response | Asterisk::Variable
         params = HTTP::Params.encode({"variable" => variable})
         response = client.get "channels/#{channel_id}/variable?" + params
-        response.status_code.to_s =~ /^[23]\d\d$/ ? Asterisk::Variable.from_json(response.body_io.gets) : response
+        response.status_code.to_s =~ /^[23]\d\d$/ ? Asterisk::Variable.from_json(response.body.to_s) : response
       end
 
       # Set the value of a channel variable or function.
@@ -1218,7 +1218,7 @@ module Asterisk
         params += "&" + HTTP::Params.encode({"snoopId" => snoop_id}) if snoop_id
 
         response = client.post "channels/#{channel_id}/snoop?" + params
-        response.status_code.to_s =~ /^[23]\d\d$/ ? Channels::Channel.from_json(response.body_io.gets) : response
+        response.status_code.to_s =~ /^[23]\d\d$/ ? Channels::Channel.from_json(response.body.to_s) : response
       end
 
       # Start snooping.
@@ -1282,7 +1282,7 @@ module Asterisk
         params += "&" + HTTP::Params.encode({"appArgs" => app_args}) if app_args
 
         response = client.post "channels/#{channel_id}/snoop/#{snoop_id}?" + params
-        response.status_code.to_s =~ /^[23]\d\d$/ ? Channels::Channel.from_json(response.body_io.gets) : response
+        response.status_code.to_s =~ /^[23]\d\d$/ ? Channels::Channel.from_json(response.body.to_s) : response
       end
 
       # Dial a created channel.
@@ -1343,7 +1343,7 @@ module Asterisk
       # - 404 - Channel cannot be found.
       def rtpstatistics(channel_id : String) : HTTP::Client::Response | RTPstat
         response = client.get "channels/#{channel_id}/rtp_statistics"
-        response.status_code.to_s =~ /^[23]\d\d$/ ? RTPstat.from_json(response.body_io.gets) : response
+        response.status_code.to_s =~ /^[23]\d\d$/ ? RTPstat.from_json(response.body.to_s) : response
       end
     end
   end

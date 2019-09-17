@@ -45,7 +45,7 @@ module Asterisk
       # - 404 - {configClass|objectType|id} not found
       def get_object(config_class : String, object_type : String, id : String) : HTTP::Client::Response | Array(Asterisk::ConfigTuple)
         response = client.get "asterisk/config/dynamic/#{config_class}/#{object_type}/#{id}"
-        response.status_code.to_s =~ /^[23]\d\d$/ ? Array(Asterisk::ConfigTuple).from_json(response.body_io.gets) : response
+        response.status_code.to_s =~ /^[23]\d\d$/ ? Array(Asterisk::ConfigTuple).from_json(response.body.to_s) : response
       end
 
       # Create or update a dynamic configuration object.
@@ -89,7 +89,7 @@ module Asterisk
       # - 404 - {configClass|objectType} not found
       def update_object(config_class : String, object_type : String, id : String, fields : Hash(String, String | Bool | Int32 | Float32)? = nil) : HTTP::Client::Response | Array(Asterisk::ConfigTuple)
         response = client.put "asterisk/config/dynamic/#{config_class}/#{object_type}/#{id}", body: fields.to_json
-        response.status_code.to_s =~ /^[23]\d\d$/ ? Array(Asterisk::ConfigTuple).from_json(response.body_io.gets) : response
+        response.status_code.to_s =~ /^[23]\d\d$/ ? Array(Asterisk::ConfigTuple).from_json(response.body.to_s) : response
       end
 
       # Delete a dynamic configuration object.
@@ -146,19 +146,19 @@ module Asterisk
         params += "&" + HTTP::Params.encode({"only" => only}) if only
 
         response = client.get "asterisk/info?" + params
-        response.status_code.to_s =~ /^[23]\d\d$/ ? Asterisk::AsteriskInfo.from_json(response.body_io.gets) : response
+        response.status_code.to_s =~ /^[23]\d\d$/ ? Asterisk::AsteriskInfo.from_json(response.body.to_s) : response
       end
 
       # Response pong message.
       def ping : HTTP::Client::Response | Asterisk::AsteriskPing
         response = client.get "asterisk/ping"
-        response.status_code.to_s =~ /^[23]\d\d$/ ? Asterisk::AsteriskPing.from_json(response.body_io.gets) : response
+        response.status_code.to_s =~ /^[23]\d\d$/ ? Asterisk::AsteriskPing.from_json(response.body.to_s) : response
       end
 
       # List Asterisk modules.
       def list_modules : HTTP::Client::Response | Array(Asterisk::Module)
         response = client.get "asterisk/modules"
-        response.status_code.to_s =~ /^[23]\d\d$/ ? Array(Asterisk::Module).from_json(response.body_io.gets) : response
+        response.status_code.to_s =~ /^[23]\d\d$/ ? Array(Asterisk::Module).from_json(response.body.to_s) : response
       end
 
       # Get Asterisk module information.
@@ -180,7 +180,7 @@ module Asterisk
       # - 409 - Module information could not be retrieved.
       def get_module(module_name : String) : HTTP::Client::Response | Asterisk::Module
         response = client.get "asterisk/modules/#{module_name}"
-        response.status_code.to_s =~ /^[23]\d\d$/ ? Asterisk::Module.from_json(response.body_io.gets) : response
+        response.status_code.to_s =~ /^[23]\d\d$/ ? Asterisk::Module.from_json(response.body.to_s) : response
       end
 
       # Load an Asterisk module.
@@ -248,7 +248,7 @@ module Asterisk
       # Gets Asterisk log channel information.
       def list_log_channels : HTTP::Client::Response | Array(Asterisk::LogChannel)
         response = client.get "asterisk/logging"
-        response.status_code.to_s =~ /^[23]\d\d$/ ? Array(Asterisk::LogChannel).from_json(response.body_io.gets) : response
+        response.status_code.to_s =~ /^[23]\d\d$/ ? Array(Asterisk::LogChannel).from_json(response.body.to_s) : response
       end
 
       # Adds a log channel.
@@ -339,7 +339,7 @@ module Asterisk
       def get_global_var(variable : String) : HTTP::Client::Response | Asterisk::Variable
         params = HTTP::Params.encode({"variable" => variable})
         response = client.get "asterisk/variable?" + params
-        response.status_code.to_s =~ /^[23]\d\d$/ ? Asterisk::Variable.from_json(response.body_io.gets) : response
+        response.status_code.to_s =~ /^[23]\d\d$/ ? Asterisk::Variable.from_json(response.body.to_s) : response
       end
 
       # Set the value of a global variable.

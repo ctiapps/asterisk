@@ -40,7 +40,7 @@ module Asterisk
         params += "&" + HTTP::Params.encode({"format" => format}) if format
 
         response = client.get "sounds?" + params
-        response.status_code.to_s =~ /^[23]\d\d$/ ? Array(Sounds::Sound).from_json(response.body_io.gets) : response
+        response.status_code.to_s =~ /^[23]\d\d$/ ? Array(Sounds::Sound).from_json(response.body.to_s) : response
       end
 
       # Get a sound's details.
@@ -58,7 +58,7 @@ module Asterisk
       # - endpoint: /sounds/{soundId}
       def get(sound_id : String) : HTTP::Client::Response | Sounds::Sound
         response = client.get "sounds/#{sound_id}"
-        response.status_code.to_s =~ /^[23]\d\d$/ ? Sounds::Sound.from_json(response.body_io.gets) : response
+        response.status_code.to_s =~ /^[23]\d\d$/ ? Sounds::Sound.from_json(response.body.to_s) : response
       end
     end
   end

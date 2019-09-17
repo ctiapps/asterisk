@@ -16,7 +16,7 @@ module Asterisk
       # List all mailboxes.
       def list : HTTP::Client::Response | Array(Mailboxes::Mailbox)
         response = client.get "mailboxes"
-        response.status_code.to_s =~ /^[23]\d\d$/ ? Array(Mailboxes::Mailbox).from_json(response.body_io.gets) : response
+        response.status_code.to_s =~ /^[23]\d\d$/ ? Array(Mailboxes::Mailbox).from_json(response.body.to_s) : response
       end
 
       # Retrieve the current state of a mailbox.
@@ -37,7 +37,7 @@ module Asterisk
       # - 404 - Mailbox not found
       def get(mailbox_name : String) : HTTP::Client::Response | Mailboxes::Mailbox
         response = client.get "mailboxes/#{mailbox_name}"
-        response.status_code.to_s =~ /^[23]\d\d$/ ? Mailboxes::Mailbox.from_json(response.body_io.gets) : response
+        response.status_code.to_s =~ /^[23]\d\d$/ ? Mailboxes::Mailbox.from_json(response.body.to_s) : response
       end
 
       # Change the state of a mailbox. (Note - implicitly creates the mailbox).

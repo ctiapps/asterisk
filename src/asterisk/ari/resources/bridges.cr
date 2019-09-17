@@ -16,7 +16,7 @@ module Asterisk
       # List all active bridges in Asterisk.
       def list : HTTP::Client::Response | Array(Bridges::Bridge)
         response = client.get "bridges"
-        response.status_code.to_s =~ /^[23]\d\d$/ ? Array(Bridges::Bridge).from_json(response.body_io.gets) : response
+        response.status_code.to_s =~ /^[23]\d\d$/ ? Array(Bridges::Bridge).from_json(response.body.to_s) : response
       end
 
       # Create a new bridge.
@@ -54,7 +54,7 @@ module Asterisk
         params += "&" + HTTP::Params.encode({"name" => name}) if name
 
         response = client.post "bridges?" + params
-        response.status_code.to_s =~ /^[23]\d\d$/ ? Bridges::Bridge.from_json(response.body_io.gets) : response
+        response.status_code.to_s =~ /^[23]\d\d$/ ? Bridges::Bridge.from_json(response.body.to_s) : response
       end
 
       # Create a new bridge or updates an existing one.
@@ -91,7 +91,7 @@ module Asterisk
         params += "&" + HTTP::Params.encode({"name" => name}) if name
 
         response = client.post "bridges/#{bridge_id}?" + params
-        response.status_code.to_s =~ /^[23]\d\d$/ ? Bridges::Bridge.from_json(response.body_io.gets) : response
+        response.status_code.to_s =~ /^[23]\d\d$/ ? Bridges::Bridge.from_json(response.body.to_s) : response
       end
 
       # Get bridge details.
@@ -112,7 +112,7 @@ module Asterisk
       # - 404 - Bridge not found
       def get(bridge_id : String) : HTTP::Client::Response | Bridges::Bridge
         response = client.get "bridges/#{bridge_id}"
-        response.status_code.to_s =~ /^[23]\d\d$/ ? Bridges::Bridge.from_json(response.body_io.gets) : response
+        response.status_code.to_s =~ /^[23]\d\d$/ ? Bridges::Bridge.from_json(response.body.to_s) : response
       end
 
       # Shut down a bridge.
@@ -388,7 +388,7 @@ module Asterisk
         params += "&" + HTTP::Params.encode({"playbackId" => playback_id}) if playback_id
 
         response = client.post "bridges/#{bridge_id}/play?" + params
-        response.status_code.to_s =~ /^[23]\d\d$/ ? Playbacks::Playback.from_json(response.body_io.gets) : response
+        response.status_code.to_s =~ /^[23]\d\d$/ ? Playbacks::Playback.from_json(response.body.to_s) : response
       end
 
       # Start playback of media on a bridge.
@@ -452,7 +452,7 @@ module Asterisk
         params += "&" + HTTP::Params.encode({"skipms" => skipms.to_s}) if skipms
 
         response = client.post "bridges/#{bridge_id}/play/#{playback_id}?" + params
-        response.status_code.to_s =~ /^[23]\d\d$/ ? Playbacks::Playback.from_json(response.body_io.gets) : response
+        response.status_code.to_s =~ /^[23]\d\d$/ ? Playbacks::Playback.from_json(response.body.to_s) : response
       end
 
       # Start a recording.
@@ -534,7 +534,7 @@ module Asterisk
         params += "&" + HTTP::Params.encode({"terminateOn" => terminate_on}) if terminate_on
 
         response = client.post "bridges/#{bridge_id}/record?" + params
-        response.status_code.to_s =~ /^[23]\d\d$/ ? Recordings::LiveRecording.from_json(response.body_io.gets) : response
+        response.status_code.to_s =~ /^[23]\d\d$/ ? Recordings::LiveRecording.from_json(response.body.to_s) : response
       end
     end
   end
