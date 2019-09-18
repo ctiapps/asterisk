@@ -63,11 +63,14 @@ module Asterisk
       end
 
       ws.on_message do |message|
-        # @channel_message.send message
-        event = JSON.parse(message)["type"].to_s
-        # TODO: raise on undefined event
+        message_json = JSON.parse(message)
+        event = message_json["type"].as_s
         klass = __events[event]
         event_data = klass.from_json(message)
+
+        # user-defined callbacks
+        # find_callback?(message_json).try &.call(self, event_data)
+        find_callback?(message_json).try &.call(self, message)
 
         # Macro code that generate case ... when ... end block for ARI events
         {% begin %}
@@ -80,7 +83,7 @@ module Asterisk
                 @on_{{event_name.underscore.id}}.try &.call(self, event_data.as({{klass}}))
               {% end %}
           {% end %}
-          else
+            else
             raise "Don't know this event: #{event}"
           end
         {% end %}
@@ -103,6 +106,50 @@ module Asterisk
         end %}
         {{events}}
       {% end %}
+    end
+
+    # @event_callbacks = Hash(JSON::Any, Proc(ARI, Events::Event, Nil)).new
+    @event_callbacks = Hash(JSON::Any, Proc(ARI, String, Nil)).new
+
+    # def on_event(filter : JSON::Any, &block : ARI, Events::Event ->)
+    def on(filter : JSON::Any, &block : ARI, String ->)
+      @event_callbacks[filter] = block
+    end
+
+    def remove_filter(filter : JSON::Any)
+      @event_callbacks.delete(filter)
+    end
+
+    private def find_callback?(message : JSON::Any)
+      @event_callbacks.map do |filter, block|
+        if json_includes?(message, filter)
+          return @event_callbacks[filter]
+        end
+      end
+      nil
+    end
+
+    # https://play.crystal-lang.org/#/r/7lam
+    # https://play.crystal-lang.org/#/r/7lb5
+    private def json_includes?(message : JSON::Any, filter : JSON::Any)
+      return false unless filter.as_h?
+      return false if filter.as_h.empty?
+
+      result = filter.as_h.map { |key, filter|
+        if message[key]?
+          if filter.as_s?
+            message[key] == filter
+          elsif filter.as_h? && message[key].as_h?
+            json_includes?(message[key], filter)
+          else
+            false
+          end
+        else
+          false
+        end
+      }
+
+      ! result.includes?(false)
     end
 
     macro resources
