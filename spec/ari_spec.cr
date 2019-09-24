@@ -36,6 +36,8 @@ describe Asterisk::ARI do
     event.type.should eq("StasisStart")
   end
 
+
+  ##############################################################################
   # After ari.start, it will connect with asterisk as ari app, it can be
   # discovered calling "ari show apps" from asterisk command line:
   #
@@ -55,6 +57,8 @@ describe Asterisk::ARI do
     ari.close
   end
 
+
+  ##############################################################################
   # Generated voice call should enter to the stasis app, then hangup request
   # will be invoked. ARI events should be triggered in followin sequence:
   # - StasisStart
@@ -89,6 +93,8 @@ describe Asterisk::ARI do
     ari.close
   end
 
+
+  ##############################################################################
   # Generated call should enter to the stasis app, then channl answer should
   # be requested and validated. Then hangup request will be invoked.
   # Following events are expected:
@@ -140,6 +146,8 @@ describe Asterisk::ARI do
     ari.close
   end
 
+
+  ##############################################################################
   it "should trigger custom callbacks" do
     channel = Channel(String).new
 
@@ -164,10 +172,11 @@ describe Asterisk::ARI do
     # Wait until call appear in stasis
     channel_id = channel.receive
 
-    event_filter = JSON.parse(%({"type": "ChannelStateChange",
-                                  "channel": {"id": "#{channel_id}"}}))
+    event_name = UUID.random.to_s
+    event_conditions = JSON.parse(%({"type": "ChannelStateChange",
+                                     "channel": {"id": "#{channel_id}"}}))
 
-    ari.on(event_filter) do |_, event_json|
+    ari.on name: event_name, conditions: event_conditions do |_, event_json|
       logger.debug "Custom ChannelStateChange event"
       event = Asterisk::ARI::Events::ChannelStateChange.from_json(event_json)
       event.channel.state.should eq("Up")
@@ -180,7 +189,7 @@ describe Asterisk::ARI do
 
     sleep 0.25
 
-    ari.remove_filter(event_filter)
+    ari.remove_callback(event_name)
 
     # request call hangup
     Asterisk::Server.exec "hangup request all"

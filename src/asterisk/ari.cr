@@ -69,8 +69,9 @@ module Asterisk
         event_data = klass.from_json(message)
 
         # user-defined callbacks
-        # find_callback?(message_json).try &.call(self, event_data)
-        find_callback?(message_json).try &.call(self, message)
+        find_callbacks(message_json).each do |callback|
+          spawn { callback.call(self, message) }
+        end
 
         # Macro code that generate case ... when ... end block for ARI events
         {% begin %}
@@ -80,7 +81,12 @@ module Asterisk
             {% unless %w(Message Event).includes?(event_name) %}
               {% klass = ("Events::" + t.stringify).id %}
               when {{event_name}}
-                @on_{{event_name.underscore.id}}.try &.call(self, event_data.as({{klass}}))
+                # @on_{{event_name.underscore.id}}.try &.call(self, event_data.as({{klass}}))
+                if @on_{{event_name.underscore.id}}
+                  spawn do
+                    @on_{{event_name.underscore.id}}.not_nil!.call(self, event_data.as({{klass}}))
+                  end
+                end
               {% end %}
           {% end %}
             else
@@ -108,39 +114,39 @@ module Asterisk
       {% end %}
     end
 
-    # @event_callbacks = Hash(JSON::Any, Proc(ARI, Events::Event, Nil)).new
-    @event_callbacks = Hash(JSON::Any, Proc(ARI, String, Nil)).new
+    @callbacks = Hash(String, Hash(JSON::Any, Proc(ARI, String, Nil))).new
 
-    # def on_event(filter : JSON::Any, &block : ARI, Events::Event ->)
-    def on(filter : JSON::Any, &block : ARI, String ->)
-      @event_callbacks[filter] = block
+    def on(name : String, conditions : JSON::Any, &block : ARI, String ->)
+      @callbacks[name] = { conditions => block }
     end
 
-    def remove_filter(filter : JSON::Any)
-      @event_callbacks.delete(filter)
+    def remove_callback(name : String)
+      @callbacks.delete(name)
     end
 
-    private def find_callback?(message : JSON::Any)
-      @event_callbacks.map do |filter, block|
-        if json_includes?(message, filter)
-          return @event_callbacks[filter]
-        end
-      end
-      nil
+    private def find_callbacks(message : JSON::Any)
+      @callbacks.map { |_, callback|
+        callback.map { |conditions, _|
+          callback[conditions] if json_includes?(message, conditions)
+        }
+      }.flatten.compact
     end
 
+    # Match JSON::Any message against JSON::Any conditions. Conditions should be
+    # a Hash of Strings or Hash of Hashes of Strings.
+    #
     # https://play.crystal-lang.org/#/r/7lam
     # https://play.crystal-lang.org/#/r/7lb5
-    private def json_includes?(message : JSON::Any, filter : JSON::Any)
-      return false unless filter.as_h?
-      return false if filter.as_h.empty?
+    private def json_includes?(message : JSON::Any, conditions : JSON::Any)
+      return false unless conditions.as_h?
+      return false if conditions.as_h.empty?
 
-      result = filter.as_h.map { |key, filter|
+      result = conditions.as_h.map { |key, conditions|
         if message[key]?
-          if filter.as_s?
-            message[key] == filter
-          elsif filter.as_h? && message[key].as_h?
-            json_includes?(message[key], filter)
+          if conditions.as_s?
+            message[key] == conditions
+          elsif conditions.as_h? && message[key].as_h?
+            json_includes?(message[key], conditions)
           else
             false
           end
@@ -149,7 +155,7 @@ module Asterisk
         end
       }
 
-      ! result.includes?(false)
+      !result.includes?(false)
     end
 
     macro resources
