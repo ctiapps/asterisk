@@ -70,7 +70,7 @@ module Asterisk
 
         # user-defined callbacks
         find_callbacks(message_json).each do |callback|
-          spawn { callback.call(self, message) }
+          spawn { callback.call(message) }
         end
 
         # Macro code that generate case ... when ... end block for ARI events
@@ -81,10 +81,10 @@ module Asterisk
             {% unless %w(Message Event).includes?(event_name) %}
               {% klass = ("Events::" + t.stringify).id %}
               when {{event_name}}
-                # @on_{{event_name.underscore.id}}.try &.call(self, event_data.as({{klass}}))
+                # @on_{{event_name.underscore.id}}.try &.call(event_data.as({{klass}}))
                 if @on_{{event_name.underscore.id}}
                   spawn do
-                    @on_{{event_name.underscore.id}}.not_nil!.call(self, event_data.as({{klass}}))
+                    @on_{{event_name.underscore.id}}.not_nil!.call(event_data.as({{klass}}))
                   end
                 end
               {% end %}
@@ -114,9 +114,9 @@ module Asterisk
       {% end %}
     end
 
-    @callbacks = Hash(String, Hash(JSON::Any, Proc(ARI, String, Nil))).new
+    @callbacks = Hash(String, Hash(JSON::Any, Proc(String, Nil))).new
 
-    def on(name : String, conditions : JSON::Any, &block : ARI, String ->)
+    def on(name : String, conditions : JSON::Any, &block : String ->)
       @callbacks[name] = { conditions => block }
     end
 

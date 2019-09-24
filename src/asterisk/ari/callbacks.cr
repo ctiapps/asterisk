@@ -13,127 +13,127 @@
 module Asterisk
   class ARI
     module Callbacks
-      def on_missing_params(&@on_missing_params : ARI, Events::MissingParams ->)
+      def on_missing_params(&@on_missing_params : Events::MissingParams ->)
       end
 
-      def on_contact_info(&@on_contact_info : ARI, Events::ContactInfo ->)
+      def on_contact_info(&@on_contact_info : Events::ContactInfo ->)
       end
 
-      def on_peer(&@on_peer : ARI, Events::Peer ->)
+      def on_peer(&@on_peer : Events::Peer ->)
       end
 
-      def on_device_state_changed(&@on_device_state_changed : ARI, Events::DeviceStateChanged ->)
+      def on_device_state_changed(&@on_device_state_changed : Events::DeviceStateChanged ->)
       end
 
-      def on_playback_started(&@on_playback_started : ARI, Events::PlaybackStarted ->)
+      def on_playback_started(&@on_playback_started : Events::PlaybackStarted ->)
       end
 
-      def on_playback_continuing(&@on_playback_continuing : ARI, Events::PlaybackContinuing ->)
+      def on_playback_continuing(&@on_playback_continuing : Events::PlaybackContinuing ->)
       end
 
-      def on_playback_finished(&@on_playback_finished : ARI, Events::PlaybackFinished ->)
+      def on_playback_finished(&@on_playback_finished : Events::PlaybackFinished ->)
       end
 
-      def on_recording_started(&@on_recording_started : ARI, Events::RecordingStarted ->)
+      def on_recording_started(&@on_recording_started : Events::RecordingStarted ->)
       end
 
-      def on_recording_finished(&@on_recording_finished : ARI, Events::RecordingFinished ->)
+      def on_recording_finished(&@on_recording_finished : Events::RecordingFinished ->)
       end
 
-      def on_recording_failed(&@on_recording_failed : ARI, Events::RecordingFailed ->)
+      def on_recording_failed(&@on_recording_failed : Events::RecordingFailed ->)
       end
 
-      def on_application_move_failed(&@on_application_move_failed : ARI, Events::ApplicationMoveFailed ->)
+      def on_application_move_failed(&@on_application_move_failed : Events::ApplicationMoveFailed ->)
       end
 
-      def on_application_replaced(&@on_application_replaced : ARI, Events::ApplicationReplaced ->)
+      def on_application_replaced(&@on_application_replaced : Events::ApplicationReplaced ->)
       end
 
-      def on_bridge_created(&@on_bridge_created : ARI, Events::BridgeCreated ->)
+      def on_bridge_created(&@on_bridge_created : Events::BridgeCreated ->)
       end
 
-      def on_bridge_destroyed(&@on_bridge_destroyed : ARI, Events::BridgeDestroyed ->)
+      def on_bridge_destroyed(&@on_bridge_destroyed : Events::BridgeDestroyed ->)
       end
 
-      def on_bridge_merged(&@on_bridge_merged : ARI, Events::BridgeMerged ->)
+      def on_bridge_merged(&@on_bridge_merged : Events::BridgeMerged ->)
       end
 
-      def on_bridge_video_source_changed(&@on_bridge_video_source_changed : ARI, Events::BridgeVideoSourceChanged ->)
+      def on_bridge_video_source_changed(&@on_bridge_video_source_changed : Events::BridgeVideoSourceChanged ->)
       end
 
-      def on_bridge_blind_transfer(&@on_bridge_blind_transfer : ARI, Events::BridgeBlindTransfer ->)
+      def on_bridge_blind_transfer(&@on_bridge_blind_transfer : Events::BridgeBlindTransfer ->)
       end
 
-      def on_bridge_attended_transfer(&@on_bridge_attended_transfer : ARI, Events::BridgeAttendedTransfer ->)
+      def on_bridge_attended_transfer(&@on_bridge_attended_transfer : Events::BridgeAttendedTransfer ->)
       end
 
-      def on_channel_created(&@on_channel_created : ARI, Events::ChannelCreated ->)
+      def on_channel_created(&@on_channel_created : Events::ChannelCreated ->)
       end
 
-      def on_channel_destroyed(&@on_channel_destroyed : ARI, Events::ChannelDestroyed ->)
+      def on_channel_destroyed(&@on_channel_destroyed : Events::ChannelDestroyed ->)
       end
 
-      def on_channel_entered_bridge(&@on_channel_entered_bridge : ARI, Events::ChannelEnteredBridge ->)
+      def on_channel_entered_bridge(&@on_channel_entered_bridge : Events::ChannelEnteredBridge ->)
       end
 
-      def on_channel_left_bridge(&@on_channel_left_bridge : ARI, Events::ChannelLeftBridge ->)
+      def on_channel_left_bridge(&@on_channel_left_bridge : Events::ChannelLeftBridge ->)
       end
 
-      def on_channel_state_change(&@on_channel_state_change : ARI, Events::ChannelStateChange ->)
+      def on_channel_state_change(&@on_channel_state_change : Events::ChannelStateChange ->)
       end
 
-      def on_channel_dtmf_received(&@on_channel_dtmf_received : ARI, Events::ChannelDtmfReceived ->)
+      def on_channel_dtmf_received(&@on_channel_dtmf_received : Events::ChannelDtmfReceived ->)
       end
 
-      def on_channel_dialplan(&@on_channel_dialplan : ARI, Events::ChannelDialplan ->)
+      def on_channel_dialplan(&@on_channel_dialplan : Events::ChannelDialplan ->)
       end
 
-      def on_channel_caller_id(&@on_channel_caller_id : ARI, Events::ChannelCallerId ->)
+      def on_channel_caller_id(&@on_channel_caller_id : Events::ChannelCallerId ->)
       end
 
-      def on_channel_userevent(&@on_channel_userevent : ARI, Events::ChannelUserevent ->)
+      def on_channel_userevent(&@on_channel_userevent : Events::ChannelUserevent ->)
       end
 
-      def on_channel_hangup_request(&@on_channel_hangup_request : ARI, Events::ChannelHangupRequest ->)
+      def on_channel_hangup_request(&@on_channel_hangup_request : Events::ChannelHangupRequest ->)
       end
 
-      def on_channel_varset(&@on_channel_varset : ARI, Events::ChannelVarset ->)
+      def on_channel_varset(&@on_channel_varset : Events::ChannelVarset ->)
       end
 
-      def on_channel_hold(&@on_channel_hold : ARI, Events::ChannelHold ->)
+      def on_channel_hold(&@on_channel_hold : Events::ChannelHold ->)
       end
 
-      def on_channel_unhold(&@on_channel_unhold : ARI, Events::ChannelUnhold ->)
+      def on_channel_unhold(&@on_channel_unhold : Events::ChannelUnhold ->)
       end
 
-      def on_channel_talking_started(&@on_channel_talking_started : ARI, Events::ChannelTalkingStarted ->)
+      def on_channel_talking_started(&@on_channel_talking_started : Events::ChannelTalkingStarted ->)
       end
 
-      def on_channel_talking_finished(&@on_channel_talking_finished : ARI, Events::ChannelTalkingFinished ->)
+      def on_channel_talking_finished(&@on_channel_talking_finished : Events::ChannelTalkingFinished ->)
       end
 
-      def on_contact_status_change(&@on_contact_status_change : ARI, Events::ContactStatusChange ->)
+      def on_contact_status_change(&@on_contact_status_change : Events::ContactStatusChange ->)
       end
 
-      def on_peer_status_change(&@on_peer_status_change : ARI, Events::PeerStatusChange ->)
+      def on_peer_status_change(&@on_peer_status_change : Events::PeerStatusChange ->)
       end
 
-      def on_endpoint_state_change(&@on_endpoint_state_change : ARI, Events::EndpointStateChange ->)
+      def on_endpoint_state_change(&@on_endpoint_state_change : Events::EndpointStateChange ->)
       end
 
-      def on_dial(&@on_dial : ARI, Events::Dial ->)
+      def on_dial(&@on_dial : Events::Dial ->)
       end
 
-      def on_stasis_end(&@on_stasis_end : ARI, Events::StasisEnd ->)
+      def on_stasis_end(&@on_stasis_end : Events::StasisEnd ->)
       end
 
-      def on_stasis_start(&@on_stasis_start : ARI, Events::StasisStart ->)
+      def on_stasis_start(&@on_stasis_start : Events::StasisStart ->)
       end
 
-      def on_text_message_received(&@on_text_message_received : ARI, Events::TextMessageReceived ->)
+      def on_text_message_received(&@on_text_message_received : Events::TextMessageReceived ->)
       end
 
-      def on_channel_connected_line(&@on_channel_connected_line : ARI, Events::ChannelConnectedLine ->)
+      def on_channel_connected_line(&@on_channel_connected_line : Events::ChannelConnectedLine ->)
       end
     end
   end

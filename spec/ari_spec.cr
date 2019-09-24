@@ -107,18 +107,18 @@ describe Asterisk::ARI do
                             username: "asterisk.cr",
                             password: "asterisk.cr"
 
-    ari.on_stasis_start do |client, event|
+    ari.on_stasis_start do |event|
       ari_channel.send "StasisStart"
 
-      # channel = Asterisk::ARI::Channels.new(client)
+      # channel = Asterisk::ARI::Channels.new(ari)
       # response = channel.answer channel_id: event.channel.id
 
-      response = client.channels.answer channel_id: event.channel.id
+      response = ari.channels.answer channel_id: event.channel.id
       # 2XX (normally it should be 204)
       (200..299).to_a.should contain(response.status_code)
     end
 
-    ari.on_channel_state_change do |_, event|
+    ari.on_channel_state_change do |event|
       event.channel.state.should eq("Up")
       ari_channel.send "ChannelStateChange"
     end
@@ -155,11 +155,11 @@ describe Asterisk::ARI do
                             username: "asterisk.cr",
                             password: "asterisk.cr"
 
-    ari.on_stasis_start do |_, event|
+    ari.on_stasis_start do |event|
       channel.send event.channel.id
     end
 
-    ari.on_channel_state_change do |_, event|
+    ari.on_channel_state_change do |event|
       logger.debug "ChannelStateChange event"
       event.channel.state.should eq("Up")
     end
@@ -176,7 +176,7 @@ describe Asterisk::ARI do
     event_conditions = JSON.parse(%({"type": "ChannelStateChange",
                                      "channel": {"id": "#{channel_id}"}}))
 
-    ari.on name: event_name, conditions: event_conditions do |_, event_json|
+    ari.on name: event_name, conditions: event_conditions do |event_json|
       logger.debug "Custom ChannelStateChange event"
       event = Asterisk::ARI::Events::ChannelStateChange.from_json(event_json)
       event.channel.state.should eq("Up")

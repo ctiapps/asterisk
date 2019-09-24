@@ -31,7 +31,7 @@ module Asterisk
             unless klass =~ /^Message|Event$/
               callback = "on_#{model_name.underscore}"
               callbacks += <<-END
-                    def #{callback}(&@#{callback} : ARI, Events::#{klass} ->)
+                    def #{callback}(&@#{callback} : Events::#{klass} ->)
                     end
 
 
