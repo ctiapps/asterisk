@@ -13,7 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - name: Build
-        run: crystal docs
+        run: crystal docs && echo "asterisk.ctiapps.pro" > docs/CNAME
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@2.0.3
         env:
