@@ -4,6 +4,6 @@ version: 0.1.2
 authors:
   - Andrius Kairiukstis <k@andrius.mobi>
 
-crystal: 0.30.0
+crystal: 0.31.1
 
 license: MIT
