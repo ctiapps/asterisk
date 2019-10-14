@@ -15,7 +15,7 @@ module Asterisk
     class Bridges < Resources
       # List all active bridges in Asterisk.
       def list : HTTP::Client::Response | Array(Bridges::Bridge)
-        format_response ari.get("bridges")
+        format_response ari.get("bridges"), Array(Bridges::Bridge)
       end
 
       # Create a new bridge.
@@ -32,7 +32,7 @@ module Asterisk
         params += "&" + HTTP::Params.encode({"name" => name}) if name
 
         request = "bridges?" + params
-        format_response ari.post(request)
+        format_response ari.post(request), Bridges::Bridge
       end
 
       # Create a new bridge or updates an existing one.
@@ -48,7 +48,7 @@ module Asterisk
         params += "&" + HTTP::Params.encode({"name" => name}) if name
 
         request = "bridges/#{bridge_id}?" + params
-        format_response ari.post(request)
+        format_response ari.post(request), Bridges::Bridge
       end
 
       # Get bridge details.
@@ -59,7 +59,7 @@ module Asterisk
       # Error responses:
       # - 404 - Bridge not found
       def get(bridge_id : String) : HTTP::Client::Response | Bridges::Bridge
-        format_response ari.get("bridges/#{bridge_id}")
+        format_response ari.get("bridges/#{bridge_id}"), Bridges::Bridge
       end
 
       # Shut down a bridge.
@@ -191,7 +191,7 @@ module Asterisk
         params += "&" + HTTP::Params.encode({"playbackId" => playback_id}) if playback_id
 
         request = "bridges/#{bridge_id}/play?" + params
-        format_response ari.post(request)
+        format_response ari.post(request), Playbacks::Playback
       end
 
       # Start playback of media on a bridge.
@@ -216,7 +216,7 @@ module Asterisk
         params += "&" + HTTP::Params.encode({"skipms" => skipms.to_s}) if skipms
 
         request = "bridges/#{bridge_id}/play/#{playback_id}?" + params
-        format_response ari.post(request)
+        format_response ari.post(request), Playbacks::Playback
       end
 
       # Start a recording.
@@ -248,7 +248,7 @@ module Asterisk
         params += "&" + HTTP::Params.encode({"terminateOn" => terminate_on}) if terminate_on
 
         request = "bridges/#{bridge_id}/record?" + params
-        format_response ari.post(request)
+        format_response ari.post(request), Recordings::LiveRecording
       end
     end
   end

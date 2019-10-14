@@ -23,7 +23,7 @@ module Asterisk
       # Error responses:
       # - 404 - {configClass|objectType|id} not found
       def get_object(config_class : String, object_type : String, id : String) : HTTP::Client::Response | Array(Asterisk::ConfigTuple)
-        format_response ari.get("asterisk/config/dynamic/#{config_class}/#{object_type}/#{id}")
+        format_response ari.get("asterisk/config/dynamic/#{config_class}/#{object_type}/#{id}"), Array(Asterisk::ConfigTuple)
       end
 
       # Create or update a dynamic configuration object.
@@ -39,7 +39,7 @@ module Asterisk
       # - 403 - Could not create or update object
       # - 404 - {configClass|objectType} not found
       def update_object(config_class : String, object_type : String, id : String, fields : Hash(String, String | Bool | Int32 | Float32)? = nil) : HTTP::Client::Response | Array(Asterisk::ConfigTuple)
-        format_response ari.put("asterisk/config/dynamic/#{config_class}/#{object_type}/#{id}", body: fields.to_json)
+        format_response ari.put("asterisk/config/dynamic/#{config_class}/#{object_type}/#{id}", body: fields.to_json), Array(Asterisk::ConfigTuple)
       end
 
       # Delete a dynamic configuration object.
@@ -66,17 +66,17 @@ module Asterisk
         params += "&" + HTTP::Params.encode({"only" => only}) if only
 
         request = "asterisk/info?" + params
-        format_response ari.get(request)
+        format_response ari.get(request), Asterisk::AsteriskInfo
       end
 
       # Response pong message.
       def ping : HTTP::Client::Response | Asterisk::AsteriskPing
-        format_response ari.get("asterisk/ping")
+        format_response ari.get("asterisk/ping"), Asterisk::AsteriskPing
       end
 
       # List Asterisk modules.
       def list_modules : HTTP::Client::Response | Array(Asterisk::Module)
-        format_response ari.get("asterisk/modules")
+        format_response ari.get("asterisk/modules"), Array(Asterisk::Module)
       end
 
       # Get Asterisk module information.
@@ -88,7 +88,7 @@ module Asterisk
       # - 404 - Module could not be found in running modules.
       # - 409 - Module information could not be retrieved.
       def get_module(module_name : String) : HTTP::Client::Response | Asterisk::Module
-        format_response ari.get("asterisk/modules/#{module_name}")
+        format_response ari.get("asterisk/modules/#{module_name}"), Asterisk::Module
       end
 
       # Load an Asterisk module.
@@ -128,7 +128,7 @@ module Asterisk
 
       # Gets Asterisk log channel information.
       def list_log_channels : HTTP::Client::Response | Array(Asterisk::LogChannel)
-        format_response ari.get("asterisk/logging")
+        format_response ari.get("asterisk/logging"), Array(Asterisk::LogChannel)
       end
 
       # Adds a log channel.
@@ -177,7 +177,7 @@ module Asterisk
       def get_global_var(variable : String) : HTTP::Client::Response | Asterisk::Variable
         params = HTTP::Params.encode({"variable" => variable})
         request = "asterisk/variable?" + params
-        format_response ari.get(request)
+        format_response ari.get(request), Asterisk::Variable
       end
 
       # Set the value of a global variable.

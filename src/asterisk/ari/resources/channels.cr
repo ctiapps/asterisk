@@ -15,7 +15,7 @@ module Asterisk
     class Channels < Resources
       # List all active channels in Asterisk.
       def list : HTTP::Client::Response | Array(Channels::Channel)
-        format_response ari.get("channels")
+        format_response ari.get("channels"), Array(Channels::Channel)
       end
 
       # Create a new channel (originate).
@@ -57,7 +57,7 @@ module Asterisk
         params += "&" + HTTP::Params.encode({"formats" => formats}) if formats
 
         request = "channels?" + params
-        format_response ari.post(request, body: variables.to_json)
+        format_response ari.post(request, body: variables.to_json), Channels::Channel
       end
 
       # Create channel.
@@ -85,7 +85,7 @@ module Asterisk
         params += "&" + HTTP::Params.encode({"formats" => formats}) if formats
 
         request = "channels/create?" + params
-        format_response ari.post(request)
+        format_response ari.post(request), Channels::Channel
       end
 
       # Channel details.
@@ -96,7 +96,7 @@ module Asterisk
       # Error responses:
       # - 404 - Channel not found
       def get(channel_id : String) : HTTP::Client::Response | Channels::Channel
-        format_response ari.get("channels/#{channel_id}")
+        format_response ari.get("channels/#{channel_id}"), Channels::Channel
       end
 
       # Create a new channel (originate with id).
@@ -137,7 +137,7 @@ module Asterisk
         params += "&" + HTTP::Params.encode({"formats" => formats}) if formats
 
         request = "channels/#{channel_id}?" + params
-        format_response ari.post(request, body: variables.to_json)
+        format_response ari.post(request, body: variables.to_json), Channels::Channel
       end
 
       # Delete (i.e. hangup) a channel.
@@ -426,7 +426,7 @@ module Asterisk
         params += "&" + HTTP::Params.encode({"playbackId" => playback_id}) if playback_id
 
         request = "channels/#{channel_id}/play?" + params
-        format_response ari.post(request)
+        format_response ari.post(request), Playbacks::Playback
       end
 
       # Start playback of media and specify the playbackId.
@@ -452,7 +452,7 @@ module Asterisk
         params += "&" + HTTP::Params.encode({"skipms" => skipms.to_s}) if skipms
 
         request = "channels/#{channel_id}/play/#{playback_id}?" + params
-        format_response ari.post(request)
+        format_response ari.post(request), Playbacks::Playback
       end
 
       # Start a recording.
@@ -484,7 +484,7 @@ module Asterisk
         params += "&" + HTTP::Params.encode({"terminateOn" => terminate_on}) if terminate_on
 
         request = "channels/#{channel_id}/record?" + params
-        format_response ari.post(request)
+        format_response ari.post(request), Recordings::LiveRecording
       end
 
       # Get the value of a channel variable or function.
@@ -500,7 +500,7 @@ module Asterisk
       def get_channel_var(channel_id : String, variable : String) : HTTP::Client::Response | Asterisk::Variable
         params = HTTP::Params.encode({"variable" => variable})
         request = "channels/#{channel_id}/variable?" + params
-        format_response ari.get(request)
+        format_response ari.get(request), Asterisk::Variable
       end
 
       # Set the value of a channel variable or function.
@@ -546,7 +546,7 @@ module Asterisk
         params += "&" + HTTP::Params.encode({"snoopId" => snoop_id}) if snoop_id
 
         request = "channels/#{channel_id}/snoop?" + params
-        format_response ari.post(request)
+        format_response ari.post(request), Channels::Channel
       end
 
       # Start snooping.
@@ -571,7 +571,7 @@ module Asterisk
         params += "&" + HTTP::Params.encode({"appArgs" => app_args}) if app_args
 
         request = "channels/#{channel_id}/snoop/#{snoop_id}?" + params
-        format_response ari.post(request)
+        format_response ari.post(request), Channels::Channel
       end
 
       # Dial a created channel.
@@ -601,7 +601,7 @@ module Asterisk
       # Error responses:
       # - 404 - Channel cannot be found.
       def rtpstatistics(channel_id : String) : HTTP::Client::Response | RTPstat
-        format_response ari.get("channels/#{channel_id}/rtp_statistics")
+        format_response ari.get("channels/#{channel_id}/rtp_statistics"), RTPstat
       end
 
       # Start an External Media session.
@@ -633,7 +633,7 @@ module Asterisk
         params += "&" + HTTP::Params.encode({"direction" => direction}) if direction
 
         request = "channels/externalMedia?" + params
-        format_response ari.post(request, body: variables.to_json)
+        format_response ari.post(request, body: variables.to_json), ExternalMedia
       end
     end
   end

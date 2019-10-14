@@ -15,7 +15,7 @@ module Asterisk
     class Applications < Resources
       # List all applications.
       def list : HTTP::Client::Response | Array(Applications::Application)
-        format_response ari.get("applications")
+        format_response ari.get("applications"), Array(Applications::Application)
       end
 
       # Get details of an application.
@@ -26,7 +26,7 @@ module Asterisk
       # Error responses:
       # - 404 - Application does not exist.
       def get(application_name : String) : HTTP::Client::Response | Applications::Application
-        format_response ari.get("applications/#{application_name}")
+        format_response ari.get("applications/#{application_name}"), Applications::Application
       end
 
       # Subscribe an application to a event source.
@@ -42,7 +42,7 @@ module Asterisk
       def subscribe(application_name : String, event_source : String) : HTTP::Client::Response | Applications::Application
         params = HTTP::Params.encode({"eventSource" => event_source})
         request = "applications/#{application_name}/subscription?" + params
-        format_response ari.post(request)
+        format_response ari.post(request), Applications::Application
       end
 
       # Unsubscribe an application from an event source.
@@ -59,7 +59,7 @@ module Asterisk
       def unsubscribe(application_name : String, event_source : String) : HTTP::Client::Response | Applications::Application
         params = HTTP::Params.encode({"eventSource" => event_source})
         request = "applications/#{application_name}/subscription?" + params
-        format_response ari.delete(request)
+        format_response ari.delete(request), Applications::Application
       end
 
       # Filter application events types.
@@ -72,7 +72,7 @@ module Asterisk
       # - 400 - Bad request.
       # - 404 - Application does not exist.
       def filter(application_name : String, filter : Hash(String, String | Bool | Int32 | Float32)? = nil) : HTTP::Client::Response | Applications::Application
-        format_response ari.put("applications/#{application_name}/eventFilter", body: filter.to_json)
+        format_response ari.put("applications/#{application_name}/eventFilter", body: filter.to_json), Applications::Application
       end
     end
   end

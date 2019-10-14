@@ -15,7 +15,7 @@ module Asterisk
     class Recordings < Resources
       # List recordings that are complete.
       def list_stored : HTTP::Client::Response | Array(Recordings::StoredRecording)
-        format_response ari.get("recordings/stored")
+        format_response ari.get("recordings/stored"), Array(Recordings::StoredRecording)
       end
 
       # Get a stored recording's details.
@@ -26,7 +26,7 @@ module Asterisk
       # Error responses:
       # - 404 - Recording not found
       def get_stored(recording_name : String) : HTTP::Client::Response | Recordings::StoredRecording
-        format_response ari.get("recordings/stored/#{recording_name}")
+        format_response ari.get("recordings/stored/#{recording_name}"), Recordings::StoredRecording
       end
 
       # Delete a stored recording.
@@ -49,7 +49,7 @@ module Asterisk
       # - 403 - The recording file could not be opened
       # - 404 - Recording not found
       def get_stored_file(recording_name : String) : HTTP::Client::Response | Binary
-        format_response ari.get("recordings/stored/#{recording_name}/file")
+        format_response ari.get("recordings/stored/#{recording_name}/file"), Binary
       end
 
       # Copy a stored recording.
@@ -64,7 +64,7 @@ module Asterisk
       def copy_stored(recording_name : String, destination_recording_name : String) : HTTP::Client::Response | Recordings::StoredRecording
         params = HTTP::Params.encode({"destinationRecordingName" => destination_recording_name})
         request = "recordings/stored/#{recording_name}/copy?" + params
-        format_response ari.post(request)
+        format_response ari.post(request), Recordings::StoredRecording
       end
 
       # List live recordings.
@@ -75,7 +75,7 @@ module Asterisk
       # Error responses:
       # - 404 - Recording not found
       def get_live(recording_name : String) : HTTP::Client::Response | Recordings::LiveRecording
-        format_response ari.get("recordings/live/#{recording_name}")
+        format_response ari.get("recordings/live/#{recording_name}"), Recordings::LiveRecording
       end
 
       # Stop a live recording and discard it.

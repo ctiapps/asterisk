@@ -15,7 +15,7 @@ module Asterisk
     class DeviceStates < Resources
       # List all ARI controlled device states.
       def list : HTTP::Client::Response | Array(DeviceStates::DeviceState)
-        format_response ari.get("deviceStates")
+        format_response ari.get("deviceStates"), Array(DeviceStates::DeviceState)
       end
 
       # Retrieve the current state of a device.
@@ -23,7 +23,7 @@ module Asterisk
       # Arguments:
       # - `device_name` - name of the device. (required);
       def get(device_name : String) : HTTP::Client::Response | DeviceStates::DeviceState
-        format_response ari.get("deviceStates/#{device_name}")
+        format_response ari.get("deviceStates/#{device_name}"), DeviceStates::DeviceState
       end
 
       # Change the state of a device controlled by ARI. (Note - implicitly creates the device state).

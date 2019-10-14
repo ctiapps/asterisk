@@ -15,7 +15,7 @@ module Asterisk
     class Mailboxes < Resources
       # List all mailboxes.
       def list : HTTP::Client::Response | Array(Mailboxes::Mailbox)
-        format_response ari.get("mailboxes")
+        format_response ari.get("mailboxes"), Array(Mailboxes::Mailbox)
       end
 
       # Retrieve the current state of a mailbox.
@@ -26,7 +26,7 @@ module Asterisk
       # Error responses:
       # - 404 - Mailbox not found
       def get(mailbox_name : String) : HTTP::Client::Response | Mailboxes::Mailbox
-        format_response ari.get("mailboxes/#{mailbox_name}")
+        format_response ari.get("mailboxes/#{mailbox_name}"), Mailboxes::Mailbox
       end
 
       # Change the state of a mailbox. (Note - implicitly creates the mailbox).

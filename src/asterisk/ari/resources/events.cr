@@ -25,7 +25,7 @@ module Asterisk
         params += "&" + HTTP::Params.encode({"subscribeAll" => subscribe_all.to_s}) if subscribe_all
 
         request = "events?" + params
-        format_response ari.get(request)
+        format_response ari.get(request), Message
       end
 
       # Generate a user event.

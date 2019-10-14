@@ -25,7 +25,7 @@ module Asterisk
         params += "&" + HTTP::Params.encode({"format" => format}) if format
 
         request = "sounds?" + params
-        format_response ari.get(request)
+        format_response ari.get(request), Array(Sounds::Sound)
       end
 
       # Get a sound's details.
@@ -33,7 +33,7 @@ module Asterisk
       # Arguments:
       # - `sound_id` - sound's id. (required);
       def get(sound_id : String) : HTTP::Client::Response | Sounds::Sound
-        format_response ari.get("sounds/#{sound_id}")
+        format_response ari.get("sounds/#{sound_id}"), Sounds::Sound
       end
     end
   end

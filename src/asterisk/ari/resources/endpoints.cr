@@ -15,7 +15,7 @@ module Asterisk
     class Endpoints < Resources
       # List all endpoints.
       def list : HTTP::Client::Response | Int32
-        format_response ari.get("endpoints")
+        format_response ari.get("endpoints"), Int32
       end
 
       # Send a message to some technology URI or endpoint.
@@ -47,7 +47,7 @@ module Asterisk
       # Error responses:
       # - 404 - Endpoints not found
       def list_by_tech(tech : String) : HTTP::Client::Response | Int32
-        format_response ari.get("endpoints/#{tech}")
+        format_response ari.get("endpoints/#{tech}"), Int32
       end
 
       # Details for an endpoint.
@@ -60,7 +60,7 @@ module Asterisk
       # - 400 - Invalid parameters for sending a message.
       # - 404 - Endpoints not found
       def get(tech : String, resource : String) : HTTP::Client::Response | Int32
-        format_response ari.get("endpoints/#{tech}/#{resource}")
+        format_response ari.get("endpoints/#{tech}/#{resource}"), Int32
       end
 
       # Send a message to some endpoint in a technology.

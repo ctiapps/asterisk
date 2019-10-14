@@ -155,7 +155,7 @@ module Asterisk
                         code.push %(ari.#{http_operation} "#{url}?" + params#{if body = body_params.first?; ", body: #{body.name}.to_json"; end})
                       else
                         code.push %(request = "#{url}?" + params)
-                        code.push %(format_response ari.#{http_operation}(request#{if body = body_params.first?; ", body: #{body.name}.to_json"; end}))
+                        code.push %(format_response ari.#{http_operation}(request#{if body = body_params.first?; ", body: #{body.name}.to_json"; end}), #{response})
                       end
 
                       code.join("\n").strip.gsub(/\n^/m, "\n        ")
@@ -167,7 +167,7 @@ module Asterisk
                       else
                         # lines of code for resulting method
                         code = Array(String).new
-                        code.push %(format_response ari.#{http_operation}("#{url}"#{if body = body_params.first?; ", body: #{body.name}.to_json"; end}))
+                        code.push %(format_response ari.#{http_operation}("#{url}"#{if body = body_params.first?; ", body: #{body.name}.to_json"; end}), #{response})
                         code.join("\n").strip.gsub(/\n^/m, "\n        ")
                       end
                     end

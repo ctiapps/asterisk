@@ -21,7 +21,7 @@ module Asterisk
       # Error responses:
       # - 404 - The playback cannot be found
       def get(playback_id : String) : HTTP::Client::Response | Playbacks::Playback
-        format_response ari.get("playbacks/#{playback_id}")
+        format_response ari.get("playbacks/#{playback_id}"), Playbacks::Playback
       end
 
       # Stop a playback.
