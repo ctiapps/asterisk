@@ -6,7 +6,7 @@ module Asterisk
       def initialize(@ari)
       end
 
-      private def format_response
+      private def format_response(response : HTTP::Client::Response)
         # 200 or 201
         if (response.ok? || response.created?) && ! response.body.nil?
           response.from_json(response.body.to_s)
