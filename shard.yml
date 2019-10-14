@@ -1,4 +1,8 @@
 name: asterisk
+
+description: |
+  Low-level access to the Asterisk PBX interfaces (ARI, AMI, AGI - all kinds)
+
 version: 0.1.2
 
 authors:
@@ -7,3 +11,8 @@ authors:
 crystal: 0.31.1
 
 license: MIT
+
+development_dependencies:
+  ameba:
+    github: crystal-ameba/ameba
+    version: ~> 0.10.0
