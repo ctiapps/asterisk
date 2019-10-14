@@ -29,16 +29,16 @@ jobs:
   test_latest:
     runs-on: ubuntu-latest
     container:
-      image: crystallang/crystal
+      image: andrius/crystal-lang:asterisk-16
     steps:
       - uses: actions/checkout@v1
       - name: Specs
         run: crystal spec --warnings all --error-on-warnings
-  test_nightly:
-    runs-on: ubuntu-latest
-    container:
-      image: crystallang/crystal:nightly
-    steps:
-      - uses: actions/checkout@v1
-      - name: Specs
-        run: crystal spec --warnings all --error-on-warnings
+  # test_nightly:
+  #   runs-on: ubuntu-latest
+  #   container:
+  #     image: crystallang/crystal:nightly
+  #   steps:
+  #     - uses: actions/checkout@v1
+  #     - name: Specs
+  #       run: crystal spec --warnings all --error-on-warnings
