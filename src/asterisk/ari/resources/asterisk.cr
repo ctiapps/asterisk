@@ -6,7 +6,7 @@
 #  be lost the next time this file is regenerated.
 #
 #  This file was generated using ctiapps/asterisk crystal shard from the
-#  Asterisk PBX version 16.5.1.
+#  Asterisk PBX version 16.6.0.
 #
 #------------------------------------------------------------------------------
 
@@ -16,352 +16,175 @@ module Asterisk
       # Retrieve a dynamic configuration object.
       #
       # Arguments:
-      # - `config_class` - the configuration class containing dynamic configuration objects.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: path,
-      #   - param name: configClass,
-      #
-      # - `object_type` - the type of configuration object to retrieve.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: path,
-      #   - param name: objectType,
-      #
-      # - `id` - the unique identifier of the object to retrieve.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: path,
-      #   - param name: id,
-      #
-      # API endpoint:
-      # - method: get
-      # - endpoint: /asterisk/config/dynamic/{configClass}/{objectType}/{id}
+      # - `config_class` - the configuration class containing dynamic configuration objects. (required);
+      # - `object_type` - the type of configuration object to retrieve. (required);
+      # - `id` - the unique identifier of the object to retrieve. (required);
       #
       # Error responses:
       # - 404 - {configClass|objectType|id} not found
       def get_object(config_class : String, object_type : String, id : String) : HTTP::Client::Response | Array(Asterisk::ConfigTuple)
-        response = client.get "asterisk/config/dynamic/#{config_class}/#{object_type}/#{id}"
-        response.status_code.to_s =~ /^[23]\d\d$/ ? Array(Asterisk::ConfigTuple).from_json(response.body.to_s) : response
+        format_response ari.get("asterisk/config/dynamic/#{config_class}/#{object_type}/#{id}")
       end
 
       # Create or update a dynamic configuration object.
       #
       # Arguments:
-      # - `config_class` - the configuration class containing dynamic configuration objects.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: path,
-      #   - param name: configClass,
-      #
-      # - `object_type` - the type of configuration object to create or update.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: path,
-      #   - param name: objectType,
-      #
-      # - `id` - the unique identifier of the object to create or update.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: path,
-      #   - param name: id,
-      #
-      # - `fields` - the body object should have a value that is a list of ConfigTuples, which provide the fields to update. Ex. [ { "attribute": "directmedia", "value": "false" } ].
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: body,
-      #   - param name: fields,
-      #
-      # API endpoint:
-      # - method: put
-      # - endpoint: /asterisk/config/dynamic/{configClass}/{objectType}/{id}
+      # - `config_class` - the configuration class containing dynamic configuration objects. (required);
+      # - `object_type` - the type of configuration object to create or update. (required);
+      # - `id` - the unique identifier of the object to create or update. (required);
+      # - `fields` - the body object should have a value that is a list of ConfigTuples, which provide the fields to update. Ex. [ { "attribute": "directmedia", "value": "false" } ];
       #
       # Error responses:
       # - 400 - Bad request body
       # - 403 - Could not create or update object
       # - 404 - {configClass|objectType} not found
       def update_object(config_class : String, object_type : String, id : String, fields : Hash(String, String | Bool | Int32 | Float32)? = nil) : HTTP::Client::Response | Array(Asterisk::ConfigTuple)
-        response = client.put "asterisk/config/dynamic/#{config_class}/#{object_type}/#{id}", body: fields.to_json
-        response.status_code.to_s =~ /^[23]\d\d$/ ? Array(Asterisk::ConfigTuple).from_json(response.body.to_s) : response
+        format_response ari.put("asterisk/config/dynamic/#{config_class}/#{object_type}/#{id}", body: fields.to_json)
       end
 
       # Delete a dynamic configuration object.
       #
       # Arguments:
-      # - `config_class` - the configuration class containing dynamic configuration objects.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: path,
-      #   - param name: configClass,
-      #
-      # - `object_type` - the type of configuration object to delete.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: path,
-      #   - param name: objectType,
-      #
-      # - `id` - the unique identifier of the object to delete.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: path,
-      #   - param name: id,
-      #
-      # API endpoint:
-      # - method: delete
-      # - endpoint: /asterisk/config/dynamic/{configClass}/{objectType}/{id}
+      # - `config_class` - the configuration class containing dynamic configuration objects. (required);
+      # - `object_type` - the type of configuration object to delete. (required);
+      # - `id` - the unique identifier of the object to delete. (required);
       #
       # Error responses:
       # - 403 - Could not delete object
       # - 404 - {configClass|objectType|id} not found
       def delete_object(config_class : String, object_type : String, id : String)
-        client.delete "asterisk/config/dynamic/#{config_class}/#{object_type}/#{id}"
+        ari.delete "asterisk/config/dynamic/#{config_class}/#{object_type}/#{id}"
       end
 
       # Gets Asterisk system information.
       #
       # Arguments:
-      # - `only` - filter information returned.
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): true,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: only,
-      #
-      # API endpoint:
-      # - method: get
-      # - endpoint: /asterisk/info
+      # - `only` - filter information returned.. Allow multiple instances (comma-separated list);
       def get_info(only : String? = nil) : HTTP::Client::Response | Asterisk::AsteriskInfo
         # Optional parameters
         params = HTTP::Params.encode({} of String => String)
         params += "&" + HTTP::Params.encode({"only" => only}) if only
 
-        response = client.get "asterisk/info?" + params
-        response.status_code.to_s =~ /^[23]\d\d$/ ? Asterisk::AsteriskInfo.from_json(response.body.to_s) : response
+        request = "asterisk/info?" + params
+        format_response ari.get(request)
       end
 
       # Response pong message.
       def ping : HTTP::Client::Response | Asterisk::AsteriskPing
-        response = client.get "asterisk/ping"
-        response.status_code.to_s =~ /^[23]\d\d$/ ? Asterisk::AsteriskPing.from_json(response.body.to_s) : response
+        format_response ari.get("asterisk/ping")
       end
 
       # List Asterisk modules.
       def list_modules : HTTP::Client::Response | Array(Asterisk::Module)
-        response = client.get "asterisk/modules"
-        response.status_code.to_s =~ /^[23]\d\d$/ ? Array(Asterisk::Module).from_json(response.body.to_s) : response
+        format_response ari.get("asterisk/modules")
       end
 
       # Get Asterisk module information.
       #
       # Arguments:
-      # - `module_name` - module's name.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: path,
-      #   - param name: moduleName,
-      #
-      # API endpoint:
-      # - method: get
-      # - endpoint: /asterisk/modules/{moduleName}
+      # - `module_name` - module's name. (required);
       #
       # Error responses:
       # - 404 - Module could not be found in running modules.
       # - 409 - Module information could not be retrieved.
       def get_module(module_name : String) : HTTP::Client::Response | Asterisk::Module
-        response = client.get "asterisk/modules/#{module_name}"
-        response.status_code.to_s =~ /^[23]\d\d$/ ? Asterisk::Module.from_json(response.body.to_s) : response
+        format_response ari.get("asterisk/modules/#{module_name}")
       end
 
       # Load an Asterisk module.
       #
       # Arguments:
-      # - `module_name` - module's name.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: path,
-      #   - param name: moduleName,
-      #
-      # API endpoint:
-      # - method: post
-      # - endpoint: /asterisk/modules/{moduleName}
+      # - `module_name` - module's name. (required);
       #
       # Error responses:
       # - 409 - Module could not be loaded.
       def load_module(module_name : String)
-        client.post "asterisk/modules/#{module_name}"
+        ari.post "asterisk/modules/#{module_name}"
       end
 
       # Unload an Asterisk module.
       #
       # Arguments:
-      # - `module_name` - module's name.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: path,
-      #   - param name: moduleName,
-      #
-      # API endpoint:
-      # - method: delete
-      # - endpoint: /asterisk/modules/{moduleName}
+      # - `module_name` - module's name. (required);
       #
       # Error responses:
       # - 404 - Module not found in running modules.
       # - 409 - Module could not be unloaded.
       def unload_module(module_name : String)
-        client.delete "asterisk/modules/#{module_name}"
+        ari.delete "asterisk/modules/#{module_name}"
       end
 
       # Reload an Asterisk module.
       #
       # Arguments:
-      # - `module_name` - module's name.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: path,
-      #   - param name: moduleName,
-      #
-      # API endpoint:
-      # - method: put
-      # - endpoint: /asterisk/modules/{moduleName}
+      # - `module_name` - module's name. (required);
       #
       # Error responses:
       # - 404 - Module not found in running modules.
       # - 409 - Module could not be reloaded.
       def reload_module(module_name : String)
-        client.put "asterisk/modules/#{module_name}"
+        ari.put "asterisk/modules/#{module_name}"
       end
 
       # Gets Asterisk log channel information.
       def list_log_channels : HTTP::Client::Response | Array(Asterisk::LogChannel)
-        response = client.get "asterisk/logging"
-        response.status_code.to_s =~ /^[23]\d\d$/ ? Array(Asterisk::LogChannel).from_json(response.body.to_s) : response
+        format_response ari.get("asterisk/logging")
       end
 
       # Adds a log channel.
       #
       # Arguments:
-      # - `log_channel_name` - the log channel to add.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: path,
-      #   - param name: logChannelName,
-      #
-      # - `configuration` - levels of the log channel.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: configuration,
-      #
-      # API endpoint:
-      # - method: post
-      # - endpoint: /asterisk/logging/{logChannelName}
+      # - `log_channel_name` - the log channel to add. (required);
+      # - `configuration` - levels of the log channel. (required);
       #
       # Error responses:
       # - 400 - Bad request body
       # - 409 - Log channel could not be created.
       def add_log(log_channel_name : String, configuration : String)
         params = HTTP::Params.encode({"configuration" => configuration})
-        client.post "asterisk/logging/#{log_channel_name}?" + params
+        ari.post "asterisk/logging/#{log_channel_name}?" + params
       end
 
       # Deletes a log channel.
       #
       # Arguments:
-      # - `log_channel_name` - log channels name.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: path,
-      #   - param name: logChannelName,
-      #
-      # API endpoint:
-      # - method: delete
-      # - endpoint: /asterisk/logging/{logChannelName}
+      # - `log_channel_name` - log channels name. (required);
       #
       # Error responses:
       # - 404 - Log channel does not exist.
       def delete_log(log_channel_name : String)
-        client.delete "asterisk/logging/#{log_channel_name}"
+        ari.delete "asterisk/logging/#{log_channel_name}"
       end
 
       # Rotates a log channel.
       #
       # Arguments:
-      # - `log_channel_name` - log channel's name.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: path,
-      #   - param name: logChannelName,
-      #
-      # API endpoint:
-      # - method: put
-      # - endpoint: /asterisk/logging/{logChannelName}/rotate
+      # - `log_channel_name` - log channel's name. (required);
       #
       # Error responses:
       # - 404 - Log channel does not exist.
       def rotate_log(log_channel_name : String)
-        client.put "asterisk/logging/#{log_channel_name}/rotate"
+        ari.put "asterisk/logging/#{log_channel_name}/rotate"
       end
 
       # Get the value of a global variable.
       #
       # Arguments:
-      # - `variable` - the variable to get.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: variable,
-      #
-      # API endpoint:
-      # - method: get
-      # - endpoint: /asterisk/variable
+      # - `variable` - the variable to get. (required);
       #
       # Error responses:
       # - 400 - Missing variable parameter.
       def get_global_var(variable : String) : HTTP::Client::Response | Asterisk::Variable
         params = HTTP::Params.encode({"variable" => variable})
-        response = client.get "asterisk/variable?" + params
-        response.status_code.to_s =~ /^[23]\d\d$/ ? Asterisk::Variable.from_json(response.body.to_s) : response
+        request = "asterisk/variable?" + params
+        format_response ari.get(request)
       end
 
       # Set the value of a global variable.
       #
       # Arguments:
-      # - `variable` - the variable to set.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: variable,
-      #
-      # - `value` - the value to set the variable to.
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: value,
-      #
-      # API endpoint:
-      # - method: post
-      # - endpoint: /asterisk/variable
+      # - `variable` - the variable to set. (required);
+      # - `value` - the value to set the variable to;
       #
       # Error responses:
       # - 400 - Missing variable parameter.
@@ -371,7 +194,7 @@ module Asterisk
         # Optional parameters
         params += "&" + HTTP::Params.encode({"value" => value}) if value
 
-        client.post "asterisk/variable?" + params
+        ari.post "asterisk/variable?" + params
       end
     end
   end

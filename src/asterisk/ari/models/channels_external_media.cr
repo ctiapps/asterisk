@@ -12,16 +12,19 @@
 
 module Asterisk
   class ARI
-    class Events < Resources
-      # Base type for errors and events
-      abstract struct Message
+    class Channels < Resources
+      # ExternalMedia session.
+      struct ExternalMedia
         include JSON::Serializable
 
-        # Indicates the type of this message.
-        property type : String
+        # The Asterisk channel representing the external media
+        property channel : Channels::Channel
 
-        # The unique ID for the Asterisk instance that raised this event.
-        property asterisk_id : String? = nil
+        # The local ip address used
+        property local_address : String? = nil
+
+        # The local ip port used
+        property local_port : Int32? = nil
       end
     end
   end

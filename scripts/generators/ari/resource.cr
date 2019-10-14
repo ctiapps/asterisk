@@ -69,10 +69,6 @@ module Asterisk
             end
             arguments = parameters.arguments
             arguments_spec = parameters.arguments_spec
-            arguments_spec += %(      #\n)
-            arguments_spec += %(      # API endpoint: \n)
-            arguments_spec += %(      # - method: #{http_operation}\n)
-            arguments_spec += %(      # - endpoint: #{endpoint})
           else
             parameters = nil
             arguments = ""
@@ -95,7 +91,6 @@ module Asterisk
 
           name = operation["nickname"].to_s.underscore
 
-          # name = %(#{endpoint =~ /\/\S+\/{(\S+)}\/\S+/ ? "" : "self."}#{name}#{arguments.empty? ? "" : "(#{arguments})"}#{response == "Nil" ? "" : " : #{response}"})
           name = %(#{name}#{arguments.empty? ? "" : "(#{arguments})"}#{response == "Nil" ? "" : " : HTTP::Client::Response | #{response}"})
           <<-END
                 # #{summary}#{arguments_spec}#{errors}
@@ -126,19 +121,26 @@ module Asterisk
                       # # encode query parameters like:
                       # code.push "params = HTTP::Params.encode({\"author\" => \"John Doe\", \"offset\" => \"20\"})"
                       params_already_defined = false
+
                       if required_params.size >= 1
                         params_already_defined = true
-                        params = "params = HTTP::Params.encode({"
-                        params += required_params.map { |parameter|
-                          %("#{parameter.name_ari}" => #{parameter.name}#{".to_s" unless parameter.datatype =~ /String/})
-                        }.join(", ")
-                        params += "})"
+
+                        r = required_params.dup
+                        # first
+                        parameter = r.shift
+                        params = %(params = HTTP::Params.encode({"#{parameter.name_ari}" => #{parameter.name}#{".to_s" unless parameter.datatype =~ /String/}}))
                         code.push params
-                        # empty space
-                        code.push "" if optional_params.size >= 1
+
+                        # remainig
+                        r.map do |parameter|
+                          code.push %(params += "&" + HTTP::Params.encode({"#{parameter.name_ari}" => #{parameter.name}#{".to_s" unless parameter.datatype =~ /String/}}))
+                        end
                       end
 
                       if optional_params.size >= 1
+                        # empty space
+                        code.push "" if required_params.size >= 1
+
                         code.push "# Optional parameters"
                         code.push "params = HTTP::Params.encode({} of String => String)" unless params_already_defined
                         optional_params.map do |parameter|
@@ -150,10 +152,10 @@ module Asterisk
 
                       body_params = parameters.try &.body_type.as(Array(Parameter)) || Array(Parameter).new
                       if response == "Nil"
-                        code.push %(client.#{http_operation} "#{url}?" + params#{if body = body_params.first?; ", body: #{body.name}.to_json"; end})
+                        code.push %(ari.#{http_operation} "#{url}?" + params#{if body = body_params.first?; ", body: #{body.name}.to_json"; end})
                       else
-                        code.push %(response = client.#{http_operation} "#{url}?" + params#{if body = body_params.first?; ", body: #{body.name}.to_json"; end})
-                        code.push %(response.status_code.to_s =~ /^[23]\\d\\d$/ ? #{response}.from_json(response.body.to_s) : response)
+                        code.push %(request = "#{url}?" + params)
+                        code.push %(format_response ari.#{http_operation}(request#{if body = body_params.first?; ", body: #{body.name}.to_json"; end}))
                       end
 
                       code.join("\n").strip.gsub(/\n^/m, "\n        ")
@@ -161,12 +163,11 @@ module Asterisk
                     else
                       body_params = parameters.try &.body_type.as(Array(Parameter)) || Array(Parameter).new
                       if response == "Nil"
-                        %(client.#{http_operation} "#{url}"#{if body = body_params.first?; ",\n  body: #{body.name}.to_json"; end})
+                        %(ari.#{http_operation} "#{url}"#{if body = body_params.first?; ",\n  body: #{body.name}.to_json"; end})
                       else
                         # lines of code for resulting method
                         code = Array(String).new
-                        code.push %(response = client.#{http_operation} "#{url}"#{if body = body_params.first?; ", body: #{body.name}.to_json"; end})
-                        code.push %(response.status_code.to_s =~ /^[23]\\d\\d$/ ? #{response}.from_json(response.body.to_s) : response)
+                        code.push %(format_response ari.#{http_operation}("#{url}"#{if body = body_params.first?; ", body: #{body.name}.to_json"; end}))
                         code.join("\n").strip.gsub(/\n^/m, "\n        ")
                       end
                     end

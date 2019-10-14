@@ -6,7 +6,7 @@
 #  be lost the next time this file is regenerated.
 #
 #  This file was generated using ctiapps/asterisk crystal shard from the
-#  Asterisk PBX version 16.5.1.
+#  Asterisk PBX version 16.6.0.
 #
 #------------------------------------------------------------------------------
 
@@ -16,49 +16,24 @@ module Asterisk
       # List all sounds.
       #
       # Arguments:
-      # - `lang` - lookup sound for a specific language.
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): ,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: lang,
-      #
-      # - `format` - lookup sound in a specific format.
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): ,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: format,
-      #
-      # API endpoint:
-      # - method: get
-      # - endpoint: /sounds
+      # - `lang` - lookup sound for a specific language;
+      # - `format` - lookup sound in a specific format;
       def list(lang : String? = nil, format : String? = nil) : HTTP::Client::Response | Array(Sounds::Sound)
         # Optional parameters
         params = HTTP::Params.encode({} of String => String)
         params += "&" + HTTP::Params.encode({"lang" => lang}) if lang
         params += "&" + HTTP::Params.encode({"format" => format}) if format
 
-        response = client.get "sounds?" + params
-        response.status_code.to_s =~ /^[23]\d\d$/ ? Array(Sounds::Sound).from_json(response.body.to_s) : response
+        request = "sounds?" + params
+        format_response ari.get(request)
       end
 
       # Get a sound's details.
       #
       # Arguments:
-      # - `sound_id` - sound's id.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: path,
-      #   - param name: soundId,
-      #
-      # API endpoint:
-      # - method: get
-      # - endpoint: /sounds/{soundId}
+      # - `sound_id` - sound's id. (required);
       def get(sound_id : String) : HTTP::Client::Response | Sounds::Sound
-        response = client.get "sounds/#{sound_id}"
-        response.status_code.to_s =~ /^[23]\d\d$/ ? Sounds::Sound.from_json(response.body.to_s) : response
+        format_response ari.get("sounds/#{sound_id}")
       end
     end
   end

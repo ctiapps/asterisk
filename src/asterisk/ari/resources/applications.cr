@@ -6,7 +6,7 @@
 #  be lost the next time this file is regenerated.
 #
 #  This file was generated using ctiapps/asterisk crystal shard from the
-#  Asterisk PBX version 16.5.1.
+#  Asterisk PBX version 16.6.0.
 #
 #------------------------------------------------------------------------------
 
@@ -15,51 +15,25 @@ module Asterisk
     class Applications < Resources
       # List all applications.
       def list : HTTP::Client::Response | Array(Applications::Application)
-        response = client.get "applications"
-        response.status_code.to_s =~ /^[23]\d\d$/ ? Array(Applications::Application).from_json(response.body.to_s) : response
+        format_response ari.get("applications")
       end
 
       # Get details of an application.
       #
       # Arguments:
-      # - `application_name` - application's name.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: path,
-      #   - param name: applicationName,
-      #
-      # API endpoint:
-      # - method: get
-      # - endpoint: /applications/{applicationName}
+      # - `application_name` - application's name. (required);
       #
       # Error responses:
       # - 404 - Application does not exist.
       def get(application_name : String) : HTTP::Client::Response | Applications::Application
-        response = client.get "applications/#{application_name}"
-        response.status_code.to_s =~ /^[23]\d\d$/ ? Applications::Application.from_json(response.body.to_s) : response
+        format_response ari.get("applications/#{application_name}")
       end
 
       # Subscribe an application to a event source.
       #
       # Arguments:
-      # - `application_name` - application's name.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: path,
-      #   - param name: applicationName,
-      #
-      # - `event_source` - uRI for event source (channel:{channelId}, bridge:{bridgeId}, endpoint:{tech}[/{resource}], deviceState:{deviceName}.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): true,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: eventSource,
-      #
-      # API endpoint:
-      # - method: post
-      # - endpoint: /applications/{applicationName}/subscription
+      # - `application_name` - application's name. (required);
+      # - `event_source` - uRI for event source (channel:{channelId}, bridge:{bridgeId}, endpoint:{tech}[/{resource}], deviceState:{deviceName}. (required). Allow multiple instances (comma-separated list);
       #
       # Error responses:
       # - 400 - Missing parameter.
@@ -67,30 +41,15 @@ module Asterisk
       # - 422 - Event source does not exist.
       def subscribe(application_name : String, event_source : String) : HTTP::Client::Response | Applications::Application
         params = HTTP::Params.encode({"eventSource" => event_source})
-        response = client.post "applications/#{application_name}/subscription?" + params
-        response.status_code.to_s =~ /^[23]\d\d$/ ? Applications::Application.from_json(response.body.to_s) : response
+        request = "applications/#{application_name}/subscription?" + params
+        format_response ari.post(request)
       end
 
       # Unsubscribe an application from an event source.
       #
       # Arguments:
-      # - `application_name` - application's name.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: path,
-      #   - param name: applicationName,
-      #
-      # - `event_source` - uRI for event source (channel:{channelId}, bridge:{bridgeId}, endpoint:{tech}[/{resource}], deviceState:{deviceName}.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): true,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: eventSource,
-      #
-      # API endpoint:
-      # - method: delete
-      # - endpoint: /applications/{applicationName}/subscription
+      # - `application_name` - application's name. (required);
+      # - `event_source` - uRI for event source (channel:{channelId}, bridge:{bridgeId}, endpoint:{tech}[/{resource}], deviceState:{deviceName}. (required). Allow multiple instances (comma-separated list);
       #
       # Error responses:
       # - 400 - Missing parameter; event source scheme not recognized.
@@ -99,37 +58,21 @@ module Asterisk
       # - 422 - Event source does not exist.
       def unsubscribe(application_name : String, event_source : String) : HTTP::Client::Response | Applications::Application
         params = HTTP::Params.encode({"eventSource" => event_source})
-        response = client.delete "applications/#{application_name}/subscription?" + params
-        response.status_code.to_s =~ /^[23]\d\d$/ ? Applications::Application.from_json(response.body.to_s) : response
+        request = "applications/#{application_name}/subscription?" + params
+        format_response ari.delete(request)
       end
 
       # Filter application events types.
       #
       # Arguments:
-      # - `application_name` - application's name.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: path,
-      #   - param name: applicationName,
-      #
-      # - `filter` - specify which event types to allow/disallow.
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: body,
-      #   - param name: filter,
-      #
-      # API endpoint:
-      # - method: put
-      # - endpoint: /applications/{applicationName}/eventFilter
+      # - `application_name` - application's name. (required);
+      # - `filter` - specify which event types to allow/disallow;
       #
       # Error responses:
       # - 400 - Bad request.
       # - 404 - Application does not exist.
       def filter(application_name : String, filter : Hash(String, String | Bool | Int32 | Float32)? = nil) : HTTP::Client::Response | Applications::Application
-        response = client.put "applications/#{application_name}/eventFilter", body: filter.to_json
-        response.status_code.to_s =~ /^[23]\d\d$/ ? Applications::Application.from_json(response.body.to_s) : response
+        format_response ari.put("applications/#{application_name}/eventFilter", body: filter.to_json)
       end
     end
   end

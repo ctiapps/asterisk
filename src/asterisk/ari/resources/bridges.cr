@@ -6,7 +6,7 @@
 #  be lost the next time this file is regenerated.
 #
 #  This file was generated using ctiapps/asterisk crystal shard from the
-#  Asterisk PBX version 16.5.1.
+#  Asterisk PBX version 16.6.0.
 #
 #------------------------------------------------------------------------------
 
@@ -15,37 +15,15 @@ module Asterisk
     class Bridges < Resources
       # List all active bridges in Asterisk.
       def list : HTTP::Client::Response | Array(Bridges::Bridge)
-        response = client.get "bridges"
-        response.status_code.to_s =~ /^[23]\d\d$/ ? Array(Bridges::Bridge).from_json(response.body.to_s) : response
+        format_response ari.get("bridges")
       end
 
       # Create a new bridge.
       #
       # Arguments:
-      # - `type` - comma separated list of bridge type attributes (mixing, holding, dtmf_events, proxy_media, video_sfu).
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: type,
-      #
-      # - `bridge_id` - unique ID to give to the bridge being created.
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: bridgeId,
-      #
-      # - `name` - name to give to the bridge being created.
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: name,
-      #
-      # API endpoint:
-      # - method: post
-      # - endpoint: /bridges
+      # - `type` - comma separated list of bridge type attributes (mixing, holding, dtmf_events, proxy_media, video_sfu);
+      # - `bridge_id` - unique ID to give to the bridge being created;
+      # - `name` - name to give to the bridge being created;
       def create(type : String? = nil, bridge_id : String? = nil, name : String? = nil) : HTTP::Client::Response | Bridges::Bridge
         # Optional parameters
         params = HTTP::Params.encode({} of String => String)
@@ -53,129 +31,56 @@ module Asterisk
         params += "&" + HTTP::Params.encode({"bridgeId" => bridge_id}) if bridge_id
         params += "&" + HTTP::Params.encode({"name" => name}) if name
 
-        response = client.post "bridges?" + params
-        response.status_code.to_s =~ /^[23]\d\d$/ ? Bridges::Bridge.from_json(response.body.to_s) : response
+        request = "bridges?" + params
+        format_response ari.post(request)
       end
 
       # Create a new bridge or updates an existing one.
       #
       # Arguments:
-      # - `bridge_id` - unique ID to give to the bridge being created.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: path,
-      #   - param name: bridgeId,
-      #
-      # - `type` - comma separated list of bridge type attributes (mixing, holding, dtmf_events, proxy_media, video_sfu) to set.
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: type,
-      #
-      # - `name` - set the name of the bridge.
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: name,
-      #
-      # API endpoint:
-      # - method: post
-      # - endpoint: /bridges/{bridgeId}
+      # - `bridge_id` - unique ID to give to the bridge being created. (required);
+      # - `type` - comma separated list of bridge type attributes (mixing, holding, dtmf_events, proxy_media, video_sfu) to set;
+      # - `name` - set the name of the bridge;
       def create_with_id(bridge_id : String, type : String? = nil, name : String? = nil) : HTTP::Client::Response | Bridges::Bridge
         # Optional parameters
         params = HTTP::Params.encode({} of String => String)
         params += "&" + HTTP::Params.encode({"type" => type}) if type
         params += "&" + HTTP::Params.encode({"name" => name}) if name
 
-        response = client.post "bridges/#{bridge_id}?" + params
-        response.status_code.to_s =~ /^[23]\d\d$/ ? Bridges::Bridge.from_json(response.body.to_s) : response
+        request = "bridges/#{bridge_id}?" + params
+        format_response ari.post(request)
       end
 
       # Get bridge details.
       #
       # Arguments:
-      # - `bridge_id` - bridge's id.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: path,
-      #   - param name: bridgeId,
-      #
-      # API endpoint:
-      # - method: get
-      # - endpoint: /bridges/{bridgeId}
+      # - `bridge_id` - bridge's id. (required);
       #
       # Error responses:
       # - 404 - Bridge not found
       def get(bridge_id : String) : HTTP::Client::Response | Bridges::Bridge
-        response = client.get "bridges/#{bridge_id}"
-        response.status_code.to_s =~ /^[23]\d\d$/ ? Bridges::Bridge.from_json(response.body.to_s) : response
+        format_response ari.get("bridges/#{bridge_id}")
       end
 
       # Shut down a bridge.
       #
       # Arguments:
-      # - `bridge_id` - bridge's id.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: path,
-      #   - param name: bridgeId,
-      #
-      # API endpoint:
-      # - method: delete
-      # - endpoint: /bridges/{bridgeId}
+      # - `bridge_id` - bridge's id. (required);
       #
       # Error responses:
       # - 404 - Bridge not found
       def destroy(bridge_id : String)
-        client.delete "bridges/#{bridge_id}"
+        ari.delete "bridges/#{bridge_id}"
       end
 
       # Add a channel to a bridge.
       #
       # Arguments:
-      # - `bridge_id` - bridge's id.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: path,
-      #   - param name: bridgeId,
-      #
-      # - `channel` - ids of channels to add to bridge.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): true,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: channel,
-      #
-      # - `role` - channel's role in the bridge.
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: role,
-      #
-      # - `absorb_dtmf` - absorb DTMF coming from this channel, preventing it to pass through to the bridge.
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: absorbDTMF,
-      #
-      # - `mute` - mute audio from this channel, preventing it to pass through to the bridge.
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: mute,
-      #
-      # API endpoint:
-      # - method: post
-      # - endpoint: /bridges/{bridgeId}/addChannel
+      # - `bridge_id` - bridge's id. (required);
+      # - `channel` - ids of channels to add to bridge. (required). Allow multiple instances (comma-separated list);
+      # - `role` - channel's role in the bridge;
+      # - `absorb_dtmf` - absorb DTMF coming from this channel, preventing it to pass through to the bridge;
+      # - `mute` - mute audio from this channel, preventing it to pass through to the bridge;
       #
       # Error responses:
       # - 400 - Channel not found
@@ -190,29 +95,14 @@ module Asterisk
         params += "&" + HTTP::Params.encode({"absorbDTMF" => absorb_dtmf.to_s}) if absorb_dtmf
         params += "&" + HTTP::Params.encode({"mute" => mute.to_s}) if mute
 
-        client.post "bridges/#{bridge_id}/addChannel?" + params
+        ari.post "bridges/#{bridge_id}/addChannel?" + params
       end
 
       # Remove a channel from a bridge.
       #
       # Arguments:
-      # - `bridge_id` - bridge's id.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: path,
-      #   - param name: bridgeId,
-      #
-      # - `channel` - ids of channels to remove from bridge.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): true,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: channel,
-      #
-      # API endpoint:
-      # - method: post
-      # - endpoint: /bridges/{bridgeId}/removeChannel
+      # - `bridge_id` - bridge's id. (required);
+      # - `channel` - ids of channels to remove from bridge. (required). Allow multiple instances (comma-separated list);
       #
       # Error responses:
       # - 400 - Channel not found
@@ -221,78 +111,39 @@ module Asterisk
       # - 422 - Channel not in this bridge
       def remove_channel(bridge_id : String, channel : String)
         params = HTTP::Params.encode({"channel" => channel})
-        client.post "bridges/#{bridge_id}/removeChannel?" + params
+        ari.post "bridges/#{bridge_id}/removeChannel?" + params
       end
 
       # Set a channel as the video source in a multi-party mixing bridge. This operation has no effect on bridges with two or fewer participants.
       #
       # Arguments:
-      # - `bridge_id` - bridge's id.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: path,
-      #   - param name: bridgeId,
-      #
-      # - `channel_id` - channel's id.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: path,
-      #   - param name: channelId,
-      #
-      # API endpoint:
-      # - method: post
-      # - endpoint: /bridges/{bridgeId}/videoSource/{channelId}
+      # - `bridge_id` - bridge's id. (required);
+      # - `channel_id` - channel's id. (required);
       #
       # Error responses:
       # - 404 - Bridge or Channel not found
       # - 409 - Channel not in Stasis application
       # - 422 - Channel not in this Bridge
       def set_video_source(bridge_id : String, channel_id : String)
-        client.post "bridges/#{bridge_id}/videoSource/#{channel_id}"
+        ari.post "bridges/#{bridge_id}/videoSource/#{channel_id}"
       end
 
       # Removes any explicit video source in a multi-party mixing bridge. This operation has no effect on bridges with two or fewer participants. When no explicit video source is set, talk detection will be used to determine the active video stream.
       #
       # Arguments:
-      # - `bridge_id` - bridge's id.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: path,
-      #   - param name: bridgeId,
-      #
-      # API endpoint:
-      # - method: delete
-      # - endpoint: /bridges/{bridgeId}/videoSource
+      # - `bridge_id` - bridge's id. (required);
       #
       # Error responses:
       # - 404 - Bridge not found
       def clear_video_source(bridge_id : String)
-        client.delete "bridges/#{bridge_id}/videoSource"
+        ari.delete "bridges/#{bridge_id}/videoSource"
       end
 
       # Play music on hold to a bridge or change the MOH class that is playing.
       #
       # Arguments:
-      # - `bridge_id` - bridge's id.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: path,
-      #   - param name: bridgeId,
-      #
-      # - `moh_class` - channel's id.
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: mohClass,
-      #
-      # API endpoint:
-      # - method: post
-      # - endpoint: /bridges/{bridgeId}/moh
+      # - `bridge_id` - bridge's id. (required);
+      # - `moh_class` - channel's id;
       #
       # Error responses:
       # - 404 - Bridge not found
@@ -302,78 +153,30 @@ module Asterisk
         params = HTTP::Params.encode({} of String => String)
         params += "&" + HTTP::Params.encode({"mohClass" => moh_class}) if moh_class
 
-        client.post "bridges/#{bridge_id}/moh?" + params
+        ari.post "bridges/#{bridge_id}/moh?" + params
       end
 
       # Stop playing music on hold to a bridge.
       #
       # Arguments:
-      # - `bridge_id` - bridge's id.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: path,
-      #   - param name: bridgeId,
-      #
-      # API endpoint:
-      # - method: delete
-      # - endpoint: /bridges/{bridgeId}/moh
+      # - `bridge_id` - bridge's id. (required);
       #
       # Error responses:
       # - 404 - Bridge not found
       # - 409 - Bridge not in Stasis application
       def stop_moh(bridge_id : String)
-        client.delete "bridges/#{bridge_id}/moh"
+        ari.delete "bridges/#{bridge_id}/moh"
       end
 
       # Start playback of media on a bridge.
       #
       # Arguments:
-      # - `bridge_id` - bridge's id.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: path,
-      #   - param name: bridgeId,
-      #
-      # - `media` - media URIs to play.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): true,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: media,
-      #
-      # - `lang` - for sounds, selects language for sound.
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: lang,
-      #
-      # - `offsetms` - number of milliseconds to skip before playing. Only applies to the first URI if multiple media URIs are specified.
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: offsetms,
-      #
-      # - `skipms` - number of milliseconds to skip for forward/reverse operations.
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: skipms,
-      #
-      # - `playback_id` - playback Id.
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: playbackId,
-      #
-      # API endpoint:
-      # - method: post
-      # - endpoint: /bridges/{bridgeId}/play
+      # - `bridge_id` - bridge's id. (required);
+      # - `media` - media URIs to play. (required). Allow multiple instances (comma-separated list);
+      # - `lang` - for sounds, selects language for sound;
+      # - `offsetms` - number of milliseconds to skip before playing. Only applies to the first URI if multiple media URIs are specified;
+      # - `skipms` - number of milliseconds to skip for forward/reverse operations;
+      # - `playback_id` - playback Id;
       #
       # Error responses:
       # - 404 - Bridge not found
@@ -387,58 +190,19 @@ module Asterisk
         params += "&" + HTTP::Params.encode({"skipms" => skipms.to_s}) if skipms
         params += "&" + HTTP::Params.encode({"playbackId" => playback_id}) if playback_id
 
-        response = client.post "bridges/#{bridge_id}/play?" + params
-        response.status_code.to_s =~ /^[23]\d\d$/ ? Playbacks::Playback.from_json(response.body.to_s) : response
+        request = "bridges/#{bridge_id}/play?" + params
+        format_response ari.post(request)
       end
 
       # Start playback of media on a bridge.
       #
       # Arguments:
-      # - `bridge_id` - bridge's id.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: path,
-      #   - param name: bridgeId,
-      #
-      # - `playback_id` - playback ID.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: path,
-      #   - param name: playbackId,
-      #
-      # - `media` - media URIs to play.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): true,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: media,
-      #
-      # - `lang` - for sounds, selects language for sound.
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: lang,
-      #
-      # - `offsetms` - number of milliseconds to skip before playing. Only applies to the first URI if multiple media URIs are specified.
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: offsetms,
-      #
-      # - `skipms` - number of milliseconds to skip for forward/reverse operations.
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: skipms,
-      #
-      # API endpoint:
-      # - method: post
-      # - endpoint: /bridges/{bridgeId}/play/{playbackId}
+      # - `bridge_id` - bridge's id. (required);
+      # - `playback_id` - playback ID. (required);
+      # - `media` - media URIs to play. (required). Allow multiple instances (comma-separated list);
+      # - `lang` - for sounds, selects language for sound;
+      # - `offsetms` - number of milliseconds to skip before playing. Only applies to the first URI if multiple media URIs are specified;
+      # - `skipms` - number of milliseconds to skip for forward/reverse operations;
       #
       # Error responses:
       # - 404 - Bridge not found
@@ -451,80 +215,30 @@ module Asterisk
         params += "&" + HTTP::Params.encode({"offsetms" => offsetms.to_s}) if offsetms
         params += "&" + HTTP::Params.encode({"skipms" => skipms.to_s}) if skipms
 
-        response = client.post "bridges/#{bridge_id}/play/#{playback_id}?" + params
-        response.status_code.to_s =~ /^[23]\d\d$/ ? Playbacks::Playback.from_json(response.body.to_s) : response
+        request = "bridges/#{bridge_id}/play/#{playback_id}?" + params
+        format_response ari.post(request)
       end
 
       # Start a recording.
       #
       # Arguments:
-      # - `bridge_id` - bridge's id.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: path,
-      #   - param name: bridgeId,
-      #
-      # - `name` - recording's filename.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: name,
-      #
-      # - `format` - format to encode audio in.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: format,
-      #
-      # - `max_duration_seconds` - maximum duration of the recording, in seconds. 0 for no limit.
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: maxDurationSeconds,
-      #
-      # - `max_silence_seconds` - maximum duration of silence, in seconds. 0 for no limit.
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: maxSilenceSeconds,
-      #
-      # - `if_exists` - action to take if a recording with the same name already exists.
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: ifExists,
-      #
-      # - `beep` - play beep when recording begins.
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: beep,
-      #
-      # - `terminate_on` - dTMF input to terminate recording.
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: terminateOn,
-      #
-      # API endpoint:
-      # - method: post
-      # - endpoint: /bridges/{bridgeId}/record
+      # - `bridge_id` - bridge's id. (required);
+      # - `name` - recording's filename. (required);
+      # - `format` - format to encode audio in. (required);
+      # - `max_duration_seconds` - maximum duration of the recording, in seconds. 0 for no limit;
+      # - `max_silence_seconds` - maximum duration of silence, in seconds. 0 for no limit;
+      # - `if_exists` - action to take if a recording with the same name already exists;
+      # - `beep` - play beep when recording begins;
+      # - `terminate_on` - dTMF input to terminate recording;
       #
       # Error responses:
       # - 400 - Invalid parameters
       # - 404 - Bridge not found
       # - 409 - Bridge is not in a Stasis application; A recording with the same name already exists on the system and can not be overwritten because it is in progress or ifExists=fail
       # - 422 - The format specified is unknown on this system
-      def record(bridge_id : String, name : String, format : String, max_duration_seconds : Int32? = 0, max_silence_seconds : Int32? = 0, if_exists : String? = fail, beep : Bool? = false, terminate_on : String? = none) : HTTP::Client::Response | Recordings::LiveRecording
-        params = HTTP::Params.encode({"name" => name, "format" => format})
+      def record(bridge_id : String, name : String, format : String, max_duration_seconds : Int32? = 0, max_silence_seconds : Int32? = 0, if_exists : String? = "fail", beep : Bool? = false, terminate_on : String? = "none") : HTTP::Client::Response | Recordings::LiveRecording
+        params = HTTP::Params.encode({"name" => name})
+        params += "&" + HTTP::Params.encode({"format" => format})
 
         # Optional parameters
         params += "&" + HTTP::Params.encode({"maxDurationSeconds" => max_duration_seconds.to_s}) if max_duration_seconds
@@ -533,8 +247,8 @@ module Asterisk
         params += "&" + HTTP::Params.encode({"beep" => beep.to_s}) if beep
         params += "&" + HTTP::Params.encode({"terminateOn" => terminate_on}) if terminate_on
 
-        response = client.post "bridges/#{bridge_id}/record?" + params
-        response.status_code.to_s =~ /^[23]\d\d$/ ? Recordings::LiveRecording.from_json(response.body.to_s) : response
+        request = "bridges/#{bridge_id}/record?" + params
+        format_response ari.post(request)
       end
     end
   end

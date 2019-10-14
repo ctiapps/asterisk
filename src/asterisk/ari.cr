@@ -12,7 +12,11 @@ require "./ari/events/*"
 
 module Asterisk
   class ARI
-    include Callbacks
+    class AuthenticationError < Exception
+    end
+
+    class ConnectionError < Exception
+    end
 
     property logger : Logger = ::Asterisk.logger
 
@@ -45,12 +49,6 @@ module Asterisk
       end
     {% end %}
 
-    class AuthenticationError < Exception
-    end
-
-    class ConnectionError < Exception
-    end
-
     def initialize(@url = "http://127.0.0.1:8088/ari", @app = "asterisk.cr", @username = "", @password = "")
       @uri = URI.parse(@url)
     end
@@ -59,33 +57,44 @@ module Asterisk
       connect
 
       ws.on_close do
-        client.close
+        close
       end
 
       ws.on_message do |message|
         message_json = JSON.parse(message)
-        event = message_json["type"].as_s
-        klass = __events[event]
-        event_data = klass.from_json(message)
 
-        # user-defined callbacks
-        find_callbacks(message_json).each do |callback|
-          callback.call(message)
+        # user-defined handlers, these receive event as a JSON message, because
+        # with generic filtering, multipe types could pass `find_handlers`
+        find_handlers(message_json).each do |handler|
+          spawn do
+            handler.call(message)
+          end
         end
+
+        event = message_json["type"].as_s
+        klass = @events_map[event]?
+        if klass.nil?
+          logger.error "Don't know this event: #{event}"
+          next
+        end
+
+        event_data = klass.from_json(message)
 
         # Macro code that generate case ... when ... end block for ARI events
         {% begin %}
           case event
           {% for t in Events.constants %}
             {% event_name = t.stringify %}
+            {% klass = ("Events::" + t.stringify).id %}
             {% unless %w(Message Event).includes?(event_name) %}
-              {% klass = ("Events::" + t.stringify).id %}
-              when {{event_name}}
-                @on_{{event_name.underscore.id}}.try &.call(event_data.as({{klass}}))
-              {% end %}
+            when {{event_name}}
+              @on_{{event_name.underscore.id}}.try do |handler|
+                spawn do
+                  handler.call(event_data.as({{klass}}))
+                end
+              end
+            {% end %}
           {% end %}
-            else
-            raise "Don't know this event: #{event}"
           end
         {% end %}
       end
@@ -95,34 +104,48 @@ module Asterisk
       end
     end
 
-    # List of ARI events as a hash (event_name => EventName)
-    private def __events
-      {% begin %}
-        {% events = {} of String => Class %}
-        {% Events.constants.map do |klass|
-          klass_name = klass.stringify
-          unless %w(Message Event).includes?(klass_name)
-            events[klass_name] = ("Events::" + klass.stringify).id
+    # Map of ARI events as a hash (event_name => EventName)
+    {% begin %}
+      {% events = {} of String => Class %}
+      {% Events.constants.map do |klass|
+        klass_name = klass.stringify
+        unless %w(Message Event).includes?(klass_name)
+          events[klass_name] = ("Events::" + klass.stringify).id
+        end
+      end %}
+      @events_map = {{events}}
+    {% end %}
+
+    # Generates events handlers for known events, like this:
+    # ```
+    # def on_device_state_changed(&@on_device_state_changed : Events::DeviceStateChanged ->)
+    # end
+    # ```
+    {% begin %}
+      {% for t in Events.constants %}
+        {% event_name = t.stringify %}
+        {% unless %w(Message Event).includes?(event_name) %}
+          {% klass = ("Events::" + t.stringify).id %}
+          def on_{{event_name.underscore.id}}(&@on_{{event_name.underscore.id}} : {{klass}} ->)
           end
-        end %}
-        {{events}}
+        {% end %}
       {% end %}
+    {% end %}
+
+    @handlers = Hash(String, Hash(JSON::Any, Proc(String, Nil))).new
+
+    def on(handler_id : String, conditions : JSON::Any, &block : String ->)
+      @handlers[handler_id] = { conditions => block }
     end
 
-    @callbacks = Hash(String, Hash(JSON::Any, Proc(String, Nil))).new
-
-    def on(name : String, conditions : JSON::Any, &block : String ->)
-      @callbacks[name] = { conditions => block }
+    def remove_handler(name : String)
+      @handlers.delete(name)
     end
 
-    def remove_callback(name : String)
-      @callbacks.delete(name)
-    end
-
-    private def find_callbacks(message : JSON::Any)
-      @callbacks.map { |_, callback|
-        callback.map { |conditions, _|
-          callback[conditions] if json_includes?(message, conditions)
+    private def find_handlers(message : JSON::Any)
+      @handlers.map { |_, handler|
+        handler.map { |conditions, _|
+          handler[conditions] if json_includes?(message, conditions)
         }
       }.flatten.compact
     end
@@ -159,14 +182,17 @@ module Asterisk
         {% resource = klass.stringify.underscore.id %}
         @{{resource}} : {{klass}}? = nil
         def {{resource}}
-          @{{resource}} ||= {{klass}}.new(client: self)
+          @{{resource}} ||= {{klass}}.new(ari: self)
         end
       {% end %}
       end
     resources
 
     private def connect
-      raise ConnectionError.new("Already connected") if ws? && ! ws.closed?
+      if ws? && ! ws.closed?
+        logger.info "#{self.class}: Already connected"
+        return
+      end
 
       @client = HTTP::Client.new(@uri)
       client.basic_auth(@username, @password)
@@ -195,8 +221,8 @@ module Asterisk
     end
 
     def close
-      client.close
       ws.close unless closed?
+      client.close
     end
 
     def closed?

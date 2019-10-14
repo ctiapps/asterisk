@@ -6,7 +6,7 @@
 #  be lost the next time this file is regenerated.
 #
 #  This file was generated using ctiapps/asterisk crystal shard from the
-#  Asterisk PBX version 16.5.1.
+#  Asterisk PBX version 16.6.0.
 #
 #------------------------------------------------------------------------------
 
@@ -15,114 +15,26 @@ module Asterisk
     class Channels < Resources
       # List all active channels in Asterisk.
       def list : HTTP::Client::Response | Array(Channels::Channel)
-        response = client.get "channels"
-        response.status_code.to_s =~ /^[23]\d\d$/ ? Array(Channels::Channel).from_json(response.body.to_s) : response
+        format_response ari.get("channels")
       end
 
       # Create a new channel (originate).
       #
       # Arguments:
-      # - `endpoint` - endpoint to call.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: endpoint,
-      #
-      # - `extension` - the extension to dial after the endpoint answers. Mutually exclusive with 'app'.
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: extension,
-      #
-      # - `context` - the context to dial after the endpoint answers. If omitted, uses 'default'. Mutually exclusive with 'app'.
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: context,
-      #
-      # - `priority` - the priority to dial after the endpoint answers. If omitted, uses 1. Mutually exclusive with 'app'.
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: priority,
-      #
-      # - `label` - the label to dial after the endpoint answers. Will supersede 'priority' if provided. Mutually exclusive with 'app'.
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: label,
-      #
-      # - `app` - the application that is subscribed to the originated channel. When the channel is answered, it will be passed to this Stasis application. Mutually exclusive with 'context', 'extension', 'priority', and 'label'.
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: app,
-      #
-      # - `app_args` - the application arguments to pass to the Stasis application provided by 'app'. Mutually exclusive with 'context', 'extension', 'priority', and 'label'.
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: appArgs,
-      #
-      # - `caller_id` - callerID to use when dialing the endpoint or extension.
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: callerId,
-      #
-      # - `timeout` - timeout (in seconds) before giving up dialing, or -1 for no timeout.
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: timeout,
-      #
-      # - `variables` - the "variables" key in the body object holds variable key/value pairs to set on the channel on creation. Other keys in the body object are interpreted as query parameters. Ex. { "endpoint": "SIP/Alice", "variables": { "CALLERID(name)": "Alice" } }.
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: body,
-      #   - param name: variables,
-      #
-      # - `channel_id` - the unique id to assign the channel on creation.
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: channelId,
-      #
-      # - `other_channel_id` - the unique id to assign the second channel when using local channels.
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: otherChannelId,
-      #
-      # - `originator` - the unique id of the channel which is originating this one.
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: originator,
-      #
-      # - `formats` - the format name capability list to use if originator is not specified. Ex. "ulaw,slin16".  Format names can be found with "core show codecs".
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: formats,
-      #
-      # API endpoint:
-      # - method: post
-      # - endpoint: /channels
+      # - `endpoint` - endpoint to call. (required);
+      # - `extension` - the extension to dial after the endpoint answers. Mutually exclusive with 'app';
+      # - `context` - the context to dial after the endpoint answers. If omitted, uses 'default'. Mutually exclusive with 'app';
+      # - `priority` - the priority to dial after the endpoint answers. If omitted, uses 1. Mutually exclusive with 'app';
+      # - `label` - the label to dial after the endpoint answers. Will supersede 'priority' if provided. Mutually exclusive with 'app';
+      # - `app` - the application that is subscribed to the originated channel. When the channel is answered, it will be passed to this Stasis application. Mutually exclusive with 'context', 'extension', 'priority', and 'label';
+      # - `app_args` - the application arguments to pass to the Stasis application provided by 'app'. Mutually exclusive with 'context', 'extension', 'priority', and 'label';
+      # - `caller_id` - callerID to use when dialing the endpoint or extension;
+      # - `timeout` - timeout (in seconds) before giving up dialing, or -1 for no timeout;
+      # - `variables` - the "variables" key in the body object holds variable key/value pairs to set on the channel on creation. Other keys in the body object are interpreted as query parameters. Ex. { "endpoint": "SIP/Alice", "variables": { "CALLERID(name)": "Alice" } };
+      # - `channel_id` - the unique id to assign the channel on creation;
+      # - `other_channel_id` - the unique id to assign the second channel when using local channels;
+      # - `originator` - the unique id of the channel which is originating this one;
+      # - `formats` - the format name capability list to use if originator is not specified. Ex. "ulaw,slin16".  Format names can be found with "core show codecs";
       #
       # Error responses:
       # - 400 - Invalid parameters for originating a channel.
@@ -144,70 +56,26 @@ module Asterisk
         params += "&" + HTTP::Params.encode({"originator" => originator}) if originator
         params += "&" + HTTP::Params.encode({"formats" => formats}) if formats
 
-        response = client.post "channels?" + params, body: variables.to_json
-        response.status_code.to_s =~ /^[23]\d\d$/ ? Channels::Channel.from_json(response.body.to_s) : response
+        request = "channels?" + params
+        format_response ari.post(request, body: variables.to_json)
       end
 
       # Create channel.
       #
       # Arguments:
-      # - `endpoint` - endpoint for channel communication.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: endpoint,
-      #
-      # - `app` - stasis Application to place channel into.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: app,
-      #
-      # - `app_args` - the application arguments to pass to the Stasis application provided by 'app'. Mutually exclusive with 'context', 'extension', 'priority', and 'label'.
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: appArgs,
-      #
-      # - `channel_id` - the unique id to assign the channel on creation.
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: channelId,
-      #
-      # - `other_channel_id` - the unique id to assign the second channel when using local channels.
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: otherChannelId,
-      #
-      # - `originator` - unique ID of the calling channel.
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: originator,
-      #
-      # - `formats` - the format name capability list to use if originator is not specified. Ex. "ulaw,slin16".  Format names can be found with "core show codecs".
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: formats,
-      #
-      # API endpoint:
-      # - method: post
-      # - endpoint: /channels/create
+      # - `endpoint` - endpoint for channel communication. (required);
+      # - `app` - stasis Application to place channel into. (required);
+      # - `app_args` - the application arguments to pass to the Stasis application provided by 'app'. Mutually exclusive with 'context', 'extension', 'priority', and 'label';
+      # - `channel_id` - the unique id to assign the channel on creation;
+      # - `other_channel_id` - the unique id to assign the second channel when using local channels;
+      # - `originator` - unique ID of the calling channel;
+      # - `formats` - the format name capability list to use if originator is not specified. Ex. "ulaw,slin16".  Format names can be found with "core show codecs";
       #
       # Error responses:
       # - 409 - Channel with given unique ID already exists.
       def create(endpoint : String, app : String, app_args : String? = nil, channel_id : String? = nil, other_channel_id : String? = nil, originator : String? = nil, formats : String? = nil) : HTTP::Client::Response | Channels::Channel
-        params = HTTP::Params.encode({"endpoint" => endpoint, "app" => app})
+        params = HTTP::Params.encode({"endpoint" => endpoint})
+        params += "&" + HTTP::Params.encode({"app" => app})
 
         # Optional parameters
         params += "&" + HTTP::Params.encode({"appArgs" => app_args}) if app_args
@@ -216,135 +84,38 @@ module Asterisk
         params += "&" + HTTP::Params.encode({"originator" => originator}) if originator
         params += "&" + HTTP::Params.encode({"formats" => formats}) if formats
 
-        response = client.post "channels/create?" + params
-        response.status_code.to_s =~ /^[23]\d\d$/ ? Channels::Channel.from_json(response.body.to_s) : response
+        request = "channels/create?" + params
+        format_response ari.post(request)
       end
 
       # Channel details.
       #
       # Arguments:
-      # - `channel_id` - channel's id.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: path,
-      #   - param name: channelId,
-      #
-      # API endpoint:
-      # - method: get
-      # - endpoint: /channels/{channelId}
+      # - `channel_id` - channel's id. (required);
       #
       # Error responses:
       # - 404 - Channel not found
       def get(channel_id : String) : HTTP::Client::Response | Channels::Channel
-        response = client.get "channels/#{channel_id}"
-        response.status_code.to_s =~ /^[23]\d\d$/ ? Channels::Channel.from_json(response.body.to_s) : response
+        format_response ari.get("channels/#{channel_id}")
       end
 
       # Create a new channel (originate with id).
       #
       # Arguments:
-      # - `channel_id` - the unique id to assign the channel on creation.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: path,
-      #   - param name: channelId,
-      #
-      # - `endpoint` - endpoint to call.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: endpoint,
-      #
-      # - `extension` - the extension to dial after the endpoint answers. Mutually exclusive with 'app'.
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: extension,
-      #
-      # - `context` - the context to dial after the endpoint answers. If omitted, uses 'default'. Mutually exclusive with 'app'.
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: context,
-      #
-      # - `priority` - the priority to dial after the endpoint answers. If omitted, uses 1. Mutually exclusive with 'app'.
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: priority,
-      #
-      # - `label` - the label to dial after the endpoint answers. Will supersede 'priority' if provided. Mutually exclusive with 'app'.
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: label,
-      #
-      # - `app` - the application that is subscribed to the originated channel. When the channel is answered, it will be passed to this Stasis application. Mutually exclusive with 'context', 'extension', 'priority', and 'label'.
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: app,
-      #
-      # - `app_args` - the application arguments to pass to the Stasis application provided by 'app'. Mutually exclusive with 'context', 'extension', 'priority', and 'label'.
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: appArgs,
-      #
-      # - `caller_id` - callerID to use when dialing the endpoint or extension.
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: callerId,
-      #
-      # - `timeout` - timeout (in seconds) before giving up dialing, or -1 for no timeout.
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: timeout,
-      #
-      # - `variables` - the "variables" key in the body object holds variable key/value pairs to set on the channel on creation. Other keys in the body object are interpreted as query parameters. Ex. { "endpoint": "SIP/Alice", "variables": { "CALLERID(name)": "Alice" } }.
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: body,
-      #   - param name: variables,
-      #
-      # - `other_channel_id` - the unique id to assign the second channel when using local channels.
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: otherChannelId,
-      #
-      # - `originator` - the unique id of the channel which is originating this one.
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: originator,
-      #
-      # - `formats` - the format name capability list to use if originator is not specified. Ex. "ulaw,slin16".  Format names can be found with "core show codecs".
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: formats,
-      #
-      # API endpoint:
-      # - method: post
-      # - endpoint: /channels/{channelId}
+      # - `channel_id` - the unique id to assign the channel on creation. (required);
+      # - `endpoint` - endpoint to call. (required);
+      # - `extension` - the extension to dial after the endpoint answers. Mutually exclusive with 'app';
+      # - `context` - the context to dial after the endpoint answers. If omitted, uses 'default'. Mutually exclusive with 'app';
+      # - `priority` - the priority to dial after the endpoint answers. If omitted, uses 1. Mutually exclusive with 'app';
+      # - `label` - the label to dial after the endpoint answers. Will supersede 'priority' if provided. Mutually exclusive with 'app';
+      # - `app` - the application that is subscribed to the originated channel. When the channel is answered, it will be passed to this Stasis application. Mutually exclusive with 'context', 'extension', 'priority', and 'label';
+      # - `app_args` - the application arguments to pass to the Stasis application provided by 'app'. Mutually exclusive with 'context', 'extension', 'priority', and 'label';
+      # - `caller_id` - callerID to use when dialing the endpoint or extension;
+      # - `timeout` - timeout (in seconds) before giving up dialing, or -1 for no timeout;
+      # - `variables` - the "variables" key in the body object holds variable key/value pairs to set on the channel on creation. Other keys in the body object are interpreted as query parameters. Ex. { "endpoint": "SIP/Alice", "variables": { "CALLERID(name)": "Alice" } };
+      # - `other_channel_id` - the unique id to assign the second channel when using local channels;
+      # - `originator` - the unique id of the channel which is originating this one;
+      # - `formats` - the format name capability list to use if originator is not specified. Ex. "ulaw,slin16".  Format names can be found with "core show codecs";
       #
       # Error responses:
       # - 400 - Invalid parameters for originating a channel.
@@ -365,30 +136,15 @@ module Asterisk
         params += "&" + HTTP::Params.encode({"originator" => originator}) if originator
         params += "&" + HTTP::Params.encode({"formats" => formats}) if formats
 
-        response = client.post "channels/#{channel_id}?" + params, body: variables.to_json
-        response.status_code.to_s =~ /^[23]\d\d$/ ? Channels::Channel.from_json(response.body.to_s) : response
+        request = "channels/#{channel_id}?" + params
+        format_response ari.post(request, body: variables.to_json)
       end
 
       # Delete (i.e. hangup) a channel.
       #
       # Arguments:
-      # - `channel_id` - channel's id.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: path,
-      #   - param name: channelId,
-      #
-      # - `reason` - reason for hanging up the channel.
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: reason,
-      #
-      # API endpoint:
-      # - method: delete
-      # - endpoint: /channels/{channelId}
+      # - `channel_id` - channel's id. (required);
+      # - `reason` - reason for hanging up the channel;
       #
       # Error responses:
       # - 400 - Invalid reason for hangup provided
@@ -398,50 +154,17 @@ module Asterisk
         params = HTTP::Params.encode({} of String => String)
         params += "&" + HTTP::Params.encode({"reason" => reason}) if reason
 
-        client.delete "channels/#{channel_id}?" + params
+        ari.delete "channels/#{channel_id}?" + params
       end
 
       # Exit application; continue execution in the dialplan.
       #
       # Arguments:
-      # - `channel_id` - channel's id.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: path,
-      #   - param name: channelId,
-      #
-      # - `context` - the context to continue to.
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: context,
-      #
-      # - `extension` - the extension to continue to.
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: extension,
-      #
-      # - `priority` - the priority to continue to.
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: priority,
-      #
-      # - `label` - the label to continue to - will supersede 'priority' if both are provided.
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: label,
-      #
-      # API endpoint:
-      # - method: post
-      # - endpoint: /channels/{channelId}/continue
+      # - `channel_id` - channel's id. (required);
+      # - `context` - the context to continue to;
+      # - `extension` - the extension to continue to;
+      # - `priority` - the priority to continue to;
+      # - `label` - the label to continue to - will supersede 'priority' if both are provided;
       #
       # Error responses:
       # - 404 - Channel not found
@@ -455,36 +178,15 @@ module Asterisk
         params += "&" + HTTP::Params.encode({"priority" => priority.to_s}) if priority
         params += "&" + HTTP::Params.encode({"label" => label}) if label
 
-        client.post "channels/#{channel_id}/continue?" + params
+        ari.post "channels/#{channel_id}/continue?" + params
       end
 
       # Move the channel from one Stasis application to another.
       #
       # Arguments:
-      # - `channel_id` - channel's id.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: path,
-      #   - param name: channelId,
-      #
-      # - `app` - the channel will be passed to this Stasis application.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: app,
-      #
-      # - `app_args` - the application arguments to pass to the Stasis application provided by 'app'.
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: appArgs,
-      #
-      # API endpoint:
-      # - method: post
-      # - endpoint: /channels/{channelId}/move
+      # - `channel_id` - channel's id. (required);
+      # - `app` - the channel will be passed to this Stasis application. (required);
+      # - `app_args` - the application arguments to pass to the Stasis application provided by 'app';
       #
       # Error responses:
       # - 404 - Channel not found
@@ -495,29 +197,14 @@ module Asterisk
         # Optional parameters
         params += "&" + HTTP::Params.encode({"appArgs" => app_args}) if app_args
 
-        client.post "channels/#{channel_id}/move?" + params
+        ari.post "channels/#{channel_id}/move?" + params
       end
 
       # Redirect the channel to a different location.
       #
       # Arguments:
-      # - `channel_id` - channel's id.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: path,
-      #   - param name: channelId,
-      #
-      # - `endpoint` - the endpoint to redirect the channel to.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: endpoint,
-      #
-      # API endpoint:
-      # - method: post
-      # - endpoint: /channels/{channelId}/redirect
+      # - `channel_id` - channel's id. (required);
+      # - `endpoint` - the endpoint to redirect the channel to. (required);
       #
       # Error responses:
       # - 400 - Endpoint parameter not provided
@@ -527,123 +214,57 @@ module Asterisk
       # - 412 - Channel in invalid state
       def redirect(channel_id : String, endpoint : String)
         params = HTTP::Params.encode({"endpoint" => endpoint})
-        client.post "channels/#{channel_id}/redirect?" + params
+        ari.post "channels/#{channel_id}/redirect?" + params
       end
 
       # Answer a channel.
       #
       # Arguments:
-      # - `channel_id` - channel's id.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: path,
-      #   - param name: channelId,
-      #
-      # API endpoint:
-      # - method: post
-      # - endpoint: /channels/{channelId}/answer
+      # - `channel_id` - channel's id. (required);
       #
       # Error responses:
       # - 404 - Channel not found
       # - 409 - Channel not in a Stasis application
       # - 412 - Channel in invalid state
       def answer(channel_id : String)
-        client.post "channels/#{channel_id}/answer"
+        ari.post "channels/#{channel_id}/answer"
       end
 
       # Indicate ringing to a channel.
       #
       # Arguments:
-      # - `channel_id` - channel's id.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: path,
-      #   - param name: channelId,
-      #
-      # API endpoint:
-      # - method: post
-      # - endpoint: /channels/{channelId}/ring
+      # - `channel_id` - channel's id. (required);
       #
       # Error responses:
       # - 404 - Channel not found
       # - 409 - Channel not in a Stasis application
       # - 412 - Channel in invalid state
       def ring(channel_id : String)
-        client.post "channels/#{channel_id}/ring"
+        ari.post "channels/#{channel_id}/ring"
       end
 
       # Stop ringing indication on a channel if locally generated.
       #
       # Arguments:
-      # - `channel_id` - channel's id.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: path,
-      #   - param name: channelId,
-      #
-      # API endpoint:
-      # - method: delete
-      # - endpoint: /channels/{channelId}/ring
+      # - `channel_id` - channel's id. (required);
       #
       # Error responses:
       # - 404 - Channel not found
       # - 409 - Channel not in a Stasis application
       # - 412 - Channel in invalid state
       def ring_stop(channel_id : String)
-        client.delete "channels/#{channel_id}/ring"
+        ari.delete "channels/#{channel_id}/ring"
       end
 
       # Send provided DTMF to a given channel.
       #
       # Arguments:
-      # - `channel_id` - channel's id.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: path,
-      #   - param name: channelId,
-      #
-      # - `dtmf` - dTMF To send.
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: dtmf,
-      #
-      # - `before` - amount of time to wait before DTMF digits (specified in milliseconds) start.
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: before,
-      #
-      # - `between` - amount of time in between DTMF digits (specified in milliseconds).
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: between,
-      #
-      # - `duration` - length of each DTMF digit (specified in milliseconds).
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: duration,
-      #
-      # - `after` - amount of time to wait after DTMF digits (specified in milliseconds) end.
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: after,
-      #
-      # API endpoint:
-      # - method: post
-      # - endpoint: /channels/{channelId}/dtmf
+      # - `channel_id` - channel's id. (required);
+      # - `dtmf` - dTMF To send;
+      # - `before` - amount of time to wait before DTMF digits (specified in milliseconds) start;
+      # - `between` - amount of time in between DTMF digits (specified in milliseconds);
+      # - `duration` - length of each DTMF digit (specified in milliseconds);
+      # - `after` - amount of time to wait after DTMF digits (specified in milliseconds) end;
       #
       # Error responses:
       # - 400 - DTMF is required
@@ -659,139 +280,76 @@ module Asterisk
         params += "&" + HTTP::Params.encode({"duration" => duration.to_s}) if duration
         params += "&" + HTTP::Params.encode({"after" => after.to_s}) if after
 
-        client.post "channels/#{channel_id}/dtmf?" + params
+        ari.post "channels/#{channel_id}/dtmf?" + params
       end
 
       # Mute a channel.
       #
       # Arguments:
-      # - `channel_id` - channel's id.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: path,
-      #   - param name: channelId,
-      #
-      # - `direction` - direction in which to mute audio.
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: direction,
-      #
-      # API endpoint:
-      # - method: post
-      # - endpoint: /channels/{channelId}/mute
+      # - `channel_id` - channel's id. (required);
+      # - `direction` - direction in which to mute audio;
       #
       # Error responses:
       # - 404 - Channel not found
       # - 409 - Channel not in a Stasis application
       # - 412 - Channel in invalid state
-      def mute(channel_id : String, direction : String? = both)
+      def mute(channel_id : String, direction : String? = "both")
         # Optional parameters
         params = HTTP::Params.encode({} of String => String)
         params += "&" + HTTP::Params.encode({"direction" => direction}) if direction
 
-        client.post "channels/#{channel_id}/mute?" + params
+        ari.post "channels/#{channel_id}/mute?" + params
       end
 
       # Unmute a channel.
       #
       # Arguments:
-      # - `channel_id` - channel's id.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: path,
-      #   - param name: channelId,
-      #
-      # - `direction` - direction in which to unmute audio.
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: direction,
-      #
-      # API endpoint:
-      # - method: delete
-      # - endpoint: /channels/{channelId}/mute
+      # - `channel_id` - channel's id. (required);
+      # - `direction` - direction in which to unmute audio;
       #
       # Error responses:
       # - 404 - Channel not found
       # - 409 - Channel not in a Stasis application
       # - 412 - Channel in invalid state
-      def unmute(channel_id : String, direction : String? = both)
+      def unmute(channel_id : String, direction : String? = "both")
         # Optional parameters
         params = HTTP::Params.encode({} of String => String)
         params += "&" + HTTP::Params.encode({"direction" => direction}) if direction
 
-        client.delete "channels/#{channel_id}/mute?" + params
+        ari.delete "channels/#{channel_id}/mute?" + params
       end
 
       # Hold a channel.
       #
       # Arguments:
-      # - `channel_id` - channel's id.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: path,
-      #   - param name: channelId,
-      #
-      # API endpoint:
-      # - method: post
-      # - endpoint: /channels/{channelId}/hold
+      # - `channel_id` - channel's id. (required);
       #
       # Error responses:
       # - 404 - Channel not found
       # - 409 - Channel not in a Stasis application
       # - 412 - Channel in invalid state
       def hold(channel_id : String)
-        client.post "channels/#{channel_id}/hold"
+        ari.post "channels/#{channel_id}/hold"
       end
 
       # Remove a channel from hold.
       #
       # Arguments:
-      # - `channel_id` - channel's id.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: path,
-      #   - param name: channelId,
-      #
-      # API endpoint:
-      # - method: delete
-      # - endpoint: /channels/{channelId}/hold
+      # - `channel_id` - channel's id. (required);
       #
       # Error responses:
       # - 404 - Channel not found
       # - 409 - Channel not in a Stasis application
       # - 412 - Channel in invalid state
       def unhold(channel_id : String)
-        client.delete "channels/#{channel_id}/hold"
+        ari.delete "channels/#{channel_id}/hold"
       end
 
       # Play music on hold to a channel.
       #
       # Arguments:
-      # - `channel_id` - channel's id.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: path,
-      #   - param name: channelId,
-      #
-      # - `moh_class` - music on hold class to use.
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: mohClass,
-      #
-      # API endpoint:
-      # - method: post
-      # - endpoint: /channels/{channelId}/moh
+      # - `channel_id` - channel's id. (required);
+      # - `moh_class` - music on hold class to use;
       #
       # Error responses:
       # - 404 - Channel not found
@@ -802,123 +360,57 @@ module Asterisk
         params = HTTP::Params.encode({} of String => String)
         params += "&" + HTTP::Params.encode({"mohClass" => moh_class}) if moh_class
 
-        client.post "channels/#{channel_id}/moh?" + params
+        ari.post "channels/#{channel_id}/moh?" + params
       end
 
       # Stop playing music on hold to a channel.
       #
       # Arguments:
-      # - `channel_id` - channel's id.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: path,
-      #   - param name: channelId,
-      #
-      # API endpoint:
-      # - method: delete
-      # - endpoint: /channels/{channelId}/moh
+      # - `channel_id` - channel's id. (required);
       #
       # Error responses:
       # - 404 - Channel not found
       # - 409 - Channel not in a Stasis application
       # - 412 - Channel in invalid state
       def stop_moh(channel_id : String)
-        client.delete "channels/#{channel_id}/moh"
+        ari.delete "channels/#{channel_id}/moh"
       end
 
       # Play silence to a channel.
       #
       # Arguments:
-      # - `channel_id` - channel's id.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: path,
-      #   - param name: channelId,
-      #
-      # API endpoint:
-      # - method: post
-      # - endpoint: /channels/{channelId}/silence
+      # - `channel_id` - channel's id. (required);
       #
       # Error responses:
       # - 404 - Channel not found
       # - 409 - Channel not in a Stasis application
       # - 412 - Channel in invalid state
       def start_silence(channel_id : String)
-        client.post "channels/#{channel_id}/silence"
+        ari.post "channels/#{channel_id}/silence"
       end
 
       # Stop playing silence to a channel.
       #
       # Arguments:
-      # - `channel_id` - channel's id.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: path,
-      #   - param name: channelId,
-      #
-      # API endpoint:
-      # - method: delete
-      # - endpoint: /channels/{channelId}/silence
+      # - `channel_id` - channel's id. (required);
       #
       # Error responses:
       # - 404 - Channel not found
       # - 409 - Channel not in a Stasis application
       # - 412 - Channel in invalid state
       def stop_silence(channel_id : String)
-        client.delete "channels/#{channel_id}/silence"
+        ari.delete "channels/#{channel_id}/silence"
       end
 
       # Start playback of media.
       #
       # Arguments:
-      # - `channel_id` - channel's id.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: path,
-      #   - param name: channelId,
-      #
-      # - `media` - media URIs to play.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): true,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: media,
-      #
-      # - `lang` - for sounds, selects language for sound.
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: lang,
-      #
-      # - `offsetms` - number of milliseconds to skip before playing. Only applies to the first URI if multiple media URIs are specified.
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: offsetms,
-      #
-      # - `skipms` - number of milliseconds to skip for forward/reverse operations.
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: skipms,
-      #
-      # - `playback_id` - playback ID.
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: playbackId,
-      #
-      # API endpoint:
-      # - method: post
-      # - endpoint: /channels/{channelId}/play
+      # - `channel_id` - channel's id. (required);
+      # - `media` - media URIs to play. (required). Allow multiple instances (comma-separated list);
+      # - `lang` - for sounds, selects language for sound;
+      # - `offsetms` - number of milliseconds to skip before playing. Only applies to the first URI if multiple media URIs are specified;
+      # - `skipms` - number of milliseconds to skip for forward/reverse operations;
+      # - `playback_id` - playback ID;
       #
       # Error responses:
       # - 404 - Channel not found
@@ -933,58 +425,19 @@ module Asterisk
         params += "&" + HTTP::Params.encode({"skipms" => skipms.to_s}) if skipms
         params += "&" + HTTP::Params.encode({"playbackId" => playback_id}) if playback_id
 
-        response = client.post "channels/#{channel_id}/play?" + params
-        response.status_code.to_s =~ /^[23]\d\d$/ ? Playbacks::Playback.from_json(response.body.to_s) : response
+        request = "channels/#{channel_id}/play?" + params
+        format_response ari.post(request)
       end
 
       # Start playback of media and specify the playbackId.
       #
       # Arguments:
-      # - `channel_id` - channel's id.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: path,
-      #   - param name: channelId,
-      #
-      # - `playback_id` - playback ID.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: path,
-      #   - param name: playbackId,
-      #
-      # - `media` - media URIs to play.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): true,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: media,
-      #
-      # - `lang` - for sounds, selects language for sound.
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: lang,
-      #
-      # - `offsetms` - number of milliseconds to skip before playing. Only applies to the first URI if multiple media URIs are specified.
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: offsetms,
-      #
-      # - `skipms` - number of milliseconds to skip for forward/reverse operations.
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: skipms,
-      #
-      # API endpoint:
-      # - method: post
-      # - endpoint: /channels/{channelId}/play/{playbackId}
+      # - `channel_id` - channel's id. (required);
+      # - `playback_id` - playback ID. (required);
+      # - `media` - media URIs to play. (required). Allow multiple instances (comma-separated list);
+      # - `lang` - for sounds, selects language for sound;
+      # - `offsetms` - number of milliseconds to skip before playing. Only applies to the first URI if multiple media URIs are specified;
+      # - `skipms` - number of milliseconds to skip for forward/reverse operations;
       #
       # Error responses:
       # - 404 - Channel not found
@@ -998,80 +451,30 @@ module Asterisk
         params += "&" + HTTP::Params.encode({"offsetms" => offsetms.to_s}) if offsetms
         params += "&" + HTTP::Params.encode({"skipms" => skipms.to_s}) if skipms
 
-        response = client.post "channels/#{channel_id}/play/#{playback_id}?" + params
-        response.status_code.to_s =~ /^[23]\d\d$/ ? Playbacks::Playback.from_json(response.body.to_s) : response
+        request = "channels/#{channel_id}/play/#{playback_id}?" + params
+        format_response ari.post(request)
       end
 
       # Start a recording.
       #
       # Arguments:
-      # - `channel_id` - channel's id.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: path,
-      #   - param name: channelId,
-      #
-      # - `name` - recording's filename.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: name,
-      #
-      # - `format` - format to encode audio in.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: format,
-      #
-      # - `max_duration_seconds` - maximum duration of the recording, in seconds. 0 for no limit.
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: maxDurationSeconds,
-      #
-      # - `max_silence_seconds` - maximum duration of silence, in seconds. 0 for no limit.
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: maxSilenceSeconds,
-      #
-      # - `if_exists` - action to take if a recording with the same name already exists.
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: ifExists,
-      #
-      # - `beep` - play beep when recording begins.
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: beep,
-      #
-      # - `terminate_on` - dTMF input to terminate recording.
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: terminateOn,
-      #
-      # API endpoint:
-      # - method: post
-      # - endpoint: /channels/{channelId}/record
+      # - `channel_id` - channel's id. (required);
+      # - `name` - recording's filename. (required);
+      # - `format` - format to encode audio in. (required);
+      # - `max_duration_seconds` - maximum duration of the recording, in seconds. 0 for no limit;
+      # - `max_silence_seconds` - maximum duration of silence, in seconds. 0 for no limit;
+      # - `if_exists` - action to take if a recording with the same name already exists;
+      # - `beep` - play beep when recording begins;
+      # - `terminate_on` - dTMF input to terminate recording;
       #
       # Error responses:
       # - 400 - Invalid parameters
       # - 404 - Channel not found
       # - 409 - Channel is not in a Stasis application; the channel is currently bridged with other hcannels; A recording with the same name already exists on the system and can not be overwritten because it is in progress or ifExists=fail
       # - 422 - The format specified is unknown on this system
-      def record(channel_id : String, name : String, format : String, max_duration_seconds : Int32? = 0, max_silence_seconds : Int32? = 0, if_exists : String? = fail, beep : Bool? = false, terminate_on : String? = none) : HTTP::Client::Response | Recordings::LiveRecording
-        params = HTTP::Params.encode({"name" => name, "format" => format})
+      def record(channel_id : String, name : String, format : String, max_duration_seconds : Int32? = 0, max_silence_seconds : Int32? = 0, if_exists : String? = "fail", beep : Bool? = false, terminate_on : String? = "none") : HTTP::Client::Response | Recordings::LiveRecording
+        params = HTTP::Params.encode({"name" => name})
+        params += "&" + HTTP::Params.encode({"format" => format})
 
         # Optional parameters
         params += "&" + HTTP::Params.encode({"maxDurationSeconds" => max_duration_seconds.to_s}) if max_duration_seconds
@@ -1080,30 +483,15 @@ module Asterisk
         params += "&" + HTTP::Params.encode({"beep" => beep.to_s}) if beep
         params += "&" + HTTP::Params.encode({"terminateOn" => terminate_on}) if terminate_on
 
-        response = client.post "channels/#{channel_id}/record?" + params
-        response.status_code.to_s =~ /^[23]\d\d$/ ? Recordings::LiveRecording.from_json(response.body.to_s) : response
+        request = "channels/#{channel_id}/record?" + params
+        format_response ari.post(request)
       end
 
       # Get the value of a channel variable or function.
       #
       # Arguments:
-      # - `channel_id` - channel's id.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: path,
-      #   - param name: channelId,
-      #
-      # - `variable` - the channel variable or function to get.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: variable,
-      #
-      # API endpoint:
-      # - method: get
-      # - endpoint: /channels/{channelId}/variable
+      # - `channel_id` - channel's id. (required);
+      # - `variable` - the channel variable or function to get. (required);
       #
       # Error responses:
       # - 400 - Missing variable parameter.
@@ -1111,37 +499,16 @@ module Asterisk
       # - 409 - Channel not in a Stasis application
       def get_channel_var(channel_id : String, variable : String) : HTTP::Client::Response | Asterisk::Variable
         params = HTTP::Params.encode({"variable" => variable})
-        response = client.get "channels/#{channel_id}/variable?" + params
-        response.status_code.to_s =~ /^[23]\d\d$/ ? Asterisk::Variable.from_json(response.body.to_s) : response
+        request = "channels/#{channel_id}/variable?" + params
+        format_response ari.get(request)
       end
 
       # Set the value of a channel variable or function.
       #
       # Arguments:
-      # - `channel_id` - channel's id.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: path,
-      #   - param name: channelId,
-      #
-      # - `variable` - the channel variable or function to set.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: variable,
-      #
-      # - `value` - the value to set the variable to.
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: value,
-      #
-      # API endpoint:
-      # - method: post
-      # - endpoint: /channels/{channelId}/variable
+      # - `channel_id` - channel's id. (required);
+      # - `variable` - the channel variable or function to set. (required);
+      # - `value` - the value to set the variable to;
       #
       # Error responses:
       # - 400 - Missing variable parameter.
@@ -1153,62 +520,23 @@ module Asterisk
         # Optional parameters
         params += "&" + HTTP::Params.encode({"value" => value}) if value
 
-        client.post "channels/#{channel_id}/variable?" + params
+        ari.post "channels/#{channel_id}/variable?" + params
       end
 
       # Start snooping.
       #
       # Arguments:
-      # - `channel_id` - channel's id.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: path,
-      #   - param name: channelId,
-      #
-      # - `app` - application the snooping channel is placed into.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: app,
-      #
-      # - `spy` - direction of audio to spy on.
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: spy,
-      #
-      # - `whisper` - direction of audio to whisper into.
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: whisper,
-      #
-      # - `app_args` - the application arguments to pass to the Stasis application.
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: appArgs,
-      #
-      # - `snoop_id` - unique ID to assign to snooping channel.
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: snoopId,
-      #
-      # API endpoint:
-      # - method: post
-      # - endpoint: /channels/{channelId}/snoop
+      # - `channel_id` - channel's id. (required);
+      # - `app` - application the snooping channel is placed into. (required);
+      # - `spy` - direction of audio to spy on;
+      # - `whisper` - direction of audio to whisper into;
+      # - `app_args` - the application arguments to pass to the Stasis application;
+      # - `snoop_id` - unique ID to assign to snooping channel;
       #
       # Error responses:
       # - 400 - Invalid parameters
       # - 404 - Channel not found
-      def snoop_channel(channel_id : String, app : String, spy : String? = none, whisper : String? = none, app_args : String? = nil, snoop_id : String? = nil) : HTTP::Client::Response | Channels::Channel
+      def snoop_channel(channel_id : String, app : String, spy : String? = "none", whisper : String? = "none", app_args : String? = nil, snoop_id : String? = nil) : HTTP::Client::Response | Channels::Channel
         params = HTTP::Params.encode({"app" => app})
 
         # Optional parameters
@@ -1217,63 +545,24 @@ module Asterisk
         params += "&" + HTTP::Params.encode({"appArgs" => app_args}) if app_args
         params += "&" + HTTP::Params.encode({"snoopId" => snoop_id}) if snoop_id
 
-        response = client.post "channels/#{channel_id}/snoop?" + params
-        response.status_code.to_s =~ /^[23]\d\d$/ ? Channels::Channel.from_json(response.body.to_s) : response
+        request = "channels/#{channel_id}/snoop?" + params
+        format_response ari.post(request)
       end
 
       # Start snooping.
       #
       # Arguments:
-      # - `channel_id` - channel's id.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: path,
-      #   - param name: channelId,
-      #
-      # - `snoop_id` - unique ID to assign to snooping channel.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: path,
-      #   - param name: snoopId,
-      #
-      # - `app` - application the snooping channel is placed into.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: app,
-      #
-      # - `spy` - direction of audio to spy on.
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: spy,
-      #
-      # - `whisper` - direction of audio to whisper into.
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: whisper,
-      #
-      # - `app_args` - the application arguments to pass to the Stasis application.
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: appArgs,
-      #
-      # API endpoint:
-      # - method: post
-      # - endpoint: /channels/{channelId}/snoop/{snoopId}
+      # - `channel_id` - channel's id. (required);
+      # - `snoop_id` - unique ID to assign to snooping channel. (required);
+      # - `app` - application the snooping channel is placed into. (required);
+      # - `spy` - direction of audio to spy on;
+      # - `whisper` - direction of audio to whisper into;
+      # - `app_args` - the application arguments to pass to the Stasis application;
       #
       # Error responses:
       # - 400 - Invalid parameters
       # - 404 - Channel not found
-      def snoop_channel_with_id(channel_id : String, snoop_id : String, app : String, spy : String? = none, whisper : String? = none, app_args : String? = nil) : HTTP::Client::Response | Channels::Channel
+      def snoop_channel_with_id(channel_id : String, snoop_id : String, app : String, spy : String? = "none", whisper : String? = "none", app_args : String? = nil) : HTTP::Client::Response | Channels::Channel
         params = HTTP::Params.encode({"app" => app})
 
         # Optional parameters
@@ -1281,37 +570,16 @@ module Asterisk
         params += "&" + HTTP::Params.encode({"whisper" => whisper}) if whisper
         params += "&" + HTTP::Params.encode({"appArgs" => app_args}) if app_args
 
-        response = client.post "channels/#{channel_id}/snoop/#{snoop_id}?" + params
-        response.status_code.to_s =~ /^[23]\d\d$/ ? Channels::Channel.from_json(response.body.to_s) : response
+        request = "channels/#{channel_id}/snoop/#{snoop_id}?" + params
+        format_response ari.post(request)
       end
 
       # Dial a created channel.
       #
       # Arguments:
-      # - `channel_id` - channel's id.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: path,
-      #   - param name: channelId,
-      #
-      # - `caller` - channel ID of caller.
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: caller,
-      #
-      # - `timeout` - dial timeout.
-      #   - Required: false,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: timeout,
-      #
-      # API endpoint:
-      # - method: post
-      # - endpoint: /channels/{channelId}/dial
+      # - `channel_id` - channel's id. (required);
+      # - `caller` - channel ID of caller;
+      # - `timeout` - dial timeout;
       #
       # Error responses:
       # - 404 - Channel cannot be found.
@@ -1322,28 +590,50 @@ module Asterisk
         params += "&" + HTTP::Params.encode({"caller" => caller}) if caller
         params += "&" + HTTP::Params.encode({"timeout" => timeout.to_s}) if timeout
 
-        client.post "channels/#{channel_id}/dial?" + params
+        ari.post "channels/#{channel_id}/dial?" + params
       end
 
       # RTP stats on a channel.
       #
       # Arguments:
-      # - `channel_id` - channel's id.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: path,
-      #   - param name: channelId,
-      #
-      # API endpoint:
-      # - method: get
-      # - endpoint: /channels/{channelId}/rtp_statistics
+      # - `channel_id` - channel's id. (required);
       #
       # Error responses:
       # - 404 - Channel cannot be found.
       def rtpstatistics(channel_id : String) : HTTP::Client::Response | RTPstat
-        response = client.get "channels/#{channel_id}/rtp_statistics"
-        response.status_code.to_s =~ /^[23]\d\d$/ ? RTPstat.from_json(response.body.to_s) : response
+        format_response ari.get("channels/#{channel_id}/rtp_statistics")
+      end
+
+      # Start an External Media session.
+      #
+      # Arguments:
+      # - `app` - stasis Application to place channel into. (required);
+      # - `external_host` - hostname/ip:port of external host. (required);
+      # - `format` - format to encode audio in. (required);
+      # - `channel_id` - the unique id to assign the channel on creation;
+      # - `variables` - the "variables" key in the body object holds variable key/value pairs to set on the channel on creation. Other keys in the body object are interpreted as query parameters. Ex. { "endpoint": "SIP/Alice", "variables": { "CALLERID(name)": "Alice" } };
+      # - `encapsulation` - payload encapsulation protocol;
+      # - `transport` - transport protocol;
+      # - `connection_type` - connection type (client/server);
+      # - `direction` - external media direction;
+      #
+      # Error responses:
+      # - 400 - Invalid parameters
+      # - 409 - Channel is not in a Stasis application; Channel is already bridged
+      def external_media(app : String, external_host : String, format : String, channel_id : String? = nil, variables : Hash(String, String | Bool | Int32 | Float32)? = nil, encapsulation : String? = "rtp", transport : String? = "udp", connection_type : String? = "client", direction : String? = "both") : HTTP::Client::Response | ExternalMedia
+        params = HTTP::Params.encode({"app" => app})
+        params += "&" + HTTP::Params.encode({"external_host" => external_host})
+        params += "&" + HTTP::Params.encode({"format" => format})
+
+        # Optional parameters
+        params += "&" + HTTP::Params.encode({"channelId" => channel_id}) if channel_id
+        params += "&" + HTTP::Params.encode({"encapsulation" => encapsulation}) if encapsulation
+        params += "&" + HTTP::Params.encode({"transport" => transport}) if transport
+        params += "&" + HTTP::Params.encode({"connection_type" => connection_type}) if connection_type
+        params += "&" + HTTP::Params.encode({"direction" => direction}) if direction
+
+        request = "channels/externalMedia?" + params
+        format_response ari.post(request, body: variables.to_json)
       end
     end
   end

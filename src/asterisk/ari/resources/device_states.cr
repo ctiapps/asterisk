@@ -6,7 +6,7 @@
 #  be lost the next time this file is regenerated.
 #
 #  This file was generated using ctiapps/asterisk crystal shard from the
-#  Asterisk PBX version 16.5.1.
+#  Asterisk PBX version 16.6.0.
 #
 #------------------------------------------------------------------------------
 
@@ -15,76 +15,41 @@ module Asterisk
     class DeviceStates < Resources
       # List all ARI controlled device states.
       def list : HTTP::Client::Response | Array(DeviceStates::DeviceState)
-        response = client.get "deviceStates"
-        response.status_code.to_s =~ /^[23]\d\d$/ ? Array(DeviceStates::DeviceState).from_json(response.body.to_s) : response
+        format_response ari.get("deviceStates")
       end
 
       # Retrieve the current state of a device.
       #
       # Arguments:
-      # - `device_name` - name of the device.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: path,
-      #   - param name: deviceName,
-      #
-      # API endpoint:
-      # - method: get
-      # - endpoint: /deviceStates/{deviceName}
+      # - `device_name` - name of the device. (required);
       def get(device_name : String) : HTTP::Client::Response | DeviceStates::DeviceState
-        response = client.get "deviceStates/#{device_name}"
-        response.status_code.to_s =~ /^[23]\d\d$/ ? DeviceStates::DeviceState.from_json(response.body.to_s) : response
+        format_response ari.get("deviceStates/#{device_name}")
       end
 
       # Change the state of a device controlled by ARI. (Note - implicitly creates the device state).
       #
       # Arguments:
-      # - `device_name` - name of the device.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: path,
-      #   - param name: deviceName,
-      #
-      # - `device_state` - device state value.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: deviceState,
-      #
-      # API endpoint:
-      # - method: put
-      # - endpoint: /deviceStates/{deviceName}
+      # - `device_name` - name of the device. (required);
+      # - `device_state` - device state value. (required);
       #
       # Error responses:
       # - 404 - Device name is missing
       # - 409 - Uncontrolled device specified
       def update(device_name : String, device_state : String)
         params = HTTP::Params.encode({"deviceState" => device_state})
-        client.put "deviceStates/#{device_name}?" + params
+        ari.put "deviceStates/#{device_name}?" + params
       end
 
       # Destroy a device-state controlled by ARI.
       #
       # Arguments:
-      # - `device_name` - name of the device.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: path,
-      #   - param name: deviceName,
-      #
-      # API endpoint:
-      # - method: delete
-      # - endpoint: /deviceStates/{deviceName}
+      # - `device_name` - name of the device. (required);
       #
       # Error responses:
       # - 404 - Device name is missing
       # - 409 - Uncontrolled device specified
       def delete(device_name : String)
-        client.delete "deviceStates/#{device_name}"
+        ari.delete "deviceStates/#{device_name}"
       end
     end
   end
