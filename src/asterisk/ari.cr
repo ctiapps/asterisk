@@ -65,50 +65,23 @@ module Asterisk
         close
       end
 
-      ws.on_message do |message|
-        message_json = JSON.parse(message)
+      ws.on_message do |json_data|
+        event = JSON.parse(json_data)
 
-        event = message_json["type"]?
-        if event.nil?
-          logger.error "WS message does not look like Asterisk ARI:\n#{message}\n---"
+        # Basic validation of the ws message.
+        # ARI event is a hash-like structure with field `type` at the root,
+        # containing string (ARI event name)
+        unless event.as_h?.try &.["type"]?.try &.as_s?
+          logger.error "Message does not look like Asterisk ARI event:\n#{json_data}\n---"
           next
         end
-        event = event.as_s
 
-        # user-defined handlers, these receive event as a JSON message, because
-        # with generic filtering, multipe types could pass `find_handlers`
-        find_handlers(message_json).each do |handler|
+        # find registered for event handlers and execute them
+        handlers_for(event).each do |handler|
           spawn do
-            handler.call(message)
+            handler.call(json_data)
           end
         end
-
-        klass = @events_map[event]?
-        if klass.nil?
-          logger.error "Don't know this event: #{event}"
-          next
-        end
-
-        event_data = klass.from_json(message)
-
-        # Macro code that generate case ... when ... end block for ARI events
-        {% begin %}
-          case event
-          {% for t in Events.constants %}
-            {% event_name = t.stringify %}
-            {% klass = ("Events::" + t.stringify).id %}
-            {% unless %w(Message Event).includes?(event_name) %}
-            when {{event_name}}
-              @{{event_name.underscore.id}}_handlers.each do |handler_id, handler|
-                logger.error "Executing handler #{handler_id} of {{event_name.id}}"
-                spawn do
-                  handler.call(event_data.as({{klass}}))
-                end
-              end
-            {% end %}
-          {% end %}
-          end
-        {% end %}
       end
 
       spawn do
@@ -128,29 +101,35 @@ module Asterisk
       @events_map = {{events}}
     {% end %}
 
-    # Generates events handlers for known events, like this:
+    # Generates events handlers for known ARI events.
     # ```
     # def on_device_state_changed(&@on_device_state_changed : Events::DeviceStateChanged ->)
     # end
     # ```
     {% begin %}
       {% for t in Events.constants %}
-        {% event_name = t.stringify %}
-        {% unless %w(Message Event).includes?(event_name) %}
-          {% klass = ("Events::" + event_name).id %}
-          {% event_name = event_name.underscore.id %}
-          @{{event_name}}_handlers = Hash(String, Proc({{klass}}, Nil)).new
+        {% event = t.stringify %}
+        {% unless %w(Message Event).includes?(event) %}
+          {% klass = ("Events::" + event).id %}
+          {% method = event.underscore.id %}
+          {% event = event.id %}
 
-          def on_{{event_name}}(&block : {{klass}} ->)
-            handler_id = UUID.random.to_s
-            @{{event_name}}_handlers[handler_id] = block
-            handler_id
+          def on_{{method}}(&block : {{klass}} ->)
+            event_filter = JSON.parse(%({"type": "{{event}}"}))
+            on(event_filter) do |json_data|
+              event_data = {{klass}}.from_json(json_data)
+              block.call(event_data)
+            end
           end
 
-          def on_{{event_name}}(handler_id : String, &block : {{klass}} ->)
-            @{{event_name}}_handlers[handler_id] = block
-            handler_id
+          def on_{{method}}(handler_id : String, &block : {{klass}} ->)
+            event_filter = JSON.parse(%({"type": "{{event}}"}))
+            on(handler_id, event_filter) do |json_data|
+              event_data = {{klass}}.from_json(json_data)
+              block.call(event_data)
+            end
           end
+
         {% end %}
       {% end %}
     {% end %}
@@ -172,10 +151,10 @@ module Asterisk
       @handlers.delete(handler_id)
     end
 
-    private def find_handlers(message : JSON::Any)
+    private def handlers_for(event : JSON::Any)
       @handlers.map { |_, handler|
         handler.map { |event_filter, _|
-          handler[event_filter] if json_includes?(message, event_filter)
+          handler[event_filter] if json_includes?(event, event_filter)
         }
       }.flatten.compact
     end
@@ -185,16 +164,16 @@ module Asterisk
     #
     # https://play.crystal-lang.org/#/r/7lam
     # https://play.crystal-lang.org/#/r/7lb5
-    private def json_includes?(message : JSON::Any, event_filter : JSON::Any)
+    private def json_includes?(event : JSON::Any, event_filter : JSON::Any)
       return false unless event_filter.as_h?
       return false if event_filter.as_h.empty?
 
       result = event_filter.as_h.map { |key, event_filter|
-        if message[key]?
+        if event[key]?
           if event_filter.as_s?
-            message[key] == event_filter
-          elsif event_filter.as_h? && message[key].as_h?
-            json_includes?(message[key], event_filter)
+            event[key] == event_filter
+          elsif event_filter.as_h? && event[key].as_h?
+            json_includes?(event[key], event_filter)
           else
             false
           end
