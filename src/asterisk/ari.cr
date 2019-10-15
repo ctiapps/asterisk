@@ -54,6 +54,11 @@ module Asterisk
     end
 
     def start
+      if connected?
+        logger.info "#{self.class}: Already started"
+        return
+      end
+
       connect
 
       ws.on_close do
@@ -63,6 +68,13 @@ module Asterisk
       ws.on_message do |message|
         message_json = JSON.parse(message)
 
+        event = message_json["type"]?
+        if event.nil?
+          logger.error "WS message does not look like Asterisk ARI:\n#{message}\n---"
+          next
+        end
+        event = event.as_s
+
         # user-defined handlers, these receive event as a JSON message, because
         # with generic filtering, multipe types could pass `find_handlers`
         find_handlers(message_json).each do |handler|
@@ -71,7 +83,6 @@ module Asterisk
           end
         end
 
-        event = message_json["type"].as_s
         klass = @events_map[event]?
         if klass.nil?
           logger.error "Don't know this event: #{event}"
@@ -88,7 +99,8 @@ module Asterisk
             {% klass = ("Events::" + t.stringify).id %}
             {% unless %w(Message Event).includes?(event_name) %}
             when {{event_name}}
-              @on_{{event_name.underscore.id}}.try do |handler|
+              @{{event_name.underscore.id}}_handlers.each do |handler_id, handler|
+                logger.error "Executing handler #{handler_id} of {{event_name.id}}"
                 spawn do
                   handler.call(event_data.as({{klass}}))
                 end
@@ -125,8 +137,19 @@ module Asterisk
       {% for t in Events.constants %}
         {% event_name = t.stringify %}
         {% unless %w(Message Event).includes?(event_name) %}
-          {% klass = ("Events::" + t.stringify).id %}
-          def on_{{event_name.underscore.id}}(&@on_{{event_name.underscore.id}} : {{klass}} ->)
+          {% klass = ("Events::" + event_name).id %}
+          {% event_name = event_name.underscore.id %}
+          @{{event_name}}_handlers = Hash(String, Proc({{klass}}, Nil)).new
+
+          def on_{{event_name}}(&block : {{klass}} ->)
+            handler_id = UUID.random.to_s
+            @{{event_name}}_handlers[handler_id] = block
+            handler_id
+          end
+
+          def on_{{event_name}}(handler_id : String, &block : {{klass}} ->)
+            @{{event_name}}_handlers[handler_id] = block
+            handler_id
           end
         {% end %}
       {% end %}
@@ -134,37 +157,44 @@ module Asterisk
 
     @handlers = Hash(String, Hash(JSON::Any, Proc(String, Nil))).new
 
-    def on(handler_id : String, conditions : JSON::Any, &block : String ->)
-      @handlers[handler_id] = { conditions => block }
+    def on(event_filter : JSON::Any, &block : String ->) : String
+      handler_id = UUID.random.to_s
+      @handlers[handler_id] = { event_filter => block }
+      handler_id
     end
 
-    def remove_handler(name : String)
-      @handlers.delete(name)
+    def on_(handler_id : String, event_filter : JSON::Any, &block : String ->) : String
+      @handlers[handler_id] = { event_filter => block }
+      handler_id
+    end
+
+    def remove_handler(handler_id : String)
+      @handlers.delete(handler_id)
     end
 
     private def find_handlers(message : JSON::Any)
       @handlers.map { |_, handler|
-        handler.map { |conditions, _|
-          handler[conditions] if json_includes?(message, conditions)
+        handler.map { |event_filter, _|
+          handler[event_filter] if json_includes?(message, event_filter)
         }
       }.flatten.compact
     end
 
-    # Match JSON::Any message against JSON::Any conditions. Conditions should be
+    # Match JSON::Any message against JSON::Any event_filter. event_filter should be
     # a Hash of Strings or Hash of Hashes of Strings.
     #
     # https://play.crystal-lang.org/#/r/7lam
     # https://play.crystal-lang.org/#/r/7lb5
-    private def json_includes?(message : JSON::Any, conditions : JSON::Any)
-      return false unless conditions.as_h?
-      return false if conditions.as_h.empty?
+    private def json_includes?(message : JSON::Any, event_filter : JSON::Any)
+      return false unless event_filter.as_h?
+      return false if event_filter.as_h.empty?
 
-      result = conditions.as_h.map { |key, conditions|
+      result = event_filter.as_h.map { |key, event_filter|
         if message[key]?
-          if conditions.as_s?
-            message[key] == conditions
-          elsif conditions.as_h? && message[key].as_h?
-            json_includes?(message[key], conditions)
+          if event_filter.as_s?
+            message[key] == event_filter
+          elsif event_filter.as_h? && message[key].as_h?
+            json_includes?(message[key], event_filter)
           else
             false
           end
@@ -189,11 +219,6 @@ module Asterisk
     resources
 
     private def connect
-      if ws? && ! ws.closed?
-        logger.info "#{self.class}: Already connected"
-        return
-      end
-
       @client = HTTP::Client.new(@uri)
       client.basic_auth(@username, @password)
 
@@ -221,12 +246,16 @@ module Asterisk
     end
 
     def close
-      ws.close unless closed?
       client.close
+      ws.close unless closed?
+    end
+
+    def connected?
+      ws? && ! ws.closed?
     end
 
     def closed?
-      ws.closed?
+      ws.nil? || (ws? && ws.closed?)
     end
   end
 end
