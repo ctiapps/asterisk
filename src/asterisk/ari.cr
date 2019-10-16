@@ -181,7 +181,7 @@ module Asterisk
       handler_id
     end
 
-    def on_(handler_id : String, event_filter : JSON::Any, &block : String ->) : String
+    def on(handler_id : String, event_filter : JSON::Any, &block : String ->) : String
       @handlers[handler_id] = { event_filter => block }
       handler_id
     end
