@@ -33,7 +33,7 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - name: Stop Asterisk
-        run: asterisk -rx "core stop now" && sleep 1 && ps x | grep "asterisk -vvv" | grep -v grep | awk '{print $1}' | xargs kill -9
+        run: (asterisk -rx "core stop now"; sleep 1; ps x | grep "asterisk -vvv" | grep -v grep | awk '{print $1}' | xargs kill -9) >/dev/null 2>&1
       - name: Copy Asterisk configs
         run: cp -R spec/asterisk_configs/* /etc/asterisk/
       - name: Start Asterisk
