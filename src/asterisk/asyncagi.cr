@@ -49,7 +49,7 @@ module Asterisk
       # ami.on_event("FullyBooted") do |ami, event|
       # end
 
-      ami.on_event("AsyncAGIStart") do |ami, event|
+      ami.on_event("AsyncAGIStart") do |_, event|
         logger.debug "#{self.class} AMI event #{event.event}: #{event.inspect}"
         # activate new call instance
         call = AsyncAGI.new(ami: @ami, logger: @logger)
@@ -60,7 +60,7 @@ module Asterisk
         process(call)
       end
 
-      ami.on_event("AsyncAGIEnd") do |ami, event|
+      ami.on_event("AsyncAGIEnd") do |_, event|
         logger.debug "#{self.class} AMI event #{event.event}: #{event.inspect}"
         # stop worker
         # log termination data
@@ -84,4 +84,3 @@ module Asterisk
 
   end
 end
-

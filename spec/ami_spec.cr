@@ -13,7 +13,7 @@ describe Asterisk::AMI do
 
     it "should respond with 'Pong' to action 'ping'" do
       with_ami do |ami|
-        10.times do |i|
+        10.times do
           actionid = UUID.random.to_s
           response = ami.send_action({"action" => "Ping", "actionid" => actionid})
           response.success?.should be_true

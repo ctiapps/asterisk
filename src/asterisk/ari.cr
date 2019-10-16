@@ -207,12 +207,12 @@ module Asterisk
       return false unless event_filter.as_h?
       return false if event_filter.as_h.empty?
 
-      result = event_filter.as_h.map { |key, event_filter|
+      result = event_filter.as_h.map { |key, ef|
         if event[key]?
-          if event_filter.as_s?
-            event[key] == event_filter
-          elsif event_filter.as_h? && event[key].as_h?
-            json_includes?(event[key], event_filter)
+          if ef.as_s?
+            event[key] == ef
+          elsif ef.as_h? && event[key].as_h?
+            json_includes?(event[key], ef)
           else
             false
           end

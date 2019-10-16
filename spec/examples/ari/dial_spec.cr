@@ -7,8 +7,8 @@ describe Dial do
       # let's reuse ARI instance, so we can track events
       Dial.start(ari)
 
-      ari.on_stasis_start do |event|
-        puts;puts;puts "(test) on_stasis_start"
+      ari.on_stasis_start do
+        logger.info "(test) on_stasis_start"
       end
 
       sleep 0.01

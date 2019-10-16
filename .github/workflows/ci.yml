@@ -26,14 +26,20 @@ jobs:
         run: shards install
       - name: Ameba
         run: ./bin/ameba
-  # test_latest:
-  #   runs-on: ubuntu-latest
-  #   container:
-  #     image: andrius/crystal-lang:asterisk-16
-  #   steps:
-  #     - uses: actions/checkout@v1
-  #     - name: Specs
-  #       run: crystal spec --warnings all --error-on-warnings
+  test_latest:
+    runs-on: ubuntu-latest
+    container:
+      image: andrius/crystal-lang:asterisk-16
+    steps:
+      - uses: actions/checkout@v1
+      - name: Stop Asterisk
+        run: asterisk -rx "core stop now" && sleep 1 && ps x | grep "asterisk -vvv" | grep -v grep | awk '{print $1}' | xargs kill -9
+      - name: Copy Asterisk configs
+        run: cp -R spec/asterisk_configs/* /etc/asterisk/
+      - name: Start Asterisk
+        run: asterisk -vvvdddF
+      - name: Specs
+        run: crystal spec --warnings all --error-on-warnings spec/ami_spec.cr spec/ami_hooks_spec.cr spec/ari_spec.cr spec/ari_event_handler_spec.cr
   # test_nightly:
   #   runs-on: ubuntu-latest
   #   container:

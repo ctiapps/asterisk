@@ -81,6 +81,7 @@ module TestHelpers
       ari.close
       sleep 0.01
     end
+    logger.level = LOG_LEVEL
   end
 
   # Getter of SIP UDP Bindaddress for connected asterisk instance.

@@ -102,11 +102,6 @@ describe Asterisk::ARI do
       channel_id = channel_id_ch.receive
       channel_id.should_not be "failure"
 
-      # Set custom event handler for event "ChannelStateChange" and channel
-      # channel_id
-      event_filter = JSON.parse(%({"type": "ChannelStateChange",
-                                   "channel": {"id": "#{channel_id}"}}))
-
       h = ari.on_channel_state_change do |event|
         handler_1.send true if event.channel.state ==  "Up"
       end
