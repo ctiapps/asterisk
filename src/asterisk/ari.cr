@@ -18,6 +18,8 @@ module Asterisk
     class ConnectionError < Exception
     end
 
+    GRACEFULLY_HANDLERS_REMOVAL_TIMEOUT = 0.02.seconds
+
     property logger : Logger = ::Asterisk.logger
 
     # ARI app-name
@@ -74,6 +76,37 @@ module Asterisk
         process_ws_message json_data
       end
 
+      # Remove orphaned event handlers after expiration
+      on_recording_finished do |event|
+        event_filter = JSON.parse(%({"recording": {"name": "#{event.recording.name}"}}))
+        sleep GRACEFULLY_HANDLERS_REMOVAL_TIMEOUT
+        handlers(event_filter).keys.each { |handler_id| remove_handler(handler_id) }
+      end
+
+      on_recording_failed do |event|
+        event_filter = JSON.parse(%({"recording": {"name": "#{event.recording.name}"}}))
+        sleep GRACEFULLY_HANDLERS_REMOVAL_TIMEOUT
+        handlers(event_filter).keys.each { |handler_id| remove_handler(handler_id) }
+      end
+
+      on_playback_finished do |event|
+        event_filter = JSON.parse(%({"playback": {"id": "#{event.playback.id}"}}))
+        sleep GRACEFULLY_HANDLERS_REMOVAL_TIMEOUT
+        handlers(event_filter).keys.each { |handler_id| remove_handler(handler_id) }
+      end
+
+      on_bridge_destroyed do |event|
+        event_filter = JSON.parse(%({"bridge": {"id": "#{event.bridge.id}"}}))
+        sleep GRACEFULLY_HANDLERS_REMOVAL_TIMEOUT
+        handlers(event_filter).keys.each { |handler_id| remove_handler(handler_id) }
+      end
+
+      on_stasis_end do |event|
+        event_filter = JSON.parse(%({"channel": {"id": "#{event.channel.id}"}}))
+        sleep GRACEFULLY_HANDLERS_REMOVAL_TIMEOUT
+        handlers(event_filter).keys.each { |handler_id| remove_handler(handler_id) }
+      end
+
       spawn do
         ws.run
       end
@@ -110,6 +143,7 @@ module Asterisk
 
     # close ARI http and ws-connections
     def close
+      handlers.clear
       client.close
       ws.close unless closed?
     end
@@ -166,7 +200,7 @@ module Asterisk
       end
 
       # find registered for event handlers and execute them
-      handlers_for(event).each do |handler|
+      event_handlers(event).each do |handler|
         spawn do
           handler.call(json_data)
         end
@@ -175,13 +209,26 @@ module Asterisk
 
     @handlers = Hash(String, Hash(JSON::Any, Proc(String, Nil))).new
 
-    def on(event_filter : JSON::Any, &block : String ->) : String
+    def event_on(event_filter : JSON::Any, &block : String ->) : String
       handler_id = UUID.random.to_s
       @handlers[handler_id] = { event_filter => block }
       handler_id
     end
 
-    def on(handler_id : String, event_filter : JSON::Any, &block : String ->) : String
+    def event_on(handler_id : String, event_filter : JSON::Any, &block : String ->) : String
+      @handlers[handler_id] = { event_filter => block }
+      handler_id
+    end
+
+    def event_on(event_filter : NamedTuple, &block : String ->) : String
+      event_filter = JSON.parse(event_filter.to_json)
+      handler_id = UUID.random.to_s
+      @handlers[handler_id] = { event_filter => block }
+      handler_id
+    end
+
+    def event_on(handler_id : String, event_filter : NamedTuple, &block : String ->) : String
+      event_filter = JSON.parse(event_filter.to_json)
       @handlers[handler_id] = { event_filter => block }
       handler_id
     end
@@ -190,7 +237,8 @@ module Asterisk
       @handlers.delete(handler_id)
     end
 
-    private def handlers_for(event : JSON::Any)
+    # Returns array of event handlers based on `event_filter` for given `event`
+    private def event_handlers(event : JSON::Any)
       @handlers.map { |_, handler|
         handler.map { |event_filter, _|
           handler[event_filter] if json_includes?(event, event_filter)
@@ -198,8 +246,26 @@ module Asterisk
       }.flatten.compact
     end
 
-    # Match JSON::Any against JSON::Any event_filter. event_filter should be
-    # a Hash of Strings or Hash of Hashes of Strings.
+    def handlers(event_filter : JSON::Any = JSON.parse("{}"))
+      return @handlers if event_filter.as_h?.try &.empty?
+
+      h = @handlers.map { |handler_id, handler|
+        handler.map { |handler_event_filter, _|
+          if json_includes?(handler_event_filter, event_filter)
+            { handler_id => handler }
+          end
+        }
+      }.flatten.compact
+
+      if h.empty?
+        Hash(String, Hash(JSON::Any, Proc(String, Nil))).new
+      else
+        h.flatten.compact.reduce { |memo, record| memo.merge(record) }
+      end
+    end
+
+    # Match `event` against `event_filter`, both must be `JSON::Any` objects.
+    # `event_filter` should be a Hash of Strings or Hash of Hashes of Strings.
     #
     # https://play.crystal-lang.org/#/r/7lam
     # https://play.crystal-lang.org/#/r/7lb5
@@ -229,7 +295,7 @@ module Asterisk
     # def on_device_state_changed(event_filter : JSON::Any = JSON.parse("{}"), &block : Events::DeviceStateChanged ->)
     #   # set filter on `type`
     #   event_filter.as_h["type"] = JSON.parse(%("DeviceStateChanged"))
-    #   on(event_filter) do |json_data|
+    #   event_on(event_filter) do |json_data|
     #     event_data = {{klass}}.from_json(json_data)
     #     block.call(event_data)
     #   end
@@ -263,7 +329,15 @@ module Asterisk
           def on_{{method}}(event_filter : JSON::Any = JSON.parse("{}"), &block : {{klass}} ->)
            # set filter on `type`
             event_filter.as_h["type"] = JSON.parse(%("{{event}}"))
-            on(event_filter) do |json_data|
+            event_on(event_filter) do |json_data|
+              event_data = {{klass}}.from_json(json_data)
+              block.call(event_data)
+            end
+          end
+
+          def on_{{method}}(event_filter : NamedTuple, &block : {{klass}} ->)
+            event_filter = JSON.parse((event_filter.merge type: "{{event}}").to_json)
+            event_on(event_filter) do |json_data|
               event_data = {{klass}}.from_json(json_data)
               block.call(event_data)
             end
@@ -272,7 +346,16 @@ module Asterisk
           def on_{{method}}(handler_id : String, event_filter : JSON::Any = JSON.parse("{}"), &block : {{klass}} ->)
             # set filter on `type`
             event_filter.as_h["type"] = JSON.parse(%("{{event}}"))
-            on(handler_id, event_filter) do |json_data|
+            event_on(handler_id, event_filter) do |json_data|
+              event_data = {{klass}}.from_json(json_data)
+              block.call(event_data)
+            end
+          end
+
+          def on_{{method}}(handler_id : String, event_filter : NamedTuple, &block : {{klass}} ->)
+            # set filter on `type`
+            event_filter = JSON.parse((event_filter.merge type: "{{event}}").to_json)
+            event_on(handler_id, event_filter) do |json_data|
               event_data = {{klass}}.from_json(json_data)
               block.call(event_data)
             end

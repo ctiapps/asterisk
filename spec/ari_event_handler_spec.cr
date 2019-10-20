@@ -4,10 +4,10 @@ module Asterisk
   class ARI
     # TODO: open `def process_ws_message(json_data)`
 
-    # getter for ARI handlers
-    def handlers
-      @handlers
-    end
+    # # open private method
+    # def handlers(event_filter : JSON::Any = JSON.parse("{}"))
+    #   previous_def
+    # end
   end
 end
 
@@ -43,7 +43,7 @@ describe Asterisk::ARI do
       event_filter = JSON.parse(%({"type": "ChannelStateChange",
                                    "channel": {"id": "#{channel_id}"}}))
 
-      handler_id = ari.on event_filter: event_filter do |event_json|
+      handler_id = ari.event_on event_filter: event_filter do |event_json|
         event = Asterisk::ARI::Events::ChannelStateChange.from_json(event_json)
         if event.channel.state ==  "Up"
           answer_ch.send true
@@ -77,6 +77,8 @@ describe Asterisk::ARI do
   # - remove handler, terminate calls and ari
   it "should process all the event handlers in chain" do
     with_ari do |ami, ari|
+      initial_handlers_count = ari.handlers.keys.size
+
       channel_id_ch = Channel(String).new
       handler_1     = Channel(Bool).new
       handler_2     = Channel(Bool).new
@@ -84,7 +86,7 @@ describe Asterisk::ARI do
       handler_4     = Channel(Bool).new
       handler_5     = Channel(Bool).new
 
-      handlers = Array(String).new
+      local_handlers = Array(String).new
 
       ari.on_stasis_start do |event|
         channel_id_ch.send event.channel.id
@@ -105,34 +107,37 @@ describe Asterisk::ARI do
       h = ari.on_channel_state_change do |event|
         handler_1.send true if event.channel.state ==  "Up"
       end
-      handlers.push h
+      local_handlers.push h
 
-      h = ari.on_channel_state_change do |event|
+      h = ari.on_channel_state_change event_filter: JSON.parse(%({"channel": {"id": "#{channel_id}"}})) do |event|
         handler_2.send true if event.channel.state ==  "Up"
       end
-      handlers.push h
+      local_handlers.push h
 
-      h = ari.on_channel_state_change do |event|
+      h = ari.on_channel_state_change event_filter: {channel: {id: channel_id}} do |event|
         handler_3.send true if event.channel.state ==  "Up"
       end
-      handlers.push h
+      local_handlers.push h
 
       # last two also has a filter on channel_id
-      h = ari.on_channel_state_change event_filter: JSON.parse(%({"channel": {"id": "#{channel_id}"}})) do |event|
+      h = ari.on_channel_state_change(JSON.parse(%({"channel": {"id": "#{channel_id}"}}))) do |event|
         handler_4.send true if event.channel.state ==  "Up"
       end
-      handlers.push h
+      local_handlers.push h
 
-      h = ari.on_channel_state_change event_filter: JSON.parse(%({"channel": {"id": "#{channel_id}"}})) do |event|
+      h = ari.on_channel_state_change({channel: {id: channel_id}}) do |event|
         handler_5.send true if event.channel.state ==  "Up"
       end
-      handlers.push h
+      local_handlers.push h
 
       # 1x on_stasis_start and 5x on_channel_state_change
-      ari.handlers.size.should eq 6
+      ari.handlers.size.should eq(initial_handlers_count + 6)
 
-      # Get call answered, so custom handler will be executed in a while
-      ari.channels.answer channel_id: channel_id
+      spawn do
+        sleep 0.01
+        # Get call answered, so custom handler will be executed in a while
+        ari.channels.answer channel_id: channel_id
+      end
 
       # prevent chanels freezing
       spawn do
@@ -151,12 +156,12 @@ describe Asterisk::ARI do
       handler_4.receive.should be_true
       handler_5.receive.should be_true
 
-      handlers.each do |handler_id|
+      local_handlers.each do |handler_id|
         ari.remove_handler(handler_id)
       end
 
       # After remove, only one handler keep remaining (on_stasis_start)
-      ari.handlers.size.should eq 1
+      ari.handlers.size.should eq(initial_handlers_count + 1)
     end
   end
 end
