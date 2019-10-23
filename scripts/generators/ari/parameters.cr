@@ -36,13 +36,11 @@ module Asterisk
               parameter = parameters[name]
               description = parameter.description[0].downcase + parameter.description[1..2000] + "."
               description = description.gsub(/\.\.$/, ".")
-              spec += %(- `#{name}` - #{description}\n)
-              spec += %(  - Required: #{parameter.required?.to_s},\n)
-              spec += %(  - Allow multiple (comma-separated list): #{parameter.allow_multiple?.to_s},\n)
-              spec += %(  ARI (http-client) related:\n)
-              spec += %(  - http request type: #{parameter.param_type},\n)
-              spec += %(  - param name: #{parameter.name_ari},\n)
-              spec += "\n"
+              spec += %(- `#{name}` - #{description})
+              spec += " (required)" if parameter.required?
+              spec += ". Allow multiple instances (comma-separated list)" if parameter.allow_multiple?
+              spec = spec.gsub(/\.$/, "")
+              spec += ";\n"
             end
             "\n" + spec.chomp.gsub(/^/m, "      # ")
           else

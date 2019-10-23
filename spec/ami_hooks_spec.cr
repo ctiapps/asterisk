@@ -7,7 +7,7 @@ describe Asterisk::AMI do
       # can't use with_ami wrapper: FullyBooted aproaching next after login
       ami = Asterisk::AMI.new username: "asterisk.cr", secret: "asterisk.cr"
 
-      ami.on_event("FullyBooted") do |ami, event|
+      ami.on_event("FullyBooted") do |_, event|
         event.event.should eq("FullyBooted")
         event["status"].should match /Fully Booted/i
         # runner already processed "FullyBooted" and ami.connected? expected to

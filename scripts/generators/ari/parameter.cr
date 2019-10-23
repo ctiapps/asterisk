@@ -34,7 +34,7 @@ module Asterisk
           end
 
           if default_value?
-            if datatype == "String"
+            if datatype == "string"
               result += %( = "#{default_value}")
             else
               result += " = #{default_value}"

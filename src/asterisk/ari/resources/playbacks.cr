@@ -6,7 +6,7 @@
 #  be lost the next time this file is regenerated.
 #
 #  This file was generated using ctiapps/asterisk crystal shard from the
-#  Asterisk PBX version 16.5.1.
+#  Asterisk PBX version 16.6.0.
 #
 #------------------------------------------------------------------------------
 
@@ -16,64 +16,30 @@ module Asterisk
       # Get a playback's details.
       #
       # Arguments:
-      # - `playback_id` - playback's id.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: path,
-      #   - param name: playbackId,
-      #
-      # API endpoint:
-      # - method: get
-      # - endpoint: /playbacks/{playbackId}
+      # - `playback_id` - playback's id. (required);
       #
       # Error responses:
       # - 404 - The playback cannot be found
       def get(playback_id : String) : HTTP::Client::Response | Playbacks::Playback
-        response = client.get "playbacks/#{playback_id}"
-        response.status_code.to_s =~ /^[23]\d\d$/ ? Playbacks::Playback.from_json(response.body.to_s) : response
+        format_response ari.get("playbacks/#{playback_id}"), Playbacks::Playback
       end
 
       # Stop a playback.
       #
       # Arguments:
-      # - `playback_id` - playback's id.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: path,
-      #   - param name: playbackId,
-      #
-      # API endpoint:
-      # - method: delete
-      # - endpoint: /playbacks/{playbackId}
+      # - `playback_id` - playback's id. (required);
       #
       # Error responses:
       # - 404 - The playback cannot be found
       def stop(playback_id : String)
-        client.delete "playbacks/#{playback_id}"
+        ari.delete "playbacks/#{playback_id}"
       end
 
       # Control a playback.
       #
       # Arguments:
-      # - `playback_id` - playback's id.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: path,
-      #   - param name: playbackId,
-      #
-      # - `operation` - operation to perform on the playback.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: operation,
-      #
-      # API endpoint:
-      # - method: post
-      # - endpoint: /playbacks/{playbackId}/control
+      # - `playback_id` - playback's id. (required);
+      # - `operation` - operation to perform on the playback. (required);
       #
       # Error responses:
       # - 400 - The provided operation parameter was invalid
@@ -81,7 +47,7 @@ module Asterisk
       # - 409 - The operation cannot be performed in the playback's current state
       def control(playback_id : String, operation : String)
         params = HTTP::Params.encode({"operation" => operation})
-        client.post "playbacks/#{playback_id}/control?" + params
+        ari.post "playbacks/#{playback_id}/control?" + params
       end
     end
   end

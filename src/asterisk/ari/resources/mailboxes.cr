@@ -6,7 +6,7 @@
 #  be lost the next time this file is regenerated.
 #
 #  This file was generated using ctiapps/asterisk crystal shard from the
-#  Asterisk PBX version 16.5.1.
+#  Asterisk PBX version 16.6.0.
 #
 #------------------------------------------------------------------------------
 
@@ -15,84 +15,44 @@ module Asterisk
     class Mailboxes < Resources
       # List all mailboxes.
       def list : HTTP::Client::Response | Array(Mailboxes::Mailbox)
-        response = client.get "mailboxes"
-        response.status_code.to_s =~ /^[23]\d\d$/ ? Array(Mailboxes::Mailbox).from_json(response.body.to_s) : response
+        format_response ari.get("mailboxes"), Array(Mailboxes::Mailbox)
       end
 
       # Retrieve the current state of a mailbox.
       #
       # Arguments:
-      # - `mailbox_name` - name of the mailbox.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: path,
-      #   - param name: mailboxName,
-      #
-      # API endpoint:
-      # - method: get
-      # - endpoint: /mailboxes/{mailboxName}
+      # - `mailbox_name` - name of the mailbox. (required);
       #
       # Error responses:
       # - 404 - Mailbox not found
       def get(mailbox_name : String) : HTTP::Client::Response | Mailboxes::Mailbox
-        response = client.get "mailboxes/#{mailbox_name}"
-        response.status_code.to_s =~ /^[23]\d\d$/ ? Mailboxes::Mailbox.from_json(response.body.to_s) : response
+        format_response ari.get("mailboxes/#{mailbox_name}"), Mailboxes::Mailbox
       end
 
       # Change the state of a mailbox. (Note - implicitly creates the mailbox).
       #
       # Arguments:
-      # - `mailbox_name` - name of the mailbox.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: path,
-      #   - param name: mailboxName,
-      #
-      # - `old_messages` - count of old messages in the mailbox.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: oldMessages,
-      #
-      # - `new_messages` - count of new messages in the mailbox.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: query,
-      #   - param name: newMessages,
-      #
-      # API endpoint:
-      # - method: put
-      # - endpoint: /mailboxes/{mailboxName}
+      # - `mailbox_name` - name of the mailbox. (required);
+      # - `old_messages` - count of old messages in the mailbox. (required);
+      # - `new_messages` - count of new messages in the mailbox. (required);
       #
       # Error responses:
       # - 404 - Mailbox not found
       def update(mailbox_name : String, old_messages : Int32, new_messages : Int32)
-        params = HTTP::Params.encode({"oldMessages" => old_messages.to_s, "newMessages" => new_messages.to_s})
-        client.put "mailboxes/#{mailbox_name}?" + params
+        params = HTTP::Params.encode({"oldMessages" => old_messages.to_s})
+        params += "&" + HTTP::Params.encode({"newMessages" => new_messages.to_s})
+        ari.put "mailboxes/#{mailbox_name}?" + params
       end
 
       # Destroy a mailbox.
       #
       # Arguments:
-      # - `mailbox_name` - name of the mailbox.
-      #   - Required: true,
-      #   - Allow multiple (comma-separated list): false,
-      #   ARI (http-client) related:
-      #   - http request type: path,
-      #   - param name: mailboxName,
-      #
-      # API endpoint:
-      # - method: delete
-      # - endpoint: /mailboxes/{mailboxName}
+      # - `mailbox_name` - name of the mailbox. (required);
       #
       # Error responses:
       # - 404 - Mailbox not found
       def delete(mailbox_name : String)
-        client.delete "mailboxes/#{mailbox_name}"
+        ari.delete "mailboxes/#{mailbox_name}"
       end
     end
   end

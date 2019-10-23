@@ -52,7 +52,7 @@ module Asterisk
     end
 
     def self.exec(command)
-      result = shell_command(%(asterisk -rx "#{command}"))
+      shell_command(%(asterisk -rx "#{command}"))
     end
   end
 end
