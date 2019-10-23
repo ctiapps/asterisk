@@ -3,7 +3,7 @@ name: asterisk
 description: |
   Low-level access to the Asterisk PBX interfaces (ARI, AMI, AGI - all kinds)
 
-version: 0.1.2
+version: 0.1.3
 
 authors:
   - Andrius Kairiukstis <k@andrius.mobi>
