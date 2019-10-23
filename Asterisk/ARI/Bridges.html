@@ -1,0 +1,1259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="generator" content="Crystal Docs 0.30.1">
+
+
+<link href="../../css/style.css" rel="stylesheet" type="text/css">
+
+<script type="text/javascript" src="../../js/doc.js"></script>
+<script type="text/javascript">
+  CrystalDoc.base_path = "../../";
+</script>
+
+  <meta id="repository-name" content="github.com/ctiapps/asterisk">
+  <title>Asterisk::ARI::Bridges - github.com/ctiapps/asterisk</title>
+</head>
+<body>
+
+<div class="sidebar">
+  <div class="sidebar-header">
+    <div class="search-box">
+      <input type="search" class="search-input" placeholder="Search..." spellcheck="false" aria-label="Search">
+    </div>
+
+    <div class="repository-links">
+      <a href="../../index.html">README</a>
+    </div>
+  </div>
+
+  <div class="search-results" class="hidden">
+    <ul class="search-list"></ul>
+  </div>
+
+  <div class="types-list">
+    <ul>
+  
+  <li class="parent open current" data-id="github.com/ctiapps/asterisk/Asterisk" data-name="asterisk">
+      <a href="../../Asterisk.html">Asterisk</a>
+      
+        <ul>
+  
+  <li class="parent " data-id="github.com/ctiapps/asterisk/Asterisk/AGI" data-name="asterisk::agi">
+      <a href="../../Asterisk/AGI.html">AGI</a>
+      
+        <ul>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/AGI/Commands" data-name="asterisk::agi::commands">
+      <a href="../../Asterisk/AGI/Commands.html">Commands</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/AGI/Response" data-name="asterisk::agi::response">
+      <a href="../../Asterisk/AGI/Response.html">Response</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class="parent " data-id="github.com/ctiapps/asterisk/Asterisk/AMI" data-name="asterisk::ami">
+      <a href="../../Asterisk/AMI.html">AMI</a>
+      
+        <ul>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/AMI/ActionID" data-name="asterisk::ami::actionid">
+      <a href="../../Asterisk/AMI/ActionID.html">ActionID</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/AMI/AMIData" data-name="asterisk::ami::amidata">
+      <a href="../../Asterisk/AMI/AMIData.html">AMIData</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/AMI/ConnectionError" data-name="asterisk::ami::connectionerror">
+      <a href="../../Asterisk/AMI/ConnectionError.html">ConnectionError</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/AMI/Event" data-name="asterisk::ami::event">
+      <a href="../../Asterisk/AMI/Event.html">Event</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/AMI/EventName" data-name="asterisk::ami::eventname">
+      <a href="../../Asterisk/AMI/EventName.html">EventName</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/AMI/LoginError" data-name="asterisk::ami::loginerror">
+      <a href="../../Asterisk/AMI/LoginError.html">LoginError</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/AMI/NotBootedError" data-name="asterisk::ami::notbootederror">
+      <a href="../../Asterisk/AMI/NotBootedError.html">NotBootedError</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/AMI/Response" data-name="asterisk::ami::response">
+      <a href="../../Asterisk/AMI/Response.html">Response</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class="parent open current" data-id="github.com/ctiapps/asterisk/Asterisk/ARI" data-name="asterisk::ari">
+      <a href="../../Asterisk/ARI.html">ARI</a>
+      
+        <ul>
+  
+  <li class="parent " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Applications" data-name="asterisk::ari::applications">
+      <a href="../../Asterisk/ARI/Applications.html">Applications</a>
+      
+        <ul>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Applications/Application" data-name="asterisk::ari::applications::application">
+      <a href="../../Asterisk/ARI/Applications/Application.html">Application</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class="parent " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Asterisk" data-name="asterisk::ari::asterisk">
+      <a href="../../Asterisk/ARI/Asterisk.html">Asterisk</a>
+      
+        <ul>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Asterisk/AsteriskInfo" data-name="asterisk::ari::asterisk::asteriskinfo">
+      <a href="../../Asterisk/ARI/Asterisk/AsteriskInfo.html">AsteriskInfo</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Asterisk/AsteriskPing" data-name="asterisk::ari::asterisk::asteriskping">
+      <a href="../../Asterisk/ARI/Asterisk/AsteriskPing.html">AsteriskPing</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Asterisk/BuildInfo" data-name="asterisk::ari::asterisk::buildinfo">
+      <a href="../../Asterisk/ARI/Asterisk/BuildInfo.html">BuildInfo</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Asterisk/ConfigInfo" data-name="asterisk::ari::asterisk::configinfo">
+      <a href="../../Asterisk/ARI/Asterisk/ConfigInfo.html">ConfigInfo</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Asterisk/ConfigTuple" data-name="asterisk::ari::asterisk::configtuple">
+      <a href="../../Asterisk/ARI/Asterisk/ConfigTuple.html">ConfigTuple</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Asterisk/LogChannel" data-name="asterisk::ari::asterisk::logchannel">
+      <a href="../../Asterisk/ARI/Asterisk/LogChannel.html">LogChannel</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Asterisk/Module" data-name="asterisk::ari::asterisk::module">
+      <a href="../../Asterisk/ARI/Asterisk/Module.html">Module</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Asterisk/SetId" data-name="asterisk::ari::asterisk::setid">
+      <a href="../../Asterisk/ARI/Asterisk/SetId.html">SetId</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Asterisk/StatusInfo" data-name="asterisk::ari::asterisk::statusinfo">
+      <a href="../../Asterisk/ARI/Asterisk/StatusInfo.html">StatusInfo</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Asterisk/SystemInfo" data-name="asterisk::ari::asterisk::systeminfo">
+      <a href="../../Asterisk/ARI/Asterisk/SystemInfo.html">SystemInfo</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Asterisk/Variable" data-name="asterisk::ari::asterisk::variable">
+      <a href="../../Asterisk/ARI/Asterisk/Variable.html">Variable</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/AuthenticationError" data-name="asterisk::ari::authenticationerror">
+      <a href="../../Asterisk/ARI/AuthenticationError.html">AuthenticationError</a>
+      
+    </li>
+  
+  <li class="parent open current" data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Bridges" data-name="asterisk::ari::bridges">
+      <a href="../../Asterisk/ARI/Bridges.html">Bridges</a>
+      
+        <ul>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Bridges/Bridge" data-name="asterisk::ari::bridges::bridge">
+      <a href="../../Asterisk/ARI/Bridges/Bridge.html">Bridge</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class="parent " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Channels" data-name="asterisk::ari::channels">
+      <a href="../../Asterisk/ARI/Channels.html">Channels</a>
+      
+        <ul>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Channels/CallerID" data-name="asterisk::ari::channels::callerid">
+      <a href="../../Asterisk/ARI/Channels/CallerID.html">CallerID</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Channels/Channel" data-name="asterisk::ari::channels::channel">
+      <a href="../../Asterisk/ARI/Channels/Channel.html">Channel</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Channels/Dialed" data-name="asterisk::ari::channels::dialed">
+      <a href="../../Asterisk/ARI/Channels/Dialed.html">Dialed</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Channels/DialplanCEP" data-name="asterisk::ari::channels::dialplancep">
+      <a href="../../Asterisk/ARI/Channels/DialplanCEP.html">DialplanCEP</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Channels/ExternalMedia" data-name="asterisk::ari::channels::externalmedia">
+      <a href="../../Asterisk/ARI/Channels/ExternalMedia.html">ExternalMedia</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Channels/RTPstat" data-name="asterisk::ari::channels::rtpstat">
+      <a href="../../Asterisk/ARI/Channels/RTPstat.html">RTPstat</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/ConnectionError" data-name="asterisk::ari::connectionerror">
+      <a href="../../Asterisk/ARI/ConnectionError.html">ConnectionError</a>
+      
+    </li>
+  
+  <li class="parent " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/DeviceStates" data-name="asterisk::ari::devicestates">
+      <a href="../../Asterisk/ARI/DeviceStates.html">DeviceStates</a>
+      
+        <ul>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/DeviceStates/DeviceState" data-name="asterisk::ari::devicestates::devicestate">
+      <a href="../../Asterisk/ARI/DeviceStates/DeviceState.html">DeviceState</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class="parent " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Endpoints" data-name="asterisk::ari::endpoints">
+      <a href="../../Asterisk/ARI/Endpoints.html">Endpoints</a>
+      
+        <ul>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Endpoints/Endpoint" data-name="asterisk::ari::endpoints::endpoint">
+      <a href="../../Asterisk/ARI/Endpoints/Endpoint.html">Endpoint</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Endpoints/TextMessage" data-name="asterisk::ari::endpoints::textmessage">
+      <a href="../../Asterisk/ARI/Endpoints/TextMessage.html">TextMessage</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Endpoints/TextMessageVariable" data-name="asterisk::ari::endpoints::textmessagevariable">
+      <a href="../../Asterisk/ARI/Endpoints/TextMessageVariable.html">TextMessageVariable</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class="parent " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events" data-name="asterisk::ari::events">
+      <a href="../../Asterisk/ARI/Events.html">Events</a>
+      
+        <ul>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/ApplicationMoveFailed" data-name="asterisk::ari::events::applicationmovefailed">
+      <a href="../../Asterisk/ARI/Events/ApplicationMoveFailed.html">ApplicationMoveFailed</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/ApplicationReplaced" data-name="asterisk::ari::events::applicationreplaced">
+      <a href="../../Asterisk/ARI/Events/ApplicationReplaced.html">ApplicationReplaced</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/BridgeAttendedTransfer" data-name="asterisk::ari::events::bridgeattendedtransfer">
+      <a href="../../Asterisk/ARI/Events/BridgeAttendedTransfer.html">BridgeAttendedTransfer</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/BridgeBlindTransfer" data-name="asterisk::ari::events::bridgeblindtransfer">
+      <a href="../../Asterisk/ARI/Events/BridgeBlindTransfer.html">BridgeBlindTransfer</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/BridgeCreated" data-name="asterisk::ari::events::bridgecreated">
+      <a href="../../Asterisk/ARI/Events/BridgeCreated.html">BridgeCreated</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/BridgeDestroyed" data-name="asterisk::ari::events::bridgedestroyed">
+      <a href="../../Asterisk/ARI/Events/BridgeDestroyed.html">BridgeDestroyed</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/BridgeMerged" data-name="asterisk::ari::events::bridgemerged">
+      <a href="../../Asterisk/ARI/Events/BridgeMerged.html">BridgeMerged</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/BridgeVideoSourceChanged" data-name="asterisk::ari::events::bridgevideosourcechanged">
+      <a href="../../Asterisk/ARI/Events/BridgeVideoSourceChanged.html">BridgeVideoSourceChanged</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/ChannelCallerId" data-name="asterisk::ari::events::channelcallerid">
+      <a href="../../Asterisk/ARI/Events/ChannelCallerId.html">ChannelCallerId</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/ChannelConnectedLine" data-name="asterisk::ari::events::channelconnectedline">
+      <a href="../../Asterisk/ARI/Events/ChannelConnectedLine.html">ChannelConnectedLine</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/ChannelCreated" data-name="asterisk::ari::events::channelcreated">
+      <a href="../../Asterisk/ARI/Events/ChannelCreated.html">ChannelCreated</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/ChannelDestroyed" data-name="asterisk::ari::events::channeldestroyed">
+      <a href="../../Asterisk/ARI/Events/ChannelDestroyed.html">ChannelDestroyed</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/ChannelDialplan" data-name="asterisk::ari::events::channeldialplan">
+      <a href="../../Asterisk/ARI/Events/ChannelDialplan.html">ChannelDialplan</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/ChannelDtmfReceived" data-name="asterisk::ari::events::channeldtmfreceived">
+      <a href="../../Asterisk/ARI/Events/ChannelDtmfReceived.html">ChannelDtmfReceived</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/ChannelEnteredBridge" data-name="asterisk::ari::events::channelenteredbridge">
+      <a href="../../Asterisk/ARI/Events/ChannelEnteredBridge.html">ChannelEnteredBridge</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/ChannelHangupRequest" data-name="asterisk::ari::events::channelhanguprequest">
+      <a href="../../Asterisk/ARI/Events/ChannelHangupRequest.html">ChannelHangupRequest</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/ChannelHold" data-name="asterisk::ari::events::channelhold">
+      <a href="../../Asterisk/ARI/Events/ChannelHold.html">ChannelHold</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/ChannelLeftBridge" data-name="asterisk::ari::events::channelleftbridge">
+      <a href="../../Asterisk/ARI/Events/ChannelLeftBridge.html">ChannelLeftBridge</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/ChannelStateChange" data-name="asterisk::ari::events::channelstatechange">
+      <a href="../../Asterisk/ARI/Events/ChannelStateChange.html">ChannelStateChange</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/ChannelTalkingFinished" data-name="asterisk::ari::events::channeltalkingfinished">
+      <a href="../../Asterisk/ARI/Events/ChannelTalkingFinished.html">ChannelTalkingFinished</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/ChannelTalkingStarted" data-name="asterisk::ari::events::channeltalkingstarted">
+      <a href="../../Asterisk/ARI/Events/ChannelTalkingStarted.html">ChannelTalkingStarted</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/ChannelUnhold" data-name="asterisk::ari::events::channelunhold">
+      <a href="../../Asterisk/ARI/Events/ChannelUnhold.html">ChannelUnhold</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/ChannelUserevent" data-name="asterisk::ari::events::channeluserevent">
+      <a href="../../Asterisk/ARI/Events/ChannelUserevent.html">ChannelUserevent</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/ChannelVarset" data-name="asterisk::ari::events::channelvarset">
+      <a href="../../Asterisk/ARI/Events/ChannelVarset.html">ChannelVarset</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/ContactInfo" data-name="asterisk::ari::events::contactinfo">
+      <a href="../../Asterisk/ARI/Events/ContactInfo.html">ContactInfo</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/ContactStatusChange" data-name="asterisk::ari::events::contactstatuschange">
+      <a href="../../Asterisk/ARI/Events/ContactStatusChange.html">ContactStatusChange</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/DeviceStateChanged" data-name="asterisk::ari::events::devicestatechanged">
+      <a href="../../Asterisk/ARI/Events/DeviceStateChanged.html">DeviceStateChanged</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/Dial" data-name="asterisk::ari::events::dial">
+      <a href="../../Asterisk/ARI/Events/Dial.html">Dial</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/EndpointStateChange" data-name="asterisk::ari::events::endpointstatechange">
+      <a href="../../Asterisk/ARI/Events/EndpointStateChange.html">EndpointStateChange</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/Event" data-name="asterisk::ari::events::event">
+      <a href="../../Asterisk/ARI/Events/Event.html">Event</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/Message" data-name="asterisk::ari::events::message">
+      <a href="../../Asterisk/ARI/Events/Message.html">Message</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/MissingParams" data-name="asterisk::ari::events::missingparams">
+      <a href="../../Asterisk/ARI/Events/MissingParams.html">MissingParams</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/Peer" data-name="asterisk::ari::events::peer">
+      <a href="../../Asterisk/ARI/Events/Peer.html">Peer</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/PeerStatusChange" data-name="asterisk::ari::events::peerstatuschange">
+      <a href="../../Asterisk/ARI/Events/PeerStatusChange.html">PeerStatusChange</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/PlaybackContinuing" data-name="asterisk::ari::events::playbackcontinuing">
+      <a href="../../Asterisk/ARI/Events/PlaybackContinuing.html">PlaybackContinuing</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/PlaybackFinished" data-name="asterisk::ari::events::playbackfinished">
+      <a href="../../Asterisk/ARI/Events/PlaybackFinished.html">PlaybackFinished</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/PlaybackStarted" data-name="asterisk::ari::events::playbackstarted">
+      <a href="../../Asterisk/ARI/Events/PlaybackStarted.html">PlaybackStarted</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/RecordingFailed" data-name="asterisk::ari::events::recordingfailed">
+      <a href="../../Asterisk/ARI/Events/RecordingFailed.html">RecordingFailed</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/RecordingFinished" data-name="asterisk::ari::events::recordingfinished">
+      <a href="../../Asterisk/ARI/Events/RecordingFinished.html">RecordingFinished</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/RecordingStarted" data-name="asterisk::ari::events::recordingstarted">
+      <a href="../../Asterisk/ARI/Events/RecordingStarted.html">RecordingStarted</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/StasisEnd" data-name="asterisk::ari::events::stasisend">
+      <a href="../../Asterisk/ARI/Events/StasisEnd.html">StasisEnd</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/StasisStart" data-name="asterisk::ari::events::stasisstart">
+      <a href="../../Asterisk/ARI/Events/StasisStart.html">StasisStart</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/TextMessageReceived" data-name="asterisk::ari::events::textmessagereceived">
+      <a href="../../Asterisk/ARI/Events/TextMessageReceived.html">TextMessageReceived</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class="parent " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Mailboxes" data-name="asterisk::ari::mailboxes">
+      <a href="../../Asterisk/ARI/Mailboxes.html">Mailboxes</a>
+      
+        <ul>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Mailboxes/Mailbox" data-name="asterisk::ari::mailboxes::mailbox">
+      <a href="../../Asterisk/ARI/Mailboxes/Mailbox.html">Mailbox</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class="parent " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Playbacks" data-name="asterisk::ari::playbacks">
+      <a href="../../Asterisk/ARI/Playbacks.html">Playbacks</a>
+      
+        <ul>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Playbacks/Playback" data-name="asterisk::ari::playbacks::playback">
+      <a href="../../Asterisk/ARI/Playbacks/Playback.html">Playback</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class="parent " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Recordings" data-name="asterisk::ari::recordings">
+      <a href="../../Asterisk/ARI/Recordings.html">Recordings</a>
+      
+        <ul>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Recordings/LiveRecording" data-name="asterisk::ari::recordings::liverecording">
+      <a href="../../Asterisk/ARI/Recordings/LiveRecording.html">LiveRecording</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Recordings/StoredRecording" data-name="asterisk::ari::recordings::storedrecording">
+      <a href="../../Asterisk/ARI/Recordings/StoredRecording.html">StoredRecording</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Request" data-name="asterisk::ari::request">
+      <a href="../../Asterisk/ARI/Request.html">Request</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Resources" data-name="asterisk::ari::resources">
+      <a href="../../Asterisk/ARI/Resources.html">Resources</a>
+      
+    </li>
+  
+  <li class="parent " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Sounds" data-name="asterisk::ari::sounds">
+      <a href="../../Asterisk/ARI/Sounds.html">Sounds</a>
+      
+        <ul>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Sounds/FormatLangPair" data-name="asterisk::ari::sounds::formatlangpair">
+      <a href="../../Asterisk/ARI/Sounds/FormatLangPair.html">FormatLangPair</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Sounds/Sound" data-name="asterisk::ari::sounds::sound">
+      <a href="../../Asterisk/ARI/Sounds/Sound.html">Sound</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class="parent " data-id="github.com/ctiapps/asterisk/Asterisk/AsyncAGI" data-name="asterisk::asyncagi">
+      <a href="../../Asterisk/AsyncAGI.html">AsyncAGI</a>
+      
+        <ul>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/AsyncAGI/Server" data-name="asterisk::asyncagi::server">
+      <a href="../../Asterisk/AsyncAGI/Server.html">Server</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/FastAGI" data-name="asterisk::fastagi">
+      <a href="../../Asterisk/FastAGI.html">FastAGI</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+</ul>
+
+  </div>
+</div>
+
+
+<div class="main-content">
+<h1 class="type-name">
+
+  <span class="kind">class</span> Asterisk::ARI::Bridges
+
+</h1>
+
+
+  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../Asterisk/ARI/Bridges.html">Asterisk::ARI::Bridges</a></li><li class="superclass"><a href="../../Asterisk/ARI/Resources.html">Asterisk::ARI::Resources</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <h2>Defined in:</h2>
+  
+    
+      <a href="https://github.com/ctiapps/asterisk/blob/ffd9689a881fdb6fff1f700a69cc6c3a6b0b6b9e/src/asterisk/ari/resources/bridges.cr#L15" target="_blank">
+        asterisk/ari/resources/bridges.cr
+      </a>
+    
+    <br/>
+  
+    
+      <a href="https://github.com/ctiapps/asterisk/blob/ffd9689a881fdb6fff1f700a69cc6c3a6b0b6b9e/src/asterisk/ari/models/bridges_bridge.cr#L15" target="_blank">
+        asterisk/ari/models/bridges_bridge.cr
+      </a>
+    
+    <br/>
+  
+
+
+
+
+
+
+
+
+
+  <h2>Instance Method Summary</h2>
+  <ul class="list-summary">
+    
+      <li class="entry-summary">
+        <a href="#add_channel(bridge_id:String,channel:String,role:String?=nil,absorb_dtmf:Bool?=false,mute:Bool?=false)-instance-method" class="signature"><strong>#add_channel</strong>(bridge_id : String, channel : String, role : String? = <span class="n">nil</span>, absorb_dtmf : Bool? = <span class="n">false</span>, mute : Bool? = <span class="n">false</span>)</a>
+        
+          <div class="summary"><p>Add a channel to a bridge.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#clear_video_source(bridge_id:String)-instance-method" class="signature"><strong>#clear_video_source</strong>(bridge_id : String)</a>
+        
+          <div class="summary"><p>Removes any explicit video source in a multi-party mixing bridge.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#create(type:String?=nil,bridge_id:String?=nil,name:String?=nil):HTTP::Client::Response%7CBridges::Bridge-instance-method" class="signature"><strong>#create</strong>(type : String? = <span class="n">nil</span>, bridge_id : String? = <span class="n">nil</span>, name : String? = <span class="n">nil</span>) : HTTP::Client::Response | Bridges::Bridge</a>
+        
+          <div class="summary"><p>Create a new bridge.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#create_with_id(bridge_id:String,type:String?=nil,name:String?=nil):HTTP::Client::Response%7CBridges::Bridge-instance-method" class="signature"><strong>#create_with_id</strong>(bridge_id : String, type : String? = <span class="n">nil</span>, name : String? = <span class="n">nil</span>) : HTTP::Client::Response | Bridges::Bridge</a>
+        
+          <div class="summary"><p>Create a new bridge or updates an existing one.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#destroy(bridge_id:String)-instance-method" class="signature"><strong>#destroy</strong>(bridge_id : String)</a>
+        
+          <div class="summary"><p>Shut down a bridge.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#get(bridge_id:String):HTTP::Client::Response%7CBridges::Bridge-instance-method" class="signature"><strong>#get</strong>(bridge_id : String) : HTTP::Client::Response | Bridges::Bridge</a>
+        
+          <div class="summary"><p>Get bridge details.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#list:HTTP::Client::Response%7CArray(Bridges::Bridge)-instance-method" class="signature"><strong>#list</strong> : HTTP::Client::Response | Array(Bridges::Bridge)</a>
+        
+          <div class="summary"><p>List all active bridges in Asterisk.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#play(bridge_id:String,media:String,lang:String?=nil,offsetms:Int32?=0,skipms:Int32?=3000,playback_id:String?=nil):HTTP::Client::Response%7CPlaybacks::Playback-instance-method" class="signature"><strong>#play</strong>(bridge_id : String, media : String, lang : String? = <span class="n">nil</span>, offsetms : Int32? = <span class="n">0</span>, skipms : Int32? = <span class="n">3000</span>, playback_id : String? = <span class="n">nil</span>) : HTTP::Client::Response | Playbacks::Playback</a>
+        
+          <div class="summary"><p>Start playback of media on a bridge.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#play_with_id(bridge_id:String,playback_id:String,media:String,lang:String?=nil,offsetms:Int32?=0,skipms:Int32?=3000):HTTP::Client::Response%7CPlaybacks::Playback-instance-method" class="signature"><strong>#play_with_id</strong>(bridge_id : String, playback_id : String, media : String, lang : String? = <span class="n">nil</span>, offsetms : Int32? = <span class="n">0</span>, skipms : Int32? = <span class="n">3000</span>) : HTTP::Client::Response | Playbacks::Playback</a>
+        
+          <div class="summary"><p>Start playback of media on a bridge.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#record(bridge_id:String,name:String,format:String,max_duration_seconds:Int32?=0,max_silence_seconds:Int32?=0,if_exists:String?=&quot;fail&quot;,beep:Bool?=false,terminate_on:String?=&quot;none&quot;):HTTP::Client::Response%7CRecordings::LiveRecording-instance-method" class="signature"><strong>#record</strong>(bridge_id : String, name : String, format : String, max_duration_seconds : Int32? = <span class="n">0</span>, max_silence_seconds : Int32? = <span class="n">0</span>, if_exists : String? = <span class="s">&quot;fail&quot;</span>, beep : Bool? = <span class="n">false</span>, terminate_on : String? = <span class="s">&quot;none&quot;</span>) : HTTP::Client::Response | Recordings::LiveRecording</a>
+        
+          <div class="summary"><p>Start a recording.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#remove_channel(bridge_id:String,channel:String)-instance-method" class="signature"><strong>#remove_channel</strong>(bridge_id : String, channel : String)</a>
+        
+          <div class="summary"><p>Remove a channel from a bridge.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#set_video_source(bridge_id:String,channel_id:String)-instance-method" class="signature"><strong>#set_video_source</strong>(bridge_id : String, channel_id : String)</a>
+        
+          <div class="summary"><p>Set a channel as the video source in a multi-party mixing bridge.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#start_moh(bridge_id:String,moh_class:String?=nil)-instance-method" class="signature"><strong>#start_moh</strong>(bridge_id : String, moh_class : String? = <span class="n">nil</span>)</a>
+        
+          <div class="summary"><p>Play music on hold to a bridge or change the MOH class that is playing.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#stop_moh(bridge_id:String)-instance-method" class="signature"><strong>#stop_moh</strong>(bridge_id : String)</a>
+        
+          <div class="summary"><p>Stop playing music on hold to a bridge.</p></div>
+        
+      </li>
+    
+  </ul>
+
+
+
+
+
+<div class="methods-inherited">
+  
+    
+
+  <h3>Instance methods inherited from class <code><a href="../../Asterisk/ARI/Resources.html">Asterisk::ARI::Resources</a></code></h3>
+  
+  
+    <a href="../../Asterisk/ARI/Resources.html#ari:ARI-instance-method" class="tooltip">
+      <span>ari : ARI</span>
+    ari</a>
+    
+  
+
+
+    
+
+  <h3>Constructor methods inherited from class <code><a href="../../Asterisk/ARI/Resources.html">Asterisk::ARI::Resources</a></code></h3>
+  
+  
+    <a href="../../Asterisk/ARI/Resources.html#new(ari)-class-method" class="tooltip">
+      <span>new(ari)</span>
+    new</a>
+    
+  
+
+
+    
+
+
+  
+    
+
+
+    
+
+
+    
+
+
+  
+    
+
+
+    
+
+
+    
+
+
+  
+</div>
+
+
+
+
+
+
+  <h2>Instance Method Detail</h2>
+  
+    <div class="entry-detail" id="add_channel(bridge_id:String,channel:String,role:String?=nil,absorb_dtmf:Bool?=false,mute:Bool?=false)-instance-method">
+      <div class="signature">
+        
+        def <strong>add_channel</strong>(bridge_id : String, channel : String, role : String? = <span class="n">nil</span>, absorb_dtmf : Bool? = <span class="n">false</span>, mute : Bool? = <span class="n">false</span>)
+
+        <a class="method-permalink" href="#add_channel(bridge_id:String,channel:String,role:String?=nil,absorb_dtmf:Bool?=false,mute:Bool?=false)-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Add a channel to a bridge.</p>
+
+<p>Arguments:</p>
+
+<ul><li><code>bridge_id</code> - bridge's id. (required);</li><li><code>channel</code> - ids of channels to add to bridge. (required). Allow multiple instances (comma-separated list);</li><li><code>role</code> - channel's role in the bridge;</li><li><code>absorb_dtmf</code> - absorb DTMF coming from this channel, preventing it to pass through to the bridge;</li><li><code>mute</code> - mute audio from this channel, preventing it to pass through to the bridge;</li></ul>
+
+<p>Error responses:</p>
+
+<ul><li>400 - Channel not found</li><li>404 - Bridge not found</li><li>409 - Bridge not in Stasis application; Channel currently recording</li><li>422 - Channel not in Stasis application</li></ul>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/ctiapps/asterisk/blob/ffd9689a881fdb6fff1f700a69cc6c3a6b0b6b9e/src/asterisk/ari/resources/bridges.cr#L90" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="clear_video_source(bridge_id:String)-instance-method">
+      <div class="signature">
+        
+        def <strong>clear_video_source</strong>(bridge_id : String)
+
+        <a class="method-permalink" href="#clear_video_source(bridge_id:String)-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Removes any explicit video source in a multi-party mixing bridge. This operation has no effect on bridges with two or fewer participants. When no explicit video source is set, talk detection will be used to determine the active video stream.</p>
+
+<p>Arguments:</p>
+
+<ul><li><code>bridge_id</code> - bridge's id. (required);</li></ul>
+
+<p>Error responses:</p>
+
+<ul><li>404 - Bridge not found</li></ul>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/ctiapps/asterisk/blob/ffd9689a881fdb6fff1f700a69cc6c3a6b0b6b9e/src/asterisk/ari/resources/bridges.cr#L138" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="create(type:String?=nil,bridge_id:String?=nil,name:String?=nil):HTTP::Client::Response|Bridges::Bridge-instance-method">
+      <div class="signature">
+        
+        def <strong>create</strong>(type : String? = <span class="n">nil</span>, bridge_id : String? = <span class="n">nil</span>, name : String? = <span class="n">nil</span>) : HTTP::Client::Response | <a href="../../Asterisk/ARI/Bridges/Bridge.html">Bridges::Bridge</a>
+
+        <a class="method-permalink" href="#create(type:String?=nil,bridge_id:String?=nil,name:String?=nil):HTTP::Client::Response%7CBridges::Bridge-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Create a new bridge.</p>
+
+<p>Arguments:</p>
+
+<ul><li><code>type</code> - comma separated list of bridge type attributes (mixing, holding, dtmf_events, proxy_media, video_sfu);</li><li><code>bridge_id</code> - unique ID to give to the bridge being created;</li><li><code>name</code> - name to give to the bridge being created;</li></ul>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/ctiapps/asterisk/blob/ffd9689a881fdb6fff1f700a69cc6c3a6b0b6b9e/src/asterisk/ari/resources/bridges.cr#L27" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="create_with_id(bridge_id:String,type:String?=nil,name:String?=nil):HTTP::Client::Response|Bridges::Bridge-instance-method">
+      <div class="signature">
+        
+        def <strong>create_with_id</strong>(bridge_id : String, type : String? = <span class="n">nil</span>, name : String? = <span class="n">nil</span>) : HTTP::Client::Response | <a href="../../Asterisk/ARI/Bridges/Bridge.html">Bridges::Bridge</a>
+
+        <a class="method-permalink" href="#create_with_id(bridge_id:String,type:String?=nil,name:String?=nil):HTTP::Client::Response%7CBridges::Bridge-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Create a new bridge or updates an existing one.</p>
+
+<p>Arguments:</p>
+
+<ul><li><code>bridge_id</code> - unique ID to give to the bridge being created. (required);</li><li><code>type</code> - comma separated list of bridge type attributes (mixing, holding, dtmf_events, proxy_media, video_sfu) to set;</li><li><code>name</code> - set the name of the bridge;</li></ul>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/ctiapps/asterisk/blob/ffd9689a881fdb6fff1f700a69cc6c3a6b0b6b9e/src/asterisk/ari/resources/bridges.cr#L44" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="destroy(bridge_id:String)-instance-method">
+      <div class="signature">
+        
+        def <strong>destroy</strong>(bridge_id : String)
+
+        <a class="method-permalink" href="#destroy(bridge_id:String)-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Shut down a bridge.</p>
+
+<p>Arguments:</p>
+
+<ul><li><code>bridge_id</code> - bridge's id. (required);</li></ul>
+
+<p>Error responses:</p>
+
+<ul><li>404 - Bridge not found</li></ul>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/ctiapps/asterisk/blob/ffd9689a881fdb6fff1f700a69cc6c3a6b0b6b9e/src/asterisk/ari/resources/bridges.cr#L72" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="get(bridge_id:String):HTTP::Client::Response|Bridges::Bridge-instance-method">
+      <div class="signature">
+        
+        def <strong>get</strong>(bridge_id : String) : HTTP::Client::Response | <a href="../../Asterisk/ARI/Bridges/Bridge.html">Bridges::Bridge</a>
+
+        <a class="method-permalink" href="#get(bridge_id:String):HTTP::Client::Response%7CBridges::Bridge-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Get bridge details.</p>
+
+<p>Arguments:</p>
+
+<ul><li><code>bridge_id</code> - bridge's id. (required);</li></ul>
+
+<p>Error responses:</p>
+
+<ul><li>404 - Bridge not found</li></ul>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/ctiapps/asterisk/blob/ffd9689a881fdb6fff1f700a69cc6c3a6b0b6b9e/src/asterisk/ari/resources/bridges.cr#L61" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="list:HTTP::Client::Response|Array(Bridges::Bridge)-instance-method">
+      <div class="signature">
+        
+        def <strong>list</strong> : HTTP::Client::Response | Array(<a href="../../Asterisk/ARI/Bridges/Bridge.html">Bridges::Bridge</a>)
+
+        <a class="method-permalink" href="#list:HTTP::Client::Response%7CArray(Bridges::Bridge)-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>List all active bridges in Asterisk.</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/ctiapps/asterisk/blob/ffd9689a881fdb6fff1f700a69cc6c3a6b0b6b9e/src/asterisk/ari/resources/bridges.cr#L17" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="play(bridge_id:String,media:String,lang:String?=nil,offsetms:Int32?=0,skipms:Int32?=3000,playback_id:String?=nil):HTTP::Client::Response|Playbacks::Playback-instance-method">
+      <div class="signature">
+        
+        def <strong>play</strong>(bridge_id : String, media : String, lang : String? = <span class="n">nil</span>, offsetms : Int32? = <span class="n">0</span>, skipms : Int32? = <span class="n">3000</span>, playback_id : String? = <span class="n">nil</span>) : HTTP::Client::Response | <a href="../../Asterisk/ARI/Playbacks/Playback.html">Playbacks::Playback</a>
+
+        <a class="method-permalink" href="#play(bridge_id:String,media:String,lang:String?=nil,offsetms:Int32?=0,skipms:Int32?=3000,playback_id:String?=nil):HTTP::Client::Response%7CPlaybacks::Playback-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Start playback of media on a bridge.</p>
+
+<p>Arguments:</p>
+
+<ul><li><code>bridge_id</code> - bridge's id. (required);</li><li><code>media</code> - media URIs to play. (required). Allow multiple instances (comma-separated list);</li><li><code>lang</code> - for sounds, selects language for sound;</li><li><code>offsetms</code> - number of milliseconds to skip before playing. Only applies to the first URI if multiple media URIs are specified;</li><li><code>skipms</code> - number of milliseconds to skip for forward/reverse operations;</li><li><code>playback_id</code> - playback Id;</li></ul>
+
+<p>Error responses:</p>
+
+<ul><li>404 - Bridge not found</li><li>409 - Bridge not in a Stasis application</li></ul>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/ctiapps/asterisk/blob/ffd9689a881fdb6fff1f700a69cc6c3a6b0b6b9e/src/asterisk/ari/resources/bridges.cr#L184" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="play_with_id(bridge_id:String,playback_id:String,media:String,lang:String?=nil,offsetms:Int32?=0,skipms:Int32?=3000):HTTP::Client::Response|Playbacks::Playback-instance-method">
+      <div class="signature">
+        
+        def <strong>play_with_id</strong>(bridge_id : String, playback_id : String, media : String, lang : String? = <span class="n">nil</span>, offsetms : Int32? = <span class="n">0</span>, skipms : Int32? = <span class="n">3000</span>) : HTTP::Client::Response | <a href="../../Asterisk/ARI/Playbacks/Playback.html">Playbacks::Playback</a>
+
+        <a class="method-permalink" href="#play_with_id(bridge_id:String,playback_id:String,media:String,lang:String?=nil,offsetms:Int32?=0,skipms:Int32?=3000):HTTP::Client::Response%7CPlaybacks::Playback-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Start playback of media on a bridge.</p>
+
+<p>Arguments:</p>
+
+<ul><li><code>bridge_id</code> - bridge's id. (required);</li><li><code>playback_id</code> - playback ID. (required);</li><li><code>media</code> - media URIs to play. (required). Allow multiple instances (comma-separated list);</li><li><code>lang</code> - for sounds, selects language for sound;</li><li><code>offsetms</code> - number of milliseconds to skip before playing. Only applies to the first URI if multiple media URIs are specified;</li><li><code>skipms</code> - number of milliseconds to skip for forward/reverse operations;</li></ul>
+
+<p>Error responses:</p>
+
+<ul><li>404 - Bridge not found</li><li>409 - Bridge not in a Stasis application</li></ul>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/ctiapps/asterisk/blob/ffd9689a881fdb6fff1f700a69cc6c3a6b0b6b9e/src/asterisk/ari/resources/bridges.cr#L210" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="record(bridge_id:String,name:String,format:String,max_duration_seconds:Int32?=0,max_silence_seconds:Int32?=0,if_exists:String?=&amp;quot;fail&amp;quot;,beep:Bool?=false,terminate_on:String?=&amp;quot;none&amp;quot;):HTTP::Client::Response|Recordings::LiveRecording-instance-method">
+      <div class="signature">
+        
+        def <strong>record</strong>(bridge_id : String, name : String, format : String, max_duration_seconds : Int32? = <span class="n">0</span>, max_silence_seconds : Int32? = <span class="n">0</span>, if_exists : String? = <span class="s">&quot;fail&quot;</span>, beep : Bool? = <span class="n">false</span>, terminate_on : String? = <span class="s">&quot;none&quot;</span>) : HTTP::Client::Response | <a href="../../Asterisk/ARI/Recordings/LiveRecording.html">Recordings::LiveRecording</a>
+
+        <a class="method-permalink" href="#record(bridge_id:String,name:String,format:String,max_duration_seconds:Int32?=0,max_silence_seconds:Int32?=0,if_exists:String?=&quot;fail&quot;,beep:Bool?=false,terminate_on:String?=&quot;none&quot;):HTTP::Client::Response%7CRecordings::LiveRecording-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Start a recording.</p>
+
+<p>Arguments:</p>
+
+<ul><li><code>bridge_id</code> - bridge's id. (required);</li><li><code>name</code> - recording's filename. (required);</li><li><code>format</code> - format to encode audio in. (required);</li><li><code>max_duration_seconds</code> - maximum duration of the recording, in seconds. 0 for no limit;</li><li><code>max_silence_seconds</code> - maximum duration of silence, in seconds. 0 for no limit;</li><li><code>if_exists</code> - action to take if a recording with the same name already exists;</li><li><code>beep</code> - play beep when recording begins;</li><li><code>terminate_on</code> - dTMF input to terminate recording;</li></ul>
+
+<p>Error responses:</p>
+
+<ul><li>400 - Invalid parameters</li><li>404 - Bridge not found</li><li>409 - Bridge is not in a Stasis application; A recording with the same name already exists on the system and can not be overwritten because it is in progress or ifExists=fail</li><li>422 - The format specified is unknown on this system</li></ul>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/ctiapps/asterisk/blob/ffd9689a881fdb6fff1f700a69cc6c3a6b0b6b9e/src/asterisk/ari/resources/bridges.cr#L239" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="remove_channel(bridge_id:String,channel:String)-instance-method">
+      <div class="signature">
+        
+        def <strong>remove_channel</strong>(bridge_id : String, channel : String)
+
+        <a class="method-permalink" href="#remove_channel(bridge_id:String,channel:String)-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Remove a channel from a bridge.</p>
+
+<p>Arguments:</p>
+
+<ul><li><code>bridge_id</code> - bridge's id. (required);</li><li><code>channel</code> - ids of channels to remove from bridge. (required). Allow multiple instances (comma-separated list);</li></ul>
+
+<p>Error responses:</p>
+
+<ul><li>400 - Channel not found</li><li>404 - Bridge not found</li><li>409 - Bridge not in Stasis application</li><li>422 - Channel not in this bridge</li></ul>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/ctiapps/asterisk/blob/ffd9689a881fdb6fff1f700a69cc6c3a6b0b6b9e/src/asterisk/ari/resources/bridges.cr#L112" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="set_video_source(bridge_id:String,channel_id:String)-instance-method">
+      <div class="signature">
+        
+        def <strong>set_video_source</strong>(bridge_id : String, channel_id : String)
+
+        <a class="method-permalink" href="#set_video_source(bridge_id:String,channel_id:String)-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Set a channel as the video source in a multi-party mixing bridge. This operation has no effect on bridges with two or fewer participants.</p>
+
+<p>Arguments:</p>
+
+<ul><li><code>bridge_id</code> - bridge's id. (required);</li><li><code>channel_id</code> - channel's id. (required);</li></ul>
+
+<p>Error responses:</p>
+
+<ul><li>404 - Bridge or Channel not found</li><li>409 - Channel not in Stasis application</li><li>422 - Channel not in this Bridge</li></ul>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/ctiapps/asterisk/blob/ffd9689a881fdb6fff1f700a69cc6c3a6b0b6b9e/src/asterisk/ari/resources/bridges.cr#L127" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="start_moh(bridge_id:String,moh_class:String?=nil)-instance-method">
+      <div class="signature">
+        
+        def <strong>start_moh</strong>(bridge_id : String, moh_class : String? = <span class="n">nil</span>)
+
+        <a class="method-permalink" href="#start_moh(bridge_id:String,moh_class:String?=nil)-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Play music on hold to a bridge or change the MOH class that is playing.</p>
+
+<p>Arguments:</p>
+
+<ul><li><code>bridge_id</code> - bridge's id. (required);</li><li><code>moh_class</code> - channel's id;</li></ul>
+
+<p>Error responses:</p>
+
+<ul><li>404 - Bridge not found</li><li>409 - Bridge not in Stasis application</li></ul>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/ctiapps/asterisk/blob/ffd9689a881fdb6fff1f700a69cc6c3a6b0b6b9e/src/asterisk/ari/resources/bridges.cr#L151" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="stop_moh(bridge_id:String)-instance-method">
+      <div class="signature">
+        
+        def <strong>stop_moh</strong>(bridge_id : String)
+
+        <a class="method-permalink" href="#stop_moh(bridge_id:String)-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Stop playing music on hold to a bridge.</p>
+
+<p>Arguments:</p>
+
+<ul><li><code>bridge_id</code> - bridge's id. (required);</li></ul>
+
+<p>Error responses:</p>
+
+<ul><li>404 - Bridge not found</li><li>409 - Bridge not in Stasis application</li></ul>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/ctiapps/asterisk/blob/ffd9689a881fdb6fff1f700a69cc6c3a6b0b6b9e/src/asterisk/ari/resources/bridges.cr#L167" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+
+
+
+
+</div>
+
+</body>
+</html>

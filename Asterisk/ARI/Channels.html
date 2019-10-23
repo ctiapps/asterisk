@@ -1,0 +1,1914 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="generator" content="Crystal Docs 0.30.1">
+
+
+<link href="../../css/style.css" rel="stylesheet" type="text/css">
+
+<script type="text/javascript" src="../../js/doc.js"></script>
+<script type="text/javascript">
+  CrystalDoc.base_path = "../../";
+</script>
+
+  <meta id="repository-name" content="github.com/ctiapps/asterisk">
+  <title>Asterisk::ARI::Channels - github.com/ctiapps/asterisk</title>
+</head>
+<body>
+
+<div class="sidebar">
+  <div class="sidebar-header">
+    <div class="search-box">
+      <input type="search" class="search-input" placeholder="Search..." spellcheck="false" aria-label="Search">
+    </div>
+
+    <div class="repository-links">
+      <a href="../../index.html">README</a>
+    </div>
+  </div>
+
+  <div class="search-results" class="hidden">
+    <ul class="search-list"></ul>
+  </div>
+
+  <div class="types-list">
+    <ul>
+  
+  <li class="parent open current" data-id="github.com/ctiapps/asterisk/Asterisk" data-name="asterisk">
+      <a href="../../Asterisk.html">Asterisk</a>
+      
+        <ul>
+  
+  <li class="parent " data-id="github.com/ctiapps/asterisk/Asterisk/AGI" data-name="asterisk::agi">
+      <a href="../../Asterisk/AGI.html">AGI</a>
+      
+        <ul>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/AGI/Commands" data-name="asterisk::agi::commands">
+      <a href="../../Asterisk/AGI/Commands.html">Commands</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/AGI/Response" data-name="asterisk::agi::response">
+      <a href="../../Asterisk/AGI/Response.html">Response</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class="parent " data-id="github.com/ctiapps/asterisk/Asterisk/AMI" data-name="asterisk::ami">
+      <a href="../../Asterisk/AMI.html">AMI</a>
+      
+        <ul>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/AMI/ActionID" data-name="asterisk::ami::actionid">
+      <a href="../../Asterisk/AMI/ActionID.html">ActionID</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/AMI/AMIData" data-name="asterisk::ami::amidata">
+      <a href="../../Asterisk/AMI/AMIData.html">AMIData</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/AMI/ConnectionError" data-name="asterisk::ami::connectionerror">
+      <a href="../../Asterisk/AMI/ConnectionError.html">ConnectionError</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/AMI/Event" data-name="asterisk::ami::event">
+      <a href="../../Asterisk/AMI/Event.html">Event</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/AMI/EventName" data-name="asterisk::ami::eventname">
+      <a href="../../Asterisk/AMI/EventName.html">EventName</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/AMI/LoginError" data-name="asterisk::ami::loginerror">
+      <a href="../../Asterisk/AMI/LoginError.html">LoginError</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/AMI/NotBootedError" data-name="asterisk::ami::notbootederror">
+      <a href="../../Asterisk/AMI/NotBootedError.html">NotBootedError</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/AMI/Response" data-name="asterisk::ami::response">
+      <a href="../../Asterisk/AMI/Response.html">Response</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class="parent open current" data-id="github.com/ctiapps/asterisk/Asterisk/ARI" data-name="asterisk::ari">
+      <a href="../../Asterisk/ARI.html">ARI</a>
+      
+        <ul>
+  
+  <li class="parent " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Applications" data-name="asterisk::ari::applications">
+      <a href="../../Asterisk/ARI/Applications.html">Applications</a>
+      
+        <ul>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Applications/Application" data-name="asterisk::ari::applications::application">
+      <a href="../../Asterisk/ARI/Applications/Application.html">Application</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class="parent " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Asterisk" data-name="asterisk::ari::asterisk">
+      <a href="../../Asterisk/ARI/Asterisk.html">Asterisk</a>
+      
+        <ul>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Asterisk/AsteriskInfo" data-name="asterisk::ari::asterisk::asteriskinfo">
+      <a href="../../Asterisk/ARI/Asterisk/AsteriskInfo.html">AsteriskInfo</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Asterisk/AsteriskPing" data-name="asterisk::ari::asterisk::asteriskping">
+      <a href="../../Asterisk/ARI/Asterisk/AsteriskPing.html">AsteriskPing</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Asterisk/BuildInfo" data-name="asterisk::ari::asterisk::buildinfo">
+      <a href="../../Asterisk/ARI/Asterisk/BuildInfo.html">BuildInfo</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Asterisk/ConfigInfo" data-name="asterisk::ari::asterisk::configinfo">
+      <a href="../../Asterisk/ARI/Asterisk/ConfigInfo.html">ConfigInfo</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Asterisk/ConfigTuple" data-name="asterisk::ari::asterisk::configtuple">
+      <a href="../../Asterisk/ARI/Asterisk/ConfigTuple.html">ConfigTuple</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Asterisk/LogChannel" data-name="asterisk::ari::asterisk::logchannel">
+      <a href="../../Asterisk/ARI/Asterisk/LogChannel.html">LogChannel</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Asterisk/Module" data-name="asterisk::ari::asterisk::module">
+      <a href="../../Asterisk/ARI/Asterisk/Module.html">Module</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Asterisk/SetId" data-name="asterisk::ari::asterisk::setid">
+      <a href="../../Asterisk/ARI/Asterisk/SetId.html">SetId</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Asterisk/StatusInfo" data-name="asterisk::ari::asterisk::statusinfo">
+      <a href="../../Asterisk/ARI/Asterisk/StatusInfo.html">StatusInfo</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Asterisk/SystemInfo" data-name="asterisk::ari::asterisk::systeminfo">
+      <a href="../../Asterisk/ARI/Asterisk/SystemInfo.html">SystemInfo</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Asterisk/Variable" data-name="asterisk::ari::asterisk::variable">
+      <a href="../../Asterisk/ARI/Asterisk/Variable.html">Variable</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/AuthenticationError" data-name="asterisk::ari::authenticationerror">
+      <a href="../../Asterisk/ARI/AuthenticationError.html">AuthenticationError</a>
+      
+    </li>
+  
+  <li class="parent " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Bridges" data-name="asterisk::ari::bridges">
+      <a href="../../Asterisk/ARI/Bridges.html">Bridges</a>
+      
+        <ul>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Bridges/Bridge" data-name="asterisk::ari::bridges::bridge">
+      <a href="../../Asterisk/ARI/Bridges/Bridge.html">Bridge</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class="parent open current" data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Channels" data-name="asterisk::ari::channels">
+      <a href="../../Asterisk/ARI/Channels.html">Channels</a>
+      
+        <ul>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Channels/CallerID" data-name="asterisk::ari::channels::callerid">
+      <a href="../../Asterisk/ARI/Channels/CallerID.html">CallerID</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Channels/Channel" data-name="asterisk::ari::channels::channel">
+      <a href="../../Asterisk/ARI/Channels/Channel.html">Channel</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Channels/Dialed" data-name="asterisk::ari::channels::dialed">
+      <a href="../../Asterisk/ARI/Channels/Dialed.html">Dialed</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Channels/DialplanCEP" data-name="asterisk::ari::channels::dialplancep">
+      <a href="../../Asterisk/ARI/Channels/DialplanCEP.html">DialplanCEP</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Channels/ExternalMedia" data-name="asterisk::ari::channels::externalmedia">
+      <a href="../../Asterisk/ARI/Channels/ExternalMedia.html">ExternalMedia</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Channels/RTPstat" data-name="asterisk::ari::channels::rtpstat">
+      <a href="../../Asterisk/ARI/Channels/RTPstat.html">RTPstat</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/ConnectionError" data-name="asterisk::ari::connectionerror">
+      <a href="../../Asterisk/ARI/ConnectionError.html">ConnectionError</a>
+      
+    </li>
+  
+  <li class="parent " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/DeviceStates" data-name="asterisk::ari::devicestates">
+      <a href="../../Asterisk/ARI/DeviceStates.html">DeviceStates</a>
+      
+        <ul>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/DeviceStates/DeviceState" data-name="asterisk::ari::devicestates::devicestate">
+      <a href="../../Asterisk/ARI/DeviceStates/DeviceState.html">DeviceState</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class="parent " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Endpoints" data-name="asterisk::ari::endpoints">
+      <a href="../../Asterisk/ARI/Endpoints.html">Endpoints</a>
+      
+        <ul>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Endpoints/Endpoint" data-name="asterisk::ari::endpoints::endpoint">
+      <a href="../../Asterisk/ARI/Endpoints/Endpoint.html">Endpoint</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Endpoints/TextMessage" data-name="asterisk::ari::endpoints::textmessage">
+      <a href="../../Asterisk/ARI/Endpoints/TextMessage.html">TextMessage</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Endpoints/TextMessageVariable" data-name="asterisk::ari::endpoints::textmessagevariable">
+      <a href="../../Asterisk/ARI/Endpoints/TextMessageVariable.html">TextMessageVariable</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class="parent " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events" data-name="asterisk::ari::events">
+      <a href="../../Asterisk/ARI/Events.html">Events</a>
+      
+        <ul>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/ApplicationMoveFailed" data-name="asterisk::ari::events::applicationmovefailed">
+      <a href="../../Asterisk/ARI/Events/ApplicationMoveFailed.html">ApplicationMoveFailed</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/ApplicationReplaced" data-name="asterisk::ari::events::applicationreplaced">
+      <a href="../../Asterisk/ARI/Events/ApplicationReplaced.html">ApplicationReplaced</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/BridgeAttendedTransfer" data-name="asterisk::ari::events::bridgeattendedtransfer">
+      <a href="../../Asterisk/ARI/Events/BridgeAttendedTransfer.html">BridgeAttendedTransfer</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/BridgeBlindTransfer" data-name="asterisk::ari::events::bridgeblindtransfer">
+      <a href="../../Asterisk/ARI/Events/BridgeBlindTransfer.html">BridgeBlindTransfer</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/BridgeCreated" data-name="asterisk::ari::events::bridgecreated">
+      <a href="../../Asterisk/ARI/Events/BridgeCreated.html">BridgeCreated</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/BridgeDestroyed" data-name="asterisk::ari::events::bridgedestroyed">
+      <a href="../../Asterisk/ARI/Events/BridgeDestroyed.html">BridgeDestroyed</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/BridgeMerged" data-name="asterisk::ari::events::bridgemerged">
+      <a href="../../Asterisk/ARI/Events/BridgeMerged.html">BridgeMerged</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/BridgeVideoSourceChanged" data-name="asterisk::ari::events::bridgevideosourcechanged">
+      <a href="../../Asterisk/ARI/Events/BridgeVideoSourceChanged.html">BridgeVideoSourceChanged</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/ChannelCallerId" data-name="asterisk::ari::events::channelcallerid">
+      <a href="../../Asterisk/ARI/Events/ChannelCallerId.html">ChannelCallerId</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/ChannelConnectedLine" data-name="asterisk::ari::events::channelconnectedline">
+      <a href="../../Asterisk/ARI/Events/ChannelConnectedLine.html">ChannelConnectedLine</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/ChannelCreated" data-name="asterisk::ari::events::channelcreated">
+      <a href="../../Asterisk/ARI/Events/ChannelCreated.html">ChannelCreated</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/ChannelDestroyed" data-name="asterisk::ari::events::channeldestroyed">
+      <a href="../../Asterisk/ARI/Events/ChannelDestroyed.html">ChannelDestroyed</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/ChannelDialplan" data-name="asterisk::ari::events::channeldialplan">
+      <a href="../../Asterisk/ARI/Events/ChannelDialplan.html">ChannelDialplan</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/ChannelDtmfReceived" data-name="asterisk::ari::events::channeldtmfreceived">
+      <a href="../../Asterisk/ARI/Events/ChannelDtmfReceived.html">ChannelDtmfReceived</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/ChannelEnteredBridge" data-name="asterisk::ari::events::channelenteredbridge">
+      <a href="../../Asterisk/ARI/Events/ChannelEnteredBridge.html">ChannelEnteredBridge</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/ChannelHangupRequest" data-name="asterisk::ari::events::channelhanguprequest">
+      <a href="../../Asterisk/ARI/Events/ChannelHangupRequest.html">ChannelHangupRequest</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/ChannelHold" data-name="asterisk::ari::events::channelhold">
+      <a href="../../Asterisk/ARI/Events/ChannelHold.html">ChannelHold</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/ChannelLeftBridge" data-name="asterisk::ari::events::channelleftbridge">
+      <a href="../../Asterisk/ARI/Events/ChannelLeftBridge.html">ChannelLeftBridge</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/ChannelStateChange" data-name="asterisk::ari::events::channelstatechange">
+      <a href="../../Asterisk/ARI/Events/ChannelStateChange.html">ChannelStateChange</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/ChannelTalkingFinished" data-name="asterisk::ari::events::channeltalkingfinished">
+      <a href="../../Asterisk/ARI/Events/ChannelTalkingFinished.html">ChannelTalkingFinished</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/ChannelTalkingStarted" data-name="asterisk::ari::events::channeltalkingstarted">
+      <a href="../../Asterisk/ARI/Events/ChannelTalkingStarted.html">ChannelTalkingStarted</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/ChannelUnhold" data-name="asterisk::ari::events::channelunhold">
+      <a href="../../Asterisk/ARI/Events/ChannelUnhold.html">ChannelUnhold</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/ChannelUserevent" data-name="asterisk::ari::events::channeluserevent">
+      <a href="../../Asterisk/ARI/Events/ChannelUserevent.html">ChannelUserevent</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/ChannelVarset" data-name="asterisk::ari::events::channelvarset">
+      <a href="../../Asterisk/ARI/Events/ChannelVarset.html">ChannelVarset</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/ContactInfo" data-name="asterisk::ari::events::contactinfo">
+      <a href="../../Asterisk/ARI/Events/ContactInfo.html">ContactInfo</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/ContactStatusChange" data-name="asterisk::ari::events::contactstatuschange">
+      <a href="../../Asterisk/ARI/Events/ContactStatusChange.html">ContactStatusChange</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/DeviceStateChanged" data-name="asterisk::ari::events::devicestatechanged">
+      <a href="../../Asterisk/ARI/Events/DeviceStateChanged.html">DeviceStateChanged</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/Dial" data-name="asterisk::ari::events::dial">
+      <a href="../../Asterisk/ARI/Events/Dial.html">Dial</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/EndpointStateChange" data-name="asterisk::ari::events::endpointstatechange">
+      <a href="../../Asterisk/ARI/Events/EndpointStateChange.html">EndpointStateChange</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/Event" data-name="asterisk::ari::events::event">
+      <a href="../../Asterisk/ARI/Events/Event.html">Event</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/Message" data-name="asterisk::ari::events::message">
+      <a href="../../Asterisk/ARI/Events/Message.html">Message</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/MissingParams" data-name="asterisk::ari::events::missingparams">
+      <a href="../../Asterisk/ARI/Events/MissingParams.html">MissingParams</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/Peer" data-name="asterisk::ari::events::peer">
+      <a href="../../Asterisk/ARI/Events/Peer.html">Peer</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/PeerStatusChange" data-name="asterisk::ari::events::peerstatuschange">
+      <a href="../../Asterisk/ARI/Events/PeerStatusChange.html">PeerStatusChange</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/PlaybackContinuing" data-name="asterisk::ari::events::playbackcontinuing">
+      <a href="../../Asterisk/ARI/Events/PlaybackContinuing.html">PlaybackContinuing</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/PlaybackFinished" data-name="asterisk::ari::events::playbackfinished">
+      <a href="../../Asterisk/ARI/Events/PlaybackFinished.html">PlaybackFinished</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/PlaybackStarted" data-name="asterisk::ari::events::playbackstarted">
+      <a href="../../Asterisk/ARI/Events/PlaybackStarted.html">PlaybackStarted</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/RecordingFailed" data-name="asterisk::ari::events::recordingfailed">
+      <a href="../../Asterisk/ARI/Events/RecordingFailed.html">RecordingFailed</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/RecordingFinished" data-name="asterisk::ari::events::recordingfinished">
+      <a href="../../Asterisk/ARI/Events/RecordingFinished.html">RecordingFinished</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/RecordingStarted" data-name="asterisk::ari::events::recordingstarted">
+      <a href="../../Asterisk/ARI/Events/RecordingStarted.html">RecordingStarted</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/StasisEnd" data-name="asterisk::ari::events::stasisend">
+      <a href="../../Asterisk/ARI/Events/StasisEnd.html">StasisEnd</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/StasisStart" data-name="asterisk::ari::events::stasisstart">
+      <a href="../../Asterisk/ARI/Events/StasisStart.html">StasisStart</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/TextMessageReceived" data-name="asterisk::ari::events::textmessagereceived">
+      <a href="../../Asterisk/ARI/Events/TextMessageReceived.html">TextMessageReceived</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class="parent " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Mailboxes" data-name="asterisk::ari::mailboxes">
+      <a href="../../Asterisk/ARI/Mailboxes.html">Mailboxes</a>
+      
+        <ul>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Mailboxes/Mailbox" data-name="asterisk::ari::mailboxes::mailbox">
+      <a href="../../Asterisk/ARI/Mailboxes/Mailbox.html">Mailbox</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class="parent " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Playbacks" data-name="asterisk::ari::playbacks">
+      <a href="../../Asterisk/ARI/Playbacks.html">Playbacks</a>
+      
+        <ul>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Playbacks/Playback" data-name="asterisk::ari::playbacks::playback">
+      <a href="../../Asterisk/ARI/Playbacks/Playback.html">Playback</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class="parent " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Recordings" data-name="asterisk::ari::recordings">
+      <a href="../../Asterisk/ARI/Recordings.html">Recordings</a>
+      
+        <ul>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Recordings/LiveRecording" data-name="asterisk::ari::recordings::liverecording">
+      <a href="../../Asterisk/ARI/Recordings/LiveRecording.html">LiveRecording</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Recordings/StoredRecording" data-name="asterisk::ari::recordings::storedrecording">
+      <a href="../../Asterisk/ARI/Recordings/StoredRecording.html">StoredRecording</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Request" data-name="asterisk::ari::request">
+      <a href="../../Asterisk/ARI/Request.html">Request</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Resources" data-name="asterisk::ari::resources">
+      <a href="../../Asterisk/ARI/Resources.html">Resources</a>
+      
+    </li>
+  
+  <li class="parent " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Sounds" data-name="asterisk::ari::sounds">
+      <a href="../../Asterisk/ARI/Sounds.html">Sounds</a>
+      
+        <ul>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Sounds/FormatLangPair" data-name="asterisk::ari::sounds::formatlangpair">
+      <a href="../../Asterisk/ARI/Sounds/FormatLangPair.html">FormatLangPair</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Sounds/Sound" data-name="asterisk::ari::sounds::sound">
+      <a href="../../Asterisk/ARI/Sounds/Sound.html">Sound</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class="parent " data-id="github.com/ctiapps/asterisk/Asterisk/AsyncAGI" data-name="asterisk::asyncagi">
+      <a href="../../Asterisk/AsyncAGI.html">AsyncAGI</a>
+      
+        <ul>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/AsyncAGI/Server" data-name="asterisk::asyncagi::server">
+      <a href="../../Asterisk/AsyncAGI/Server.html">Server</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/FastAGI" data-name="asterisk::fastagi">
+      <a href="../../Asterisk/FastAGI.html">FastAGI</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+</ul>
+
+  </div>
+</div>
+
+
+<div class="main-content">
+<h1 class="type-name">
+
+  <span class="kind">class</span> Asterisk::ARI::Channels
+
+</h1>
+
+
+  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../Asterisk/ARI/Channels.html">Asterisk::ARI::Channels</a></li><li class="superclass"><a href="../../Asterisk/ARI/Resources.html">Asterisk::ARI::Resources</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <h2>Defined in:</h2>
+  
+    
+      <a href="https://github.com/ctiapps/asterisk/blob/ffd9689a881fdb6fff1f700a69cc6c3a6b0b6b9e/src/asterisk/ari/resources/channels.cr#L15" target="_blank">
+        asterisk/ari/resources/channels.cr
+      </a>
+    
+    <br/>
+  
+    
+      <a href="https://github.com/ctiapps/asterisk/blob/ffd9689a881fdb6fff1f700a69cc6c3a6b0b6b9e/src/asterisk/ari/models/channels_caller_id.cr#L15" target="_blank">
+        asterisk/ari/models/channels_caller_id.cr
+      </a>
+    
+    <br/>
+  
+    
+      <a href="https://github.com/ctiapps/asterisk/blob/ffd9689a881fdb6fff1f700a69cc6c3a6b0b6b9e/src/asterisk/ari/models/channels_channel.cr#L15" target="_blank">
+        asterisk/ari/models/channels_channel.cr
+      </a>
+    
+    <br/>
+  
+    
+      <a href="https://github.com/ctiapps/asterisk/blob/ffd9689a881fdb6fff1f700a69cc6c3a6b0b6b9e/src/asterisk/ari/models/channels_dialed.cr#L15" target="_blank">
+        asterisk/ari/models/channels_dialed.cr
+      </a>
+    
+    <br/>
+  
+    
+      <a href="https://github.com/ctiapps/asterisk/blob/ffd9689a881fdb6fff1f700a69cc6c3a6b0b6b9e/src/asterisk/ari/models/channels_dialplan_cep.cr#L15" target="_blank">
+        asterisk/ari/models/channels_dialplan_cep.cr
+      </a>
+    
+    <br/>
+  
+    
+      <a href="https://github.com/ctiapps/asterisk/blob/ffd9689a881fdb6fff1f700a69cc6c3a6b0b6b9e/src/asterisk/ari/models/channels_external_media.cr#L15" target="_blank">
+        asterisk/ari/models/channels_external_media.cr
+      </a>
+    
+    <br/>
+  
+    
+      <a href="https://github.com/ctiapps/asterisk/blob/ffd9689a881fdb6fff1f700a69cc6c3a6b0b6b9e/src/asterisk/ari/models/channels_rt_pstat.cr#L15" target="_blank">
+        asterisk/ari/models/channels_rt_pstat.cr
+      </a>
+    
+    <br/>
+  
+
+
+
+
+
+
+
+
+
+  <h2>Instance Method Summary</h2>
+  <ul class="list-summary">
+    
+      <li class="entry-summary">
+        <a href="#answer(channel_id:String)-instance-method" class="signature"><strong>#answer</strong>(channel_id : String)</a>
+        
+          <div class="summary"><p>Answer a channel.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#continue_in_dialplan(channel_id:String,context:String?=nil,extension:String?=nil,priority:Int32?=nil,label:String?=nil)-instance-method" class="signature"><strong>#continue_in_dialplan</strong>(channel_id : String, context : String? = <span class="n">nil</span>, extension : String? = <span class="n">nil</span>, priority : Int32? = <span class="n">nil</span>, label : String? = <span class="n">nil</span>)</a>
+        
+          <div class="summary"><p>Exit application; continue execution in the dialplan.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#create(endpoint:String,app:String,app_args:String?=nil,channel_id:String?=nil,other_channel_id:String?=nil,originator:String?=nil,formats:String?=nil):HTTP::Client::Response%7CChannels::Channel-instance-method" class="signature"><strong>#create</strong>(endpoint : String, app : String, app_args : String? = <span class="n">nil</span>, channel_id : String? = <span class="n">nil</span>, other_channel_id : String? = <span class="n">nil</span>, originator : String? = <span class="n">nil</span>, formats : String? = <span class="n">nil</span>) : HTTP::Client::Response | Channels::Channel</a>
+        
+          <div class="summary"><p>Create channel.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#dial(channel_id:String,caller:String?=nil,timeout:Int32?=0)-instance-method" class="signature"><strong>#dial</strong>(channel_id : String, caller : String? = <span class="n">nil</span>, timeout : Int32? = <span class="n">0</span>)</a>
+        
+          <div class="summary"><p>Dial a created channel.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#external_media(app:String,external_host:String,format:String,channel_id:String?=nil,variables:Hash(String,String%7CBool%7CInt32%7CFloat32)?=nil,encapsulation:String?=&quot;rtp&quot;,transport:String?=&quot;udp&quot;,connection_type:String?=&quot;client&quot;,direction:String?=&quot;both&quot;):HTTP::Client::Response%7CExternalMedia-instance-method" class="signature"><strong>#external_media</strong>(app : String, external_host : String, format : String, channel_id : String? = <span class="n">nil</span>, variables : Hash(String, String | Bool | Int32 | Float32)? = <span class="n">nil</span>, encapsulation : String? = <span class="s">&quot;rtp&quot;</span>, transport : String? = <span class="s">&quot;udp&quot;</span>, connection_type : String? = <span class="s">&quot;client&quot;</span>, direction : String? = <span class="s">&quot;both&quot;</span>) : HTTP::Client::Response | ExternalMedia</a>
+        
+          <div class="summary"><p>Start an External Media session.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#get(channel_id:String):HTTP::Client::Response%7CChannels::Channel-instance-method" class="signature"><strong>#get</strong>(channel_id : String) : HTTP::Client::Response | Channels::Channel</a>
+        
+          <div class="summary"><p>Channel details.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#get_channel_var(channel_id:String,variable:String):HTTP::Client::Response%7CAsterisk::Variable-instance-method" class="signature"><strong>#get_channel_var</strong>(channel_id : String, variable : String) : HTTP::Client::Response | Asterisk::Variable</a>
+        
+          <div class="summary"><p>Get the value of a channel variable or function.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#hangup(channel_id:String,reason:String?=nil)-instance-method" class="signature"><strong>#hangup</strong>(channel_id : String, reason : String? = <span class="n">nil</span>)</a>
+        
+          <div class="summary"><p>Delete (i.e.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#hold(channel_id:String)-instance-method" class="signature"><strong>#hold</strong>(channel_id : String)</a>
+        
+          <div class="summary"><p>Hold a channel.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#list:HTTP::Client::Response%7CArray(Channels::Channel)-instance-method" class="signature"><strong>#list</strong> : HTTP::Client::Response | Array(Channels::Channel)</a>
+        
+          <div class="summary"><p>List all active channels in Asterisk.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#move(channel_id:String,app:String,app_args:String?=nil)-instance-method" class="signature"><strong>#move</strong>(channel_id : String, app : String, app_args : String? = <span class="n">nil</span>)</a>
+        
+          <div class="summary"><p>Move the channel from one Stasis application to another.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#mute(channel_id:String,direction:String?=&quot;both&quot;)-instance-method" class="signature"><strong>#mute</strong>(channel_id : String, direction : String? = <span class="s">&quot;both&quot;</span>)</a>
+        
+          <div class="summary"><p>Mute a channel.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#originate(endpoint:String,extension:String?=nil,context:String?=nil,priority:Int64?=nil,label:String?=nil,app:String?=nil,app_args:String?=nil,caller_id:String?=nil,timeout:Int32?=30,variables:Hash(String,String%7CBool%7CInt32%7CFloat32)?=nil,channel_id:String?=nil,other_channel_id:String?=nil,originator:String?=nil,formats:String?=nil):HTTP::Client::Response%7CChannels::Channel-instance-method" class="signature"><strong>#originate</strong>(endpoint : String, extension : String? = <span class="n">nil</span>, context : String? = <span class="n">nil</span>, priority : Int64? = <span class="n">nil</span>, label : String? = <span class="n">nil</span>, app : String? = <span class="n">nil</span>, app_args : String? = <span class="n">nil</span>, caller_id : String? = <span class="n">nil</span>, timeout : Int32? = <span class="n">30</span>, variables : Hash(String, String | Bool | Int32 | Float32)? = <span class="n">nil</span>, channel_id : String? = <span class="n">nil</span>, other_channel_id : String? = <span class="n">nil</span>, originator : String? = <span class="n">nil</span>, formats : String? = <span class="n">nil</span>) : HTTP::Client::Response | Channels::Channel</a>
+        
+          <div class="summary"><p>Create a new channel (originate).</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#originate_with_id(channel_id:String,endpoint:String,extension:String?=nil,context:String?=nil,priority:Int64?=nil,label:String?=nil,app:String?=nil,app_args:String?=nil,caller_id:String?=nil,timeout:Int32?=30,variables:Hash(String,String%7CBool%7CInt32%7CFloat32)?=nil,other_channel_id:String?=nil,originator:String?=nil,formats:String?=nil):HTTP::Client::Response%7CChannels::Channel-instance-method" class="signature"><strong>#originate_with_id</strong>(channel_id : String, endpoint : String, extension : String? = <span class="n">nil</span>, context : String? = <span class="n">nil</span>, priority : Int64? = <span class="n">nil</span>, label : String? = <span class="n">nil</span>, app : String? = <span class="n">nil</span>, app_args : String? = <span class="n">nil</span>, caller_id : String? = <span class="n">nil</span>, timeout : Int32? = <span class="n">30</span>, variables : Hash(String, String | Bool | Int32 | Float32)? = <span class="n">nil</span>, other_channel_id : String? = <span class="n">nil</span>, originator : String? = <span class="n">nil</span>, formats : String? = <span class="n">nil</span>) : HTTP::Client::Response | Channels::Channel</a>
+        
+          <div class="summary"><p>Create a new channel (originate with id).</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#play(channel_id:String,media:String,lang:String?=nil,offsetms:Int32?=nil,skipms:Int32?=3000,playback_id:String?=nil):HTTP::Client::Response%7CPlaybacks::Playback-instance-method" class="signature"><strong>#play</strong>(channel_id : String, media : String, lang : String? = <span class="n">nil</span>, offsetms : Int32? = <span class="n">nil</span>, skipms : Int32? = <span class="n">3000</span>, playback_id : String? = <span class="n">nil</span>) : HTTP::Client::Response | Playbacks::Playback</a>
+        
+          <div class="summary"><p>Start playback of media.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#play_with_id(channel_id:String,playback_id:String,media:String,lang:String?=nil,offsetms:Int32?=nil,skipms:Int32?=3000):HTTP::Client::Response%7CPlaybacks::Playback-instance-method" class="signature"><strong>#play_with_id</strong>(channel_id : String, playback_id : String, media : String, lang : String? = <span class="n">nil</span>, offsetms : Int32? = <span class="n">nil</span>, skipms : Int32? = <span class="n">3000</span>) : HTTP::Client::Response | Playbacks::Playback</a>
+        
+          <div class="summary"><p>Start playback of media and specify the playbackId.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#record(channel_id:String,name:String,format:String,max_duration_seconds:Int32?=0,max_silence_seconds:Int32?=0,if_exists:String?=&quot;fail&quot;,beep:Bool?=false,terminate_on:String?=&quot;none&quot;):HTTP::Client::Response%7CRecordings::LiveRecording-instance-method" class="signature"><strong>#record</strong>(channel_id : String, name : String, format : String, max_duration_seconds : Int32? = <span class="n">0</span>, max_silence_seconds : Int32? = <span class="n">0</span>, if_exists : String? = <span class="s">&quot;fail&quot;</span>, beep : Bool? = <span class="n">false</span>, terminate_on : String? = <span class="s">&quot;none&quot;</span>) : HTTP::Client::Response | Recordings::LiveRecording</a>
+        
+          <div class="summary"><p>Start a recording.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#redirect(channel_id:String,endpoint:String)-instance-method" class="signature"><strong>#redirect</strong>(channel_id : String, endpoint : String)</a>
+        
+          <div class="summary"><p>Redirect the channel to a different location.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#ring(channel_id:String)-instance-method" class="signature"><strong>#ring</strong>(channel_id : String)</a>
+        
+          <div class="summary"><p>Indicate ringing to a channel.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#ring_stop(channel_id:String)-instance-method" class="signature"><strong>#ring_stop</strong>(channel_id : String)</a>
+        
+          <div class="summary"><p>Stop ringing indication on a channel if locally generated.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#rtpstatistics(channel_id:String):HTTP::Client::Response%7CRTPstat-instance-method" class="signature"><strong>#rtpstatistics</strong>(channel_id : String) : HTTP::Client::Response | RTPstat</a>
+        
+          <div class="summary"><p>RTP stats on a channel.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#send_dtmf(channel_id:String,dtmf:String?=nil,before:Int32?=0,between:Int32?=100,duration:Int32?=100,after:Int32?=0)-instance-method" class="signature"><strong>#send_dtmf</strong>(channel_id : String, dtmf : String? = <span class="n">nil</span>, before : Int32? = <span class="n">0</span>, between : Int32? = <span class="n">100</span>, duration : Int32? = <span class="n">100</span>, after : Int32? = <span class="n">0</span>)</a>
+        
+          <div class="summary"><p>Send provided DTMF to a given channel.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#set_channel_var(channel_id:String,variable:String,value:String?=nil)-instance-method" class="signature"><strong>#set_channel_var</strong>(channel_id : String, variable : String, value : String? = <span class="n">nil</span>)</a>
+        
+          <div class="summary"><p>Set the value of a channel variable or function.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#snoop_channel(channel_id:String,app:String,spy:String?=&quot;none&quot;,whisper:String?=&quot;none&quot;,app_args:String?=nil,snoop_id:String?=nil):HTTP::Client::Response%7CChannels::Channel-instance-method" class="signature"><strong>#snoop_channel</strong>(channel_id : String, app : String, spy : String? = <span class="s">&quot;none&quot;</span>, whisper : String? = <span class="s">&quot;none&quot;</span>, app_args : String? = <span class="n">nil</span>, snoop_id : String? = <span class="n">nil</span>) : HTTP::Client::Response | Channels::Channel</a>
+        
+          <div class="summary"><p>Start snooping.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#snoop_channel_with_id(channel_id:String,snoop_id:String,app:String,spy:String?=&quot;none&quot;,whisper:String?=&quot;none&quot;,app_args:String?=nil):HTTP::Client::Response%7CChannels::Channel-instance-method" class="signature"><strong>#snoop_channel_with_id</strong>(channel_id : String, snoop_id : String, app : String, spy : String? = <span class="s">&quot;none&quot;</span>, whisper : String? = <span class="s">&quot;none&quot;</span>, app_args : String? = <span class="n">nil</span>) : HTTP::Client::Response | Channels::Channel</a>
+        
+          <div class="summary"><p>Start snooping.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#start_moh(channel_id:String,moh_class:String?=nil)-instance-method" class="signature"><strong>#start_moh</strong>(channel_id : String, moh_class : String? = <span class="n">nil</span>)</a>
+        
+          <div class="summary"><p>Play music on hold to a channel.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#start_silence(channel_id:String)-instance-method" class="signature"><strong>#start_silence</strong>(channel_id : String)</a>
+        
+          <div class="summary"><p>Play silence to a channel.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#stop_moh(channel_id:String)-instance-method" class="signature"><strong>#stop_moh</strong>(channel_id : String)</a>
+        
+          <div class="summary"><p>Stop playing music on hold to a channel.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#stop_silence(channel_id:String)-instance-method" class="signature"><strong>#stop_silence</strong>(channel_id : String)</a>
+        
+          <div class="summary"><p>Stop playing silence to a channel.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#unhold(channel_id:String)-instance-method" class="signature"><strong>#unhold</strong>(channel_id : String)</a>
+        
+          <div class="summary"><p>Remove a channel from hold.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#unmute(channel_id:String,direction:String?=&quot;both&quot;)-instance-method" class="signature"><strong>#unmute</strong>(channel_id : String, direction : String? = <span class="s">&quot;both&quot;</span>)</a>
+        
+          <div class="summary"><p>Unmute a channel.</p></div>
+        
+      </li>
+    
+  </ul>
+
+
+
+
+
+<div class="methods-inherited">
+  
+    
+
+  <h3>Instance methods inherited from class <code><a href="../../Asterisk/ARI/Resources.html">Asterisk::ARI::Resources</a></code></h3>
+  
+  
+    <a href="../../Asterisk/ARI/Resources.html#ari:ARI-instance-method" class="tooltip">
+      <span>ari : ARI</span>
+    ari</a>
+    
+  
+
+
+    
+
+  <h3>Constructor methods inherited from class <code><a href="../../Asterisk/ARI/Resources.html">Asterisk::ARI::Resources</a></code></h3>
+  
+  
+    <a href="../../Asterisk/ARI/Resources.html#new(ari)-class-method" class="tooltip">
+      <span>new(ari)</span>
+    new</a>
+    
+  
+
+
+    
+
+
+  
+    
+
+
+    
+
+
+    
+
+
+  
+    
+
+
+    
+
+
+    
+
+
+  
+</div>
+
+
+
+
+
+
+  <h2>Instance Method Detail</h2>
+  
+    <div class="entry-detail" id="answer(channel_id:String)-instance-method">
+      <div class="signature">
+        
+        def <strong>answer</strong>(channel_id : String)
+
+        <a class="method-permalink" href="#answer(channel_id:String)-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Answer a channel.</p>
+
+<p>Arguments:</p>
+
+<ul><li><code>channel_id</code> - channel's id. (required);</li></ul>
+
+<p>Error responses:</p>
+
+<ul><li>404 - Channel not found</li><li>409 - Channel not in a Stasis application</li><li>412 - Channel in invalid state</li></ul>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/ctiapps/asterisk/blob/ffd9689a881fdb6fff1f700a69cc6c3a6b0b6b9e/src/asterisk/ari/resources/channels.cr#L229" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="continue_in_dialplan(channel_id:String,context:String?=nil,extension:String?=nil,priority:Int32?=nil,label:String?=nil)-instance-method">
+      <div class="signature">
+        
+        def <strong>continue_in_dialplan</strong>(channel_id : String, context : String? = <span class="n">nil</span>, extension : String? = <span class="n">nil</span>, priority : Int32? = <span class="n">nil</span>, label : String? = <span class="n">nil</span>)
+
+        <a class="method-permalink" href="#continue_in_dialplan(channel_id:String,context:String?=nil,extension:String?=nil,priority:Int32?=nil,label:String?=nil)-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Exit application; continue execution in the dialplan.</p>
+
+<p>Arguments:</p>
+
+<ul><li><code>channel_id</code> - channel's id. (required);</li><li><code>context</code> - the context to continue to;</li><li><code>extension</code> - the extension to continue to;</li><li><code>priority</code> - the priority to continue to;</li><li><code>label</code> - the label to continue to - will supersede 'priority' if both are provided;</li></ul>
+
+<p>Error responses:</p>
+
+<ul><li>404 - Channel not found</li><li>409 - Channel not in a Stasis application</li><li>412 - Channel in invalid state</li></ul>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/ctiapps/asterisk/blob/ffd9689a881fdb6fff1f700a69cc6c3a6b0b6b9e/src/asterisk/ari/resources/channels.cr#L173" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="create(endpoint:String,app:String,app_args:String?=nil,channel_id:String?=nil,other_channel_id:String?=nil,originator:String?=nil,formats:String?=nil):HTTP::Client::Response|Channels::Channel-instance-method">
+      <div class="signature">
+        
+        def <strong>create</strong>(endpoint : String, app : String, app_args : String? = <span class="n">nil</span>, channel_id : String? = <span class="n">nil</span>, other_channel_id : String? = <span class="n">nil</span>, originator : String? = <span class="n">nil</span>, formats : String? = <span class="n">nil</span>) : HTTP::Client::Response | <a href="../../Asterisk/ARI/Channels/Channel.html">Channels::Channel</a>
+
+        <a class="method-permalink" href="#create(endpoint:String,app:String,app_args:String?=nil,channel_id:String?=nil,other_channel_id:String?=nil,originator:String?=nil,formats:String?=nil):HTTP::Client::Response%7CChannels::Channel-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Create channel.</p>
+
+<p>Arguments:</p>
+
+<ul><li><code>endpoint</code> - endpoint for channel communication. (required);</li><li><code>app</code> - stasis Application to place channel into. (required);</li><li><code>app_args</code> - the application arguments to pass to the Stasis application provided by 'app'. Mutually exclusive with 'context', 'extension', 'priority', and 'label';</li><li><code>channel_id</code> - the unique id to assign the channel on creation;</li><li><code>other_channel_id</code> - the unique id to assign the second channel when using local channels;</li><li><code>originator</code> - unique ID of the calling channel;</li><li><code>formats</code> - the format name capability list to use if originator is not specified. Ex. "ulaw,slin16".  Format names can be found with "core show codecs";</li></ul>
+
+<p>Error responses:</p>
+
+<ul><li>409 - Channel with given unique ID already exists.</li></ul>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/ctiapps/asterisk/blob/ffd9689a881fdb6fff1f700a69cc6c3a6b0b6b9e/src/asterisk/ari/resources/channels.cr#L76" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="dial(channel_id:String,caller:String?=nil,timeout:Int32?=0)-instance-method">
+      <div class="signature">
+        
+        def <strong>dial</strong>(channel_id : String, caller : String? = <span class="n">nil</span>, timeout : Int32? = <span class="n">0</span>)
+
+        <a class="method-permalink" href="#dial(channel_id:String,caller:String?=nil,timeout:Int32?=0)-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Dial a created channel.</p>
+
+<p>Arguments:</p>
+
+<ul><li><code>channel_id</code> - channel's id. (required);</li><li><code>caller</code> - channel ID of caller;</li><li><code>timeout</code> - dial timeout;</li></ul>
+
+<p>Error responses:</p>
+
+<ul><li>404 - Channel cannot be found.</li><li>409 - Channel cannot be dialed.</li></ul>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/ctiapps/asterisk/blob/ffd9689a881fdb6fff1f700a69cc6c3a6b0b6b9e/src/asterisk/ari/resources/channels.cr#L587" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="external_media(app:String,external_host:String,format:String,channel_id:String?=nil,variables:Hash(String,String|Bool|Int32|Float32)?=nil,encapsulation:String?=&amp;quot;rtp&amp;quot;,transport:String?=&amp;quot;udp&amp;quot;,connection_type:String?=&amp;quot;client&amp;quot;,direction:String?=&amp;quot;both&amp;quot;):HTTP::Client::Response|ExternalMedia-instance-method">
+      <div class="signature">
+        
+        def <strong>external_media</strong>(app : String, external_host : String, format : String, channel_id : String? = <span class="n">nil</span>, variables : Hash(String, String | Bool | Int32 | Float32)? = <span class="n">nil</span>, encapsulation : String? = <span class="s">&quot;rtp&quot;</span>, transport : String? = <span class="s">&quot;udp&quot;</span>, connection_type : String? = <span class="s">&quot;client&quot;</span>, direction : String? = <span class="s">&quot;both&quot;</span>) : HTTP::Client::Response | <a href="../../Asterisk/ARI/Channels/ExternalMedia.html">ExternalMedia</a>
+
+        <a class="method-permalink" href="#external_media(app:String,external_host:String,format:String,channel_id:String?=nil,variables:Hash(String,String%7CBool%7CInt32%7CFloat32)?=nil,encapsulation:String?=&quot;rtp&quot;,transport:String?=&quot;udp&quot;,connection_type:String?=&quot;client&quot;,direction:String?=&quot;both&quot;):HTTP::Client::Response%7CExternalMedia-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Start an External Media session.</p>
+
+<p>Arguments:</p>
+
+<ul><li><code>app</code> - stasis Application to place channel into. (required);</li><li><code>external_host</code> - hostname/ip:port of external host. (required);</li><li><code>format</code> - format to encode audio in. (required);</li><li><code>channel_id</code> - the unique id to assign the channel on creation;</li><li><code>variables</code> - the "variables" key in the body object holds variable key/value pairs to set on the channel on creation. Other keys in the body object are interpreted as query parameters. Ex. { "endpoint": "SIP/Alice", "variables": { "CALLERID(name)": "Alice" } };</li><li><code>encapsulation</code> - payload encapsulation protocol;</li><li><code>transport</code> - transport protocol;</li><li><code>connection_type</code> - connection type (client/server);</li><li><code>direction</code> - external media direction;</li></ul>
+
+<p>Error responses:</p>
+
+<ul><li>400 - Invalid parameters</li><li>409 - Channel is not in a Stasis application; Channel is already bridged</li></ul>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/ctiapps/asterisk/blob/ffd9689a881fdb6fff1f700a69cc6c3a6b0b6b9e/src/asterisk/ari/resources/channels.cr#L623" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="get(channel_id:String):HTTP::Client::Response|Channels::Channel-instance-method">
+      <div class="signature">
+        
+        def <strong>get</strong>(channel_id : String) : HTTP::Client::Response | <a href="../../Asterisk/ARI/Channels/Channel.html">Channels::Channel</a>
+
+        <a class="method-permalink" href="#get(channel_id:String):HTTP::Client::Response%7CChannels::Channel-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Channel details.</p>
+
+<p>Arguments:</p>
+
+<ul><li><code>channel_id</code> - channel's id. (required);</li></ul>
+
+<p>Error responses:</p>
+
+<ul><li>404 - Channel not found</li></ul>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/ctiapps/asterisk/blob/ffd9689a881fdb6fff1f700a69cc6c3a6b0b6b9e/src/asterisk/ari/resources/channels.cr#L98" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="get_channel_var(channel_id:String,variable:String):HTTP::Client::Response|Asterisk::Variable-instance-method">
+      <div class="signature">
+        
+        def <strong>get_channel_var</strong>(channel_id : String, variable : String) : HTTP::Client::Response | <a href="../../Asterisk/ARI/Asterisk/Variable.html">Asterisk::Variable</a>
+
+        <a class="method-permalink" href="#get_channel_var(channel_id:String,variable:String):HTTP::Client::Response%7CAsterisk::Variable-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Get the value of a channel variable or function.</p>
+
+<p>Arguments:</p>
+
+<ul><li><code>channel_id</code> - channel's id. (required);</li><li><code>variable</code> - the channel variable or function to get. (required);</li></ul>
+
+<p>Error responses:</p>
+
+<ul><li>400 - Missing variable parameter.</li><li>404 - Channel or variable not found</li><li>409 - Channel not in a Stasis application</li></ul>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/ctiapps/asterisk/blob/ffd9689a881fdb6fff1f700a69cc6c3a6b0b6b9e/src/asterisk/ari/resources/channels.cr#L500" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="hangup(channel_id:String,reason:String?=nil)-instance-method">
+      <div class="signature">
+        
+        def <strong>hangup</strong>(channel_id : String, reason : String? = <span class="n">nil</span>)
+
+        <a class="method-permalink" href="#hangup(channel_id:String,reason:String?=nil)-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Delete (i.e. hangup) a channel.</p>
+
+<p>Arguments:</p>
+
+<ul><li><code>channel_id</code> - channel's id. (required);</li><li><code>reason</code> - reason for hanging up the channel;</li></ul>
+
+<p>Error responses:</p>
+
+<ul><li>400 - Invalid reason for hangup provided</li><li>404 - Channel not found</li></ul>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/ctiapps/asterisk/blob/ffd9689a881fdb6fff1f700a69cc6c3a6b0b6b9e/src/asterisk/ari/resources/channels.cr#L152" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="hold(channel_id:String)-instance-method">
+      <div class="signature">
+        
+        def <strong>hold</strong>(channel_id : String)
+
+        <a class="method-permalink" href="#hold(channel_id:String)-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Hold a channel.</p>
+
+<p>Arguments:</p>
+
+<ul><li><code>channel_id</code> - channel's id. (required);</li></ul>
+
+<p>Error responses:</p>
+
+<ul><li>404 - Channel not found</li><li>409 - Channel not in a Stasis application</li><li>412 - Channel in invalid state</li></ul>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/ctiapps/asterisk/blob/ffd9689a881fdb6fff1f700a69cc6c3a6b0b6b9e/src/asterisk/ari/resources/channels.cr#L331" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="list:HTTP::Client::Response|Array(Channels::Channel)-instance-method">
+      <div class="signature">
+        
+        def <strong>list</strong> : HTTP::Client::Response | Array(<a href="../../Asterisk/ARI/Channels/Channel.html">Channels::Channel</a>)
+
+        <a class="method-permalink" href="#list:HTTP::Client::Response%7CArray(Channels::Channel)-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>List all active channels in Asterisk.</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/ctiapps/asterisk/blob/ffd9689a881fdb6fff1f700a69cc6c3a6b0b6b9e/src/asterisk/ari/resources/channels.cr#L17" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="move(channel_id:String,app:String,app_args:String?=nil)-instance-method">
+      <div class="signature">
+        
+        def <strong>move</strong>(channel_id : String, app : String, app_args : String? = <span class="n">nil</span>)
+
+        <a class="method-permalink" href="#move(channel_id:String,app:String,app_args:String?=nil)-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Move the channel from one Stasis application to another.</p>
+
+<p>Arguments:</p>
+
+<ul><li><code>channel_id</code> - channel's id. (required);</li><li><code>app</code> - the channel will be passed to this Stasis application. (required);</li><li><code>app_args</code> - the application arguments to pass to the Stasis application provided by 'app';</li></ul>
+
+<p>Error responses:</p>
+
+<ul><li>404 - Channel not found</li><li>409 - Channel not in a Stasis application</li></ul>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/ctiapps/asterisk/blob/ffd9689a881fdb6fff1f700a69cc6c3a6b0b6b9e/src/asterisk/ari/resources/channels.cr#L194" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="mute(channel_id:String,direction:String?=&amp;quot;both&amp;quot;)-instance-method">
+      <div class="signature">
+        
+        def <strong>mute</strong>(channel_id : String, direction : String? = <span class="s">&quot;both&quot;</span>)
+
+        <a class="method-permalink" href="#mute(channel_id:String,direction:String?=&quot;both&quot;)-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Mute a channel.</p>
+
+<p>Arguments:</p>
+
+<ul><li><code>channel_id</code> - channel's id. (required);</li><li><code>direction</code> - direction in which to mute audio;</li></ul>
+
+<p>Error responses:</p>
+
+<ul><li>404 - Channel not found</li><li>409 - Channel not in a Stasis application</li><li>412 - Channel in invalid state</li></ul>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/ctiapps/asterisk/blob/ffd9689a881fdb6fff1f700a69cc6c3a6b0b6b9e/src/asterisk/ari/resources/channels.cr#L296" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="originate(endpoint:String,extension:String?=nil,context:String?=nil,priority:Int64?=nil,label:String?=nil,app:String?=nil,app_args:String?=nil,caller_id:String?=nil,timeout:Int32?=30,variables:Hash(String,String|Bool|Int32|Float32)?=nil,channel_id:String?=nil,other_channel_id:String?=nil,originator:String?=nil,formats:String?=nil):HTTP::Client::Response|Channels::Channel-instance-method">
+      <div class="signature">
+        
+        def <strong>originate</strong>(endpoint : String, extension : String? = <span class="n">nil</span>, context : String? = <span class="n">nil</span>, priority : Int64? = <span class="n">nil</span>, label : String? = <span class="n">nil</span>, app : String? = <span class="n">nil</span>, app_args : String? = <span class="n">nil</span>, caller_id : String? = <span class="n">nil</span>, timeout : Int32? = <span class="n">30</span>, variables : Hash(String, String | Bool | Int32 | Float32)? = <span class="n">nil</span>, channel_id : String? = <span class="n">nil</span>, other_channel_id : String? = <span class="n">nil</span>, originator : String? = <span class="n">nil</span>, formats : String? = <span class="n">nil</span>) : HTTP::Client::Response | <a href="../../Asterisk/ARI/Channels/Channel.html">Channels::Channel</a>
+
+        <a class="method-permalink" href="#originate(endpoint:String,extension:String?=nil,context:String?=nil,priority:Int64?=nil,label:String?=nil,app:String?=nil,app_args:String?=nil,caller_id:String?=nil,timeout:Int32?=30,variables:Hash(String,String%7CBool%7CInt32%7CFloat32)?=nil,channel_id:String?=nil,other_channel_id:String?=nil,originator:String?=nil,formats:String?=nil):HTTP::Client::Response%7CChannels::Channel-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Create a new channel (originate).</p>
+
+<p>Arguments:</p>
+
+<ul><li><code>endpoint</code> - endpoint to call. (required);</li><li><code>extension</code> - the extension to dial after the endpoint answers. Mutually exclusive with 'app';</li><li><code>context</code> - the context to dial after the endpoint answers. If omitted, uses 'default'. Mutually exclusive with 'app';</li><li><code>priority</code> - the priority to dial after the endpoint answers. If omitted, uses 1. Mutually exclusive with 'app';</li><li><code>label</code> - the label to dial after the endpoint answers. Will supersede 'priority' if provided. Mutually exclusive with 'app';</li><li><code>app</code> - the application that is subscribed to the originated channel. When the channel is answered, it will be passed to this Stasis application. Mutually exclusive with 'context', 'extension', 'priority', and 'label';</li><li><code>app_args</code> - the application arguments to pass to the Stasis application provided by 'app'. Mutually exclusive with 'context', 'extension', 'priority', and 'label';</li><li><code>caller_id</code> - callerID to use when dialing the endpoint or extension;</li><li><code>timeout</code> - timeout (in seconds) before giving up dialing, or -1 for no timeout;</li><li><code>variables</code> - the "variables" key in the body object holds variable key/value pairs to set on the channel on creation. Other keys in the body object are interpreted as query parameters. Ex. { "endpoint": "SIP/Alice", "variables": { "CALLERID(name)": "Alice" } };</li><li><code>channel_id</code> - the unique id to assign the channel on creation;</li><li><code>other_channel_id</code> - the unique id to assign the second channel when using local channels;</li><li><code>originator</code> - the unique id of the channel which is originating this one;</li><li><code>formats</code> - the format name capability list to use if originator is not specified. Ex. "ulaw,slin16".  Format names can be found with "core show codecs";</li></ul>
+
+<p>Error responses:</p>
+
+<ul><li>400 - Invalid parameters for originating a channel.</li><li>409 - Channel with given unique ID already exists.</li></ul>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/ctiapps/asterisk/blob/ffd9689a881fdb6fff1f700a69cc6c3a6b0b6b9e/src/asterisk/ari/resources/channels.cr#L42" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="originate_with_id(channel_id:String,endpoint:String,extension:String?=nil,context:String?=nil,priority:Int64?=nil,label:String?=nil,app:String?=nil,app_args:String?=nil,caller_id:String?=nil,timeout:Int32?=30,variables:Hash(String,String|Bool|Int32|Float32)?=nil,other_channel_id:String?=nil,originator:String?=nil,formats:String?=nil):HTTP::Client::Response|Channels::Channel-instance-method">
+      <div class="signature">
+        
+        def <strong>originate_with_id</strong>(channel_id : String, endpoint : String, extension : String? = <span class="n">nil</span>, context : String? = <span class="n">nil</span>, priority : Int64? = <span class="n">nil</span>, label : String? = <span class="n">nil</span>, app : String? = <span class="n">nil</span>, app_args : String? = <span class="n">nil</span>, caller_id : String? = <span class="n">nil</span>, timeout : Int32? = <span class="n">30</span>, variables : Hash(String, String | Bool | Int32 | Float32)? = <span class="n">nil</span>, other_channel_id : String? = <span class="n">nil</span>, originator : String? = <span class="n">nil</span>, formats : String? = <span class="n">nil</span>) : HTTP::Client::Response | <a href="../../Asterisk/ARI/Channels/Channel.html">Channels::Channel</a>
+
+        <a class="method-permalink" href="#originate_with_id(channel_id:String,endpoint:String,extension:String?=nil,context:String?=nil,priority:Int64?=nil,label:String?=nil,app:String?=nil,app_args:String?=nil,caller_id:String?=nil,timeout:Int32?=30,variables:Hash(String,String%7CBool%7CInt32%7CFloat32)?=nil,other_channel_id:String?=nil,originator:String?=nil,formats:String?=nil):HTTP::Client::Response%7CChannels::Channel-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Create a new channel (originate with id).</p>
+
+<p>Arguments:</p>
+
+<ul><li><code>channel_id</code> - the unique id to assign the channel on creation. (required);</li><li><code>endpoint</code> - endpoint to call. (required);</li><li><code>extension</code> - the extension to dial after the endpoint answers. Mutually exclusive with 'app';</li><li><code>context</code> - the context to dial after the endpoint answers. If omitted, uses 'default'. Mutually exclusive with 'app';</li><li><code>priority</code> - the priority to dial after the endpoint answers. If omitted, uses 1. Mutually exclusive with 'app';</li><li><code>label</code> - the label to dial after the endpoint answers. Will supersede 'priority' if provided. Mutually exclusive with 'app';</li><li><code>app</code> - the application that is subscribed to the originated channel. When the channel is answered, it will be passed to this Stasis application. Mutually exclusive with 'context', 'extension', 'priority', and 'label';</li><li><code>app_args</code> - the application arguments to pass to the Stasis application provided by 'app'. Mutually exclusive with 'context', 'extension', 'priority', and 'label';</li><li><code>caller_id</code> - callerID to use when dialing the endpoint or extension;</li><li><code>timeout</code> - timeout (in seconds) before giving up dialing, or -1 for no timeout;</li><li><code>variables</code> - the "variables" key in the body object holds variable key/value pairs to set on the channel on creation. Other keys in the body object are interpreted as query parameters. Ex. { "endpoint": "SIP/Alice", "variables": { "CALLERID(name)": "Alice" } };</li><li><code>other_channel_id</code> - the unique id to assign the second channel when using local channels;</li><li><code>originator</code> - the unique id of the channel which is originating this one;</li><li><code>formats</code> - the format name capability list to use if originator is not specified. Ex. "ulaw,slin16".  Format names can be found with "core show codecs";</li></ul>
+
+<p>Error responses:</p>
+
+<ul><li>400 - Invalid parameters for originating a channel.</li><li>409 - Channel with given unique ID already exists.</li></ul>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/ctiapps/asterisk/blob/ffd9689a881fdb6fff1f700a69cc6c3a6b0b6b9e/src/asterisk/ari/resources/channels.cr#L123" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="play(channel_id:String,media:String,lang:String?=nil,offsetms:Int32?=nil,skipms:Int32?=3000,playback_id:String?=nil):HTTP::Client::Response|Playbacks::Playback-instance-method">
+      <div class="signature">
+        
+        def <strong>play</strong>(channel_id : String, media : String, lang : String? = <span class="n">nil</span>, offsetms : Int32? = <span class="n">nil</span>, skipms : Int32? = <span class="n">3000</span>, playback_id : String? = <span class="n">nil</span>) : HTTP::Client::Response | <a href="../../Asterisk/ARI/Playbacks/Playback.html">Playbacks::Playback</a>
+
+        <a class="method-permalink" href="#play(channel_id:String,media:String,lang:String?=nil,offsetms:Int32?=nil,skipms:Int32?=3000,playback_id:String?=nil):HTTP::Client::Response%7CPlaybacks::Playback-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Start playback of media.</p>
+
+<p>Arguments:</p>
+
+<ul><li><code>channel_id</code> - channel's id. (required);</li><li><code>media</code> - media URIs to play. (required). Allow multiple instances (comma-separated list);</li><li><code>lang</code> - for sounds, selects language for sound;</li><li><code>offsetms</code> - number of milliseconds to skip before playing. Only applies to the first URI if multiple media URIs are specified;</li><li><code>skipms</code> - number of milliseconds to skip for forward/reverse operations;</li><li><code>playback_id</code> - playback ID;</li></ul>
+
+<p>Error responses:</p>
+
+<ul><li>404 - Channel not found</li><li>409 - Channel not in a Stasis application</li><li>412 - Channel in invalid state</li></ul>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/ctiapps/asterisk/blob/ffd9689a881fdb6fff1f700a69cc6c3a6b0b6b9e/src/asterisk/ari/resources/channels.cr#L419" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="play_with_id(channel_id:String,playback_id:String,media:String,lang:String?=nil,offsetms:Int32?=nil,skipms:Int32?=3000):HTTP::Client::Response|Playbacks::Playback-instance-method">
+      <div class="signature">
+        
+        def <strong>play_with_id</strong>(channel_id : String, playback_id : String, media : String, lang : String? = <span class="n">nil</span>, offsetms : Int32? = <span class="n">nil</span>, skipms : Int32? = <span class="n">3000</span>) : HTTP::Client::Response | <a href="../../Asterisk/ARI/Playbacks/Playback.html">Playbacks::Playback</a>
+
+        <a class="method-permalink" href="#play_with_id(channel_id:String,playback_id:String,media:String,lang:String?=nil,offsetms:Int32?=nil,skipms:Int32?=3000):HTTP::Client::Response%7CPlaybacks::Playback-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Start playback of media and specify the playbackId.</p>
+
+<p>Arguments:</p>
+
+<ul><li><code>channel_id</code> - channel's id. (required);</li><li><code>playback_id</code> - playback ID. (required);</li><li><code>media</code> - media URIs to play. (required). Allow multiple instances (comma-separated list);</li><li><code>lang</code> - for sounds, selects language for sound;</li><li><code>offsetms</code> - number of milliseconds to skip before playing. Only applies to the first URI if multiple media URIs are specified;</li><li><code>skipms</code> - number of milliseconds to skip for forward/reverse operations;</li></ul>
+
+<p>Error responses:</p>
+
+<ul><li>404 - Channel not found</li><li>409 - Channel not in a Stasis application</li><li>412 - Channel in invalid state</li></ul>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/ctiapps/asterisk/blob/ffd9689a881fdb6fff1f700a69cc6c3a6b0b6b9e/src/asterisk/ari/resources/channels.cr#L446" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="record(channel_id:String,name:String,format:String,max_duration_seconds:Int32?=0,max_silence_seconds:Int32?=0,if_exists:String?=&amp;quot;fail&amp;quot;,beep:Bool?=false,terminate_on:String?=&amp;quot;none&amp;quot;):HTTP::Client::Response|Recordings::LiveRecording-instance-method">
+      <div class="signature">
+        
+        def <strong>record</strong>(channel_id : String, name : String, format : String, max_duration_seconds : Int32? = <span class="n">0</span>, max_silence_seconds : Int32? = <span class="n">0</span>, if_exists : String? = <span class="s">&quot;fail&quot;</span>, beep : Bool? = <span class="n">false</span>, terminate_on : String? = <span class="s">&quot;none&quot;</span>) : HTTP::Client::Response | <a href="../../Asterisk/ARI/Recordings/LiveRecording.html">Recordings::LiveRecording</a>
+
+        <a class="method-permalink" href="#record(channel_id:String,name:String,format:String,max_duration_seconds:Int32?=0,max_silence_seconds:Int32?=0,if_exists:String?=&quot;fail&quot;,beep:Bool?=false,terminate_on:String?=&quot;none&quot;):HTTP::Client::Response%7CRecordings::LiveRecording-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Start a recording.</p>
+
+<p>Arguments:</p>
+
+<ul><li><code>channel_id</code> - channel's id. (required);</li><li><code>name</code> - recording's filename. (required);</li><li><code>format</code> - format to encode audio in. (required);</li><li><code>max_duration_seconds</code> - maximum duration of the recording, in seconds. 0 for no limit;</li><li><code>max_silence_seconds</code> - maximum duration of silence, in seconds. 0 for no limit;</li><li><code>if_exists</code> - action to take if a recording with the same name already exists;</li><li><code>beep</code> - play beep when recording begins;</li><li><code>terminate_on</code> - dTMF input to terminate recording;</li></ul>
+
+<p>Error responses:</p>
+
+<ul><li>400 - Invalid parameters</li><li>404 - Channel not found</li><li>409 - Channel is not in a Stasis application; the channel is currently bridged with other hcannels; A recording with the same name already exists on the system and can not be overwritten because it is in progress or ifExists=fail</li><li>422 - The format specified is unknown on this system</li></ul>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/ctiapps/asterisk/blob/ffd9689a881fdb6fff1f700a69cc6c3a6b0b6b9e/src/asterisk/ari/resources/channels.cr#L475" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="redirect(channel_id:String,endpoint:String)-instance-method">
+      <div class="signature">
+        
+        def <strong>redirect</strong>(channel_id : String, endpoint : String)
+
+        <a class="method-permalink" href="#redirect(channel_id:String,endpoint:String)-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Redirect the channel to a different location.</p>
+
+<p>Arguments:</p>
+
+<ul><li><code>channel_id</code> - channel's id. (required);</li><li><code>endpoint</code> - the endpoint to redirect the channel to. (required);</li></ul>
+
+<p>Error responses:</p>
+
+<ul><li>400 - Endpoint parameter not provided</li><li>404 - Channel or endpoint not found</li><li>409 - Channel not in a Stasis application</li><li>422 - Endpoint is not the same type as the channel</li><li>412 - Channel in invalid state</li></ul>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/ctiapps/asterisk/blob/ffd9689a881fdb6fff1f700a69cc6c3a6b0b6b9e/src/asterisk/ari/resources/channels.cr#L215" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="ring(channel_id:String)-instance-method">
+      <div class="signature">
+        
+        def <strong>ring</strong>(channel_id : String)
+
+        <a class="method-permalink" href="#ring(channel_id:String)-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Indicate ringing to a channel.</p>
+
+<p>Arguments:</p>
+
+<ul><li><code>channel_id</code> - channel's id. (required);</li></ul>
+
+<p>Error responses:</p>
+
+<ul><li>404 - Channel not found</li><li>409 - Channel not in a Stasis application</li><li>412 - Channel in invalid state</li></ul>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/ctiapps/asterisk/blob/ffd9689a881fdb6fff1f700a69cc6c3a6b0b6b9e/src/asterisk/ari/resources/channels.cr#L242" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="ring_stop(channel_id:String)-instance-method">
+      <div class="signature">
+        
+        def <strong>ring_stop</strong>(channel_id : String)
+
+        <a class="method-permalink" href="#ring_stop(channel_id:String)-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Stop ringing indication on a channel if locally generated.</p>
+
+<p>Arguments:</p>
+
+<ul><li><code>channel_id</code> - channel's id. (required);</li></ul>
+
+<p>Error responses:</p>
+
+<ul><li>404 - Channel not found</li><li>409 - Channel not in a Stasis application</li><li>412 - Channel in invalid state</li></ul>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/ctiapps/asterisk/blob/ffd9689a881fdb6fff1f700a69cc6c3a6b0b6b9e/src/asterisk/ari/resources/channels.cr#L255" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="rtpstatistics(channel_id:String):HTTP::Client::Response|RTPstat-instance-method">
+      <div class="signature">
+        
+        def <strong>rtpstatistics</strong>(channel_id : String) : HTTP::Client::Response | <a href="../../Asterisk/ARI/Channels/RTPstat.html">RTPstat</a>
+
+        <a class="method-permalink" href="#rtpstatistics(channel_id:String):HTTP::Client::Response%7CRTPstat-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>RTP stats on a channel.</p>
+
+<p>Arguments:</p>
+
+<ul><li><code>channel_id</code> - channel's id. (required);</li></ul>
+
+<p>Error responses:</p>
+
+<ul><li>404 - Channel cannot be found.</li></ul>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/ctiapps/asterisk/blob/ffd9689a881fdb6fff1f700a69cc6c3a6b0b6b9e/src/asterisk/ari/resources/channels.cr#L603" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="send_dtmf(channel_id:String,dtmf:String?=nil,before:Int32?=0,between:Int32?=100,duration:Int32?=100,after:Int32?=0)-instance-method">
+      <div class="signature">
+        
+        def <strong>send_dtmf</strong>(channel_id : String, dtmf : String? = <span class="n">nil</span>, before : Int32? = <span class="n">0</span>, between : Int32? = <span class="n">100</span>, duration : Int32? = <span class="n">100</span>, after : Int32? = <span class="n">0</span>)
+
+        <a class="method-permalink" href="#send_dtmf(channel_id:String,dtmf:String?=nil,before:Int32?=0,between:Int32?=100,duration:Int32?=100,after:Int32?=0)-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Send provided DTMF to a given channel.</p>
+
+<p>Arguments:</p>
+
+<ul><li><code>channel_id</code> - channel's id. (required);</li><li><code>dtmf</code> - dTMF To send;</li><li><code>before</code> - amount of time to wait before DTMF digits (specified in milliseconds) start;</li><li><code>between</code> - amount of time in between DTMF digits (specified in milliseconds);</li><li><code>duration</code> - length of each DTMF digit (specified in milliseconds);</li><li><code>after</code> - amount of time to wait after DTMF digits (specified in milliseconds) end;</li></ul>
+
+<p>Error responses:</p>
+
+<ul><li>400 - DTMF is required</li><li>404 - Channel not found</li><li>409 - Channel not in a Stasis application</li><li>412 - Channel in invalid state</li></ul>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/ctiapps/asterisk/blob/ffd9689a881fdb6fff1f700a69cc6c3a6b0b6b9e/src/asterisk/ari/resources/channels.cr#L274" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="set_channel_var(channel_id:String,variable:String,value:String?=nil)-instance-method">
+      <div class="signature">
+        
+        def <strong>set_channel_var</strong>(channel_id : String, variable : String, value : String? = <span class="n">nil</span>)
+
+        <a class="method-permalink" href="#set_channel_var(channel_id:String,variable:String,value:String?=nil)-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Set the value of a channel variable or function.</p>
+
+<p>Arguments:</p>
+
+<ul><li><code>channel_id</code> - channel's id. (required);</li><li><code>variable</code> - the channel variable or function to set. (required);</li><li><code>value</code> - the value to set the variable to;</li></ul>
+
+<p>Error responses:</p>
+
+<ul><li>400 - Missing variable parameter.</li><li>404 - Channel not found</li><li>409 - Channel not in a Stasis application</li></ul>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/ctiapps/asterisk/blob/ffd9689a881fdb6fff1f700a69cc6c3a6b0b6b9e/src/asterisk/ari/resources/channels.cr#L517" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="snoop_channel(channel_id:String,app:String,spy:String?=&amp;quot;none&amp;quot;,whisper:String?=&amp;quot;none&amp;quot;,app_args:String?=nil,snoop_id:String?=nil):HTTP::Client::Response|Channels::Channel-instance-method">
+      <div class="signature">
+        
+        def <strong>snoop_channel</strong>(channel_id : String, app : String, spy : String? = <span class="s">&quot;none&quot;</span>, whisper : String? = <span class="s">&quot;none&quot;</span>, app_args : String? = <span class="n">nil</span>, snoop_id : String? = <span class="n">nil</span>) : HTTP::Client::Response | <a href="../../Asterisk/ARI/Channels/Channel.html">Channels::Channel</a>
+
+        <a class="method-permalink" href="#snoop_channel(channel_id:String,app:String,spy:String?=&quot;none&quot;,whisper:String?=&quot;none&quot;,app_args:String?=nil,snoop_id:String?=nil):HTTP::Client::Response%7CChannels::Channel-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Start snooping.</p>
+
+<p>Arguments:</p>
+
+<ul><li><code>channel_id</code> - channel's id. (required);</li><li><code>app</code> - application the snooping channel is placed into. (required);</li><li><code>spy</code> - direction of audio to spy on;</li><li><code>whisper</code> - direction of audio to whisper into;</li><li><code>app_args</code> - the application arguments to pass to the Stasis application;</li><li><code>snoop_id</code> - unique ID to assign to snooping channel;</li></ul>
+
+<p>Error responses:</p>
+
+<ul><li>400 - Invalid parameters</li><li>404 - Channel not found</li></ul>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/ctiapps/asterisk/blob/ffd9689a881fdb6fff1f700a69cc6c3a6b0b6b9e/src/asterisk/ari/resources/channels.cr#L539" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="snoop_channel_with_id(channel_id:String,snoop_id:String,app:String,spy:String?=&amp;quot;none&amp;quot;,whisper:String?=&amp;quot;none&amp;quot;,app_args:String?=nil):HTTP::Client::Response|Channels::Channel-instance-method">
+      <div class="signature">
+        
+        def <strong>snoop_channel_with_id</strong>(channel_id : String, snoop_id : String, app : String, spy : String? = <span class="s">&quot;none&quot;</span>, whisper : String? = <span class="s">&quot;none&quot;</span>, app_args : String? = <span class="n">nil</span>) : HTTP::Client::Response | <a href="../../Asterisk/ARI/Channels/Channel.html">Channels::Channel</a>
+
+        <a class="method-permalink" href="#snoop_channel_with_id(channel_id:String,snoop_id:String,app:String,spy:String?=&quot;none&quot;,whisper:String?=&quot;none&quot;,app_args:String?=nil):HTTP::Client::Response%7CChannels::Channel-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Start snooping.</p>
+
+<p>Arguments:</p>
+
+<ul><li><code>channel_id</code> - channel's id. (required);</li><li><code>snoop_id</code> - unique ID to assign to snooping channel. (required);</li><li><code>app</code> - application the snooping channel is placed into. (required);</li><li><code>spy</code> - direction of audio to spy on;</li><li><code>whisper</code> - direction of audio to whisper into;</li><li><code>app_args</code> - the application arguments to pass to the Stasis application;</li></ul>
+
+<p>Error responses:</p>
+
+<ul><li>400 - Invalid parameters</li><li>404 - Channel not found</li></ul>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/ctiapps/asterisk/blob/ffd9689a881fdb6fff1f700a69cc6c3a6b0b6b9e/src/asterisk/ari/resources/channels.cr#L565" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="start_moh(channel_id:String,moh_class:String?=nil)-instance-method">
+      <div class="signature">
+        
+        def <strong>start_moh</strong>(channel_id : String, moh_class : String? = <span class="n">nil</span>)
+
+        <a class="method-permalink" href="#start_moh(channel_id:String,moh_class:String?=nil)-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Play music on hold to a channel.</p>
+
+<p>Arguments:</p>
+
+<ul><li><code>channel_id</code> - channel's id. (required);</li><li><code>moh_class</code> - music on hold class to use;</li></ul>
+
+<p>Error responses:</p>
+
+<ul><li>404 - Channel not found</li><li>409 - Channel not in a Stasis application</li><li>412 - Channel in invalid state</li></ul>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/ctiapps/asterisk/blob/ffd9689a881fdb6fff1f700a69cc6c3a6b0b6b9e/src/asterisk/ari/resources/channels.cr#L358" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="start_silence(channel_id:String)-instance-method">
+      <div class="signature">
+        
+        def <strong>start_silence</strong>(channel_id : String)
+
+        <a class="method-permalink" href="#start_silence(channel_id:String)-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Play silence to a channel.</p>
+
+<p>Arguments:</p>
+
+<ul><li><code>channel_id</code> - channel's id. (required);</li></ul>
+
+<p>Error responses:</p>
+
+<ul><li>404 - Channel not found</li><li>409 - Channel not in a Stasis application</li><li>412 - Channel in invalid state</li></ul>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/ctiapps/asterisk/blob/ffd9689a881fdb6fff1f700a69cc6c3a6b0b6b9e/src/asterisk/ari/resources/channels.cr#L388" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="stop_moh(channel_id:String)-instance-method">
+      <div class="signature">
+        
+        def <strong>stop_moh</strong>(channel_id : String)
+
+        <a class="method-permalink" href="#stop_moh(channel_id:String)-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Stop playing music on hold to a channel.</p>
+
+<p>Arguments:</p>
+
+<ul><li><code>channel_id</code> - channel's id. (required);</li></ul>
+
+<p>Error responses:</p>
+
+<ul><li>404 - Channel not found</li><li>409 - Channel not in a Stasis application</li><li>412 - Channel in invalid state</li></ul>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/ctiapps/asterisk/blob/ffd9689a881fdb6fff1f700a69cc6c3a6b0b6b9e/src/asterisk/ari/resources/channels.cr#L375" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="stop_silence(channel_id:String)-instance-method">
+      <div class="signature">
+        
+        def <strong>stop_silence</strong>(channel_id : String)
+
+        <a class="method-permalink" href="#stop_silence(channel_id:String)-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Stop playing silence to a channel.</p>
+
+<p>Arguments:</p>
+
+<ul><li><code>channel_id</code> - channel's id. (required);</li></ul>
+
+<p>Error responses:</p>
+
+<ul><li>404 - Channel not found</li><li>409 - Channel not in a Stasis application</li><li>412 - Channel in invalid state</li></ul>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/ctiapps/asterisk/blob/ffd9689a881fdb6fff1f700a69cc6c3a6b0b6b9e/src/asterisk/ari/resources/channels.cr#L401" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="unhold(channel_id:String)-instance-method">
+      <div class="signature">
+        
+        def <strong>unhold</strong>(channel_id : String)
+
+        <a class="method-permalink" href="#unhold(channel_id:String)-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Remove a channel from hold.</p>
+
+<p>Arguments:</p>
+
+<ul><li><code>channel_id</code> - channel's id. (required);</li></ul>
+
+<p>Error responses:</p>
+
+<ul><li>404 - Channel not found</li><li>409 - Channel not in a Stasis application</li><li>412 - Channel in invalid state</li></ul>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/ctiapps/asterisk/blob/ffd9689a881fdb6fff1f700a69cc6c3a6b0b6b9e/src/asterisk/ari/resources/channels.cr#L344" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="unmute(channel_id:String,direction:String?=&amp;quot;both&amp;quot;)-instance-method">
+      <div class="signature">
+        
+        def <strong>unmute</strong>(channel_id : String, direction : String? = <span class="s">&quot;both&quot;</span>)
+
+        <a class="method-permalink" href="#unmute(channel_id:String,direction:String?=&quot;both&quot;)-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Unmute a channel.</p>
+
+<p>Arguments:</p>
+
+<ul><li><code>channel_id</code> - channel's id. (required);</li><li><code>direction</code> - direction in which to unmute audio;</li></ul>
+
+<p>Error responses:</p>
+
+<ul><li>404 - Channel not found</li><li>409 - Channel not in a Stasis application</li><li>412 - Channel in invalid state</li></ul>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/ctiapps/asterisk/blob/ffd9689a881fdb6fff1f700a69cc6c3a6b0b6b9e/src/asterisk/ari/resources/channels.cr#L314" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+
+
+
+
+</div>
+
+</body>
+</html>

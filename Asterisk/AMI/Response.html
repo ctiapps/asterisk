@@ -1,0 +1,1445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="generator" content="Crystal Docs 0.30.1">
+
+
+<link href="../../css/style.css" rel="stylesheet" type="text/css">
+
+<script type="text/javascript" src="../../js/doc.js"></script>
+<script type="text/javascript">
+  CrystalDoc.base_path = "../../";
+</script>
+
+  <meta id="repository-name" content="github.com/ctiapps/asterisk">
+  <title>Asterisk::AMI::Response - github.com/ctiapps/asterisk</title>
+</head>
+<body>
+
+<div class="sidebar">
+  <div class="sidebar-header">
+    <div class="search-box">
+      <input type="search" class="search-input" placeholder="Search..." spellcheck="false" aria-label="Search">
+    </div>
+
+    <div class="repository-links">
+      <a href="../../index.html">README</a>
+    </div>
+  </div>
+
+  <div class="search-results" class="hidden">
+    <ul class="search-list"></ul>
+  </div>
+
+  <div class="types-list">
+    <ul>
+  
+  <li class="parent open current" data-id="github.com/ctiapps/asterisk/Asterisk" data-name="asterisk">
+      <a href="../../Asterisk.html">Asterisk</a>
+      
+        <ul>
+  
+  <li class="parent " data-id="github.com/ctiapps/asterisk/Asterisk/AGI" data-name="asterisk::agi">
+      <a href="../../Asterisk/AGI.html">AGI</a>
+      
+        <ul>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/AGI/Commands" data-name="asterisk::agi::commands">
+      <a href="../../Asterisk/AGI/Commands.html">Commands</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/AGI/Response" data-name="asterisk::agi::response">
+      <a href="../../Asterisk/AGI/Response.html">Response</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class="parent open current" data-id="github.com/ctiapps/asterisk/Asterisk/AMI" data-name="asterisk::ami">
+      <a href="../../Asterisk/AMI.html">AMI</a>
+      
+        <ul>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/AMI/ActionID" data-name="asterisk::ami::actionid">
+      <a href="../../Asterisk/AMI/ActionID.html">ActionID</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/AMI/AMIData" data-name="asterisk::ami::amidata">
+      <a href="../../Asterisk/AMI/AMIData.html">AMIData</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/AMI/ConnectionError" data-name="asterisk::ami::connectionerror">
+      <a href="../../Asterisk/AMI/ConnectionError.html">ConnectionError</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/AMI/Event" data-name="asterisk::ami::event">
+      <a href="../../Asterisk/AMI/Event.html">Event</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/AMI/EventName" data-name="asterisk::ami::eventname">
+      <a href="../../Asterisk/AMI/EventName.html">EventName</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/AMI/LoginError" data-name="asterisk::ami::loginerror">
+      <a href="../../Asterisk/AMI/LoginError.html">LoginError</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/AMI/NotBootedError" data-name="asterisk::ami::notbootederror">
+      <a href="../../Asterisk/AMI/NotBootedError.html">NotBootedError</a>
+      
+    </li>
+  
+  <li class=" current" data-id="github.com/ctiapps/asterisk/Asterisk/AMI/Response" data-name="asterisk::ami::response">
+      <a href="../../Asterisk/AMI/Response.html">Response</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class="parent " data-id="github.com/ctiapps/asterisk/Asterisk/ARI" data-name="asterisk::ari">
+      <a href="../../Asterisk/ARI.html">ARI</a>
+      
+        <ul>
+  
+  <li class="parent " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Applications" data-name="asterisk::ari::applications">
+      <a href="../../Asterisk/ARI/Applications.html">Applications</a>
+      
+        <ul>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Applications/Application" data-name="asterisk::ari::applications::application">
+      <a href="../../Asterisk/ARI/Applications/Application.html">Application</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class="parent " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Asterisk" data-name="asterisk::ari::asterisk">
+      <a href="../../Asterisk/ARI/Asterisk.html">Asterisk</a>
+      
+        <ul>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Asterisk/AsteriskInfo" data-name="asterisk::ari::asterisk::asteriskinfo">
+      <a href="../../Asterisk/ARI/Asterisk/AsteriskInfo.html">AsteriskInfo</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Asterisk/AsteriskPing" data-name="asterisk::ari::asterisk::asteriskping">
+      <a href="../../Asterisk/ARI/Asterisk/AsteriskPing.html">AsteriskPing</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Asterisk/BuildInfo" data-name="asterisk::ari::asterisk::buildinfo">
+      <a href="../../Asterisk/ARI/Asterisk/BuildInfo.html">BuildInfo</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Asterisk/ConfigInfo" data-name="asterisk::ari::asterisk::configinfo">
+      <a href="../../Asterisk/ARI/Asterisk/ConfigInfo.html">ConfigInfo</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Asterisk/ConfigTuple" data-name="asterisk::ari::asterisk::configtuple">
+      <a href="../../Asterisk/ARI/Asterisk/ConfigTuple.html">ConfigTuple</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Asterisk/LogChannel" data-name="asterisk::ari::asterisk::logchannel">
+      <a href="../../Asterisk/ARI/Asterisk/LogChannel.html">LogChannel</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Asterisk/Module" data-name="asterisk::ari::asterisk::module">
+      <a href="../../Asterisk/ARI/Asterisk/Module.html">Module</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Asterisk/SetId" data-name="asterisk::ari::asterisk::setid">
+      <a href="../../Asterisk/ARI/Asterisk/SetId.html">SetId</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Asterisk/StatusInfo" data-name="asterisk::ari::asterisk::statusinfo">
+      <a href="../../Asterisk/ARI/Asterisk/StatusInfo.html">StatusInfo</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Asterisk/SystemInfo" data-name="asterisk::ari::asterisk::systeminfo">
+      <a href="../../Asterisk/ARI/Asterisk/SystemInfo.html">SystemInfo</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Asterisk/Variable" data-name="asterisk::ari::asterisk::variable">
+      <a href="../../Asterisk/ARI/Asterisk/Variable.html">Variable</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/AuthenticationError" data-name="asterisk::ari::authenticationerror">
+      <a href="../../Asterisk/ARI/AuthenticationError.html">AuthenticationError</a>
+      
+    </li>
+  
+  <li class="parent " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Bridges" data-name="asterisk::ari::bridges">
+      <a href="../../Asterisk/ARI/Bridges.html">Bridges</a>
+      
+        <ul>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Bridges/Bridge" data-name="asterisk::ari::bridges::bridge">
+      <a href="../../Asterisk/ARI/Bridges/Bridge.html">Bridge</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class="parent " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Channels" data-name="asterisk::ari::channels">
+      <a href="../../Asterisk/ARI/Channels.html">Channels</a>
+      
+        <ul>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Channels/CallerID" data-name="asterisk::ari::channels::callerid">
+      <a href="../../Asterisk/ARI/Channels/CallerID.html">CallerID</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Channels/Channel" data-name="asterisk::ari::channels::channel">
+      <a href="../../Asterisk/ARI/Channels/Channel.html">Channel</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Channels/Dialed" data-name="asterisk::ari::channels::dialed">
+      <a href="../../Asterisk/ARI/Channels/Dialed.html">Dialed</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Channels/DialplanCEP" data-name="asterisk::ari::channels::dialplancep">
+      <a href="../../Asterisk/ARI/Channels/DialplanCEP.html">DialplanCEP</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Channels/ExternalMedia" data-name="asterisk::ari::channels::externalmedia">
+      <a href="../../Asterisk/ARI/Channels/ExternalMedia.html">ExternalMedia</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Channels/RTPstat" data-name="asterisk::ari::channels::rtpstat">
+      <a href="../../Asterisk/ARI/Channels/RTPstat.html">RTPstat</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/ConnectionError" data-name="asterisk::ari::connectionerror">
+      <a href="../../Asterisk/ARI/ConnectionError.html">ConnectionError</a>
+      
+    </li>
+  
+  <li class="parent " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/DeviceStates" data-name="asterisk::ari::devicestates">
+      <a href="../../Asterisk/ARI/DeviceStates.html">DeviceStates</a>
+      
+        <ul>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/DeviceStates/DeviceState" data-name="asterisk::ari::devicestates::devicestate">
+      <a href="../../Asterisk/ARI/DeviceStates/DeviceState.html">DeviceState</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class="parent " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Endpoints" data-name="asterisk::ari::endpoints">
+      <a href="../../Asterisk/ARI/Endpoints.html">Endpoints</a>
+      
+        <ul>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Endpoints/Endpoint" data-name="asterisk::ari::endpoints::endpoint">
+      <a href="../../Asterisk/ARI/Endpoints/Endpoint.html">Endpoint</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Endpoints/TextMessage" data-name="asterisk::ari::endpoints::textmessage">
+      <a href="../../Asterisk/ARI/Endpoints/TextMessage.html">TextMessage</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Endpoints/TextMessageVariable" data-name="asterisk::ari::endpoints::textmessagevariable">
+      <a href="../../Asterisk/ARI/Endpoints/TextMessageVariable.html">TextMessageVariable</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class="parent " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events" data-name="asterisk::ari::events">
+      <a href="../../Asterisk/ARI/Events.html">Events</a>
+      
+        <ul>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/ApplicationMoveFailed" data-name="asterisk::ari::events::applicationmovefailed">
+      <a href="../../Asterisk/ARI/Events/ApplicationMoveFailed.html">ApplicationMoveFailed</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/ApplicationReplaced" data-name="asterisk::ari::events::applicationreplaced">
+      <a href="../../Asterisk/ARI/Events/ApplicationReplaced.html">ApplicationReplaced</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/BridgeAttendedTransfer" data-name="asterisk::ari::events::bridgeattendedtransfer">
+      <a href="../../Asterisk/ARI/Events/BridgeAttendedTransfer.html">BridgeAttendedTransfer</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/BridgeBlindTransfer" data-name="asterisk::ari::events::bridgeblindtransfer">
+      <a href="../../Asterisk/ARI/Events/BridgeBlindTransfer.html">BridgeBlindTransfer</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/BridgeCreated" data-name="asterisk::ari::events::bridgecreated">
+      <a href="../../Asterisk/ARI/Events/BridgeCreated.html">BridgeCreated</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/BridgeDestroyed" data-name="asterisk::ari::events::bridgedestroyed">
+      <a href="../../Asterisk/ARI/Events/BridgeDestroyed.html">BridgeDestroyed</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/BridgeMerged" data-name="asterisk::ari::events::bridgemerged">
+      <a href="../../Asterisk/ARI/Events/BridgeMerged.html">BridgeMerged</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/BridgeVideoSourceChanged" data-name="asterisk::ari::events::bridgevideosourcechanged">
+      <a href="../../Asterisk/ARI/Events/BridgeVideoSourceChanged.html">BridgeVideoSourceChanged</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/ChannelCallerId" data-name="asterisk::ari::events::channelcallerid">
+      <a href="../../Asterisk/ARI/Events/ChannelCallerId.html">ChannelCallerId</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/ChannelConnectedLine" data-name="asterisk::ari::events::channelconnectedline">
+      <a href="../../Asterisk/ARI/Events/ChannelConnectedLine.html">ChannelConnectedLine</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/ChannelCreated" data-name="asterisk::ari::events::channelcreated">
+      <a href="../../Asterisk/ARI/Events/ChannelCreated.html">ChannelCreated</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/ChannelDestroyed" data-name="asterisk::ari::events::channeldestroyed">
+      <a href="../../Asterisk/ARI/Events/ChannelDestroyed.html">ChannelDestroyed</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/ChannelDialplan" data-name="asterisk::ari::events::channeldialplan">
+      <a href="../../Asterisk/ARI/Events/ChannelDialplan.html">ChannelDialplan</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/ChannelDtmfReceived" data-name="asterisk::ari::events::channeldtmfreceived">
+      <a href="../../Asterisk/ARI/Events/ChannelDtmfReceived.html">ChannelDtmfReceived</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/ChannelEnteredBridge" data-name="asterisk::ari::events::channelenteredbridge">
+      <a href="../../Asterisk/ARI/Events/ChannelEnteredBridge.html">ChannelEnteredBridge</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/ChannelHangupRequest" data-name="asterisk::ari::events::channelhanguprequest">
+      <a href="../../Asterisk/ARI/Events/ChannelHangupRequest.html">ChannelHangupRequest</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/ChannelHold" data-name="asterisk::ari::events::channelhold">
+      <a href="../../Asterisk/ARI/Events/ChannelHold.html">ChannelHold</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/ChannelLeftBridge" data-name="asterisk::ari::events::channelleftbridge">
+      <a href="../../Asterisk/ARI/Events/ChannelLeftBridge.html">ChannelLeftBridge</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/ChannelStateChange" data-name="asterisk::ari::events::channelstatechange">
+      <a href="../../Asterisk/ARI/Events/ChannelStateChange.html">ChannelStateChange</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/ChannelTalkingFinished" data-name="asterisk::ari::events::channeltalkingfinished">
+      <a href="../../Asterisk/ARI/Events/ChannelTalkingFinished.html">ChannelTalkingFinished</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/ChannelTalkingStarted" data-name="asterisk::ari::events::channeltalkingstarted">
+      <a href="../../Asterisk/ARI/Events/ChannelTalkingStarted.html">ChannelTalkingStarted</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/ChannelUnhold" data-name="asterisk::ari::events::channelunhold">
+      <a href="../../Asterisk/ARI/Events/ChannelUnhold.html">ChannelUnhold</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/ChannelUserevent" data-name="asterisk::ari::events::channeluserevent">
+      <a href="../../Asterisk/ARI/Events/ChannelUserevent.html">ChannelUserevent</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/ChannelVarset" data-name="asterisk::ari::events::channelvarset">
+      <a href="../../Asterisk/ARI/Events/ChannelVarset.html">ChannelVarset</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/ContactInfo" data-name="asterisk::ari::events::contactinfo">
+      <a href="../../Asterisk/ARI/Events/ContactInfo.html">ContactInfo</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/ContactStatusChange" data-name="asterisk::ari::events::contactstatuschange">
+      <a href="../../Asterisk/ARI/Events/ContactStatusChange.html">ContactStatusChange</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/DeviceStateChanged" data-name="asterisk::ari::events::devicestatechanged">
+      <a href="../../Asterisk/ARI/Events/DeviceStateChanged.html">DeviceStateChanged</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/Dial" data-name="asterisk::ari::events::dial">
+      <a href="../../Asterisk/ARI/Events/Dial.html">Dial</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/EndpointStateChange" data-name="asterisk::ari::events::endpointstatechange">
+      <a href="../../Asterisk/ARI/Events/EndpointStateChange.html">EndpointStateChange</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/Event" data-name="asterisk::ari::events::event">
+      <a href="../../Asterisk/ARI/Events/Event.html">Event</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/Message" data-name="asterisk::ari::events::message">
+      <a href="../../Asterisk/ARI/Events/Message.html">Message</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/MissingParams" data-name="asterisk::ari::events::missingparams">
+      <a href="../../Asterisk/ARI/Events/MissingParams.html">MissingParams</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/Peer" data-name="asterisk::ari::events::peer">
+      <a href="../../Asterisk/ARI/Events/Peer.html">Peer</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/PeerStatusChange" data-name="asterisk::ari::events::peerstatuschange">
+      <a href="../../Asterisk/ARI/Events/PeerStatusChange.html">PeerStatusChange</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/PlaybackContinuing" data-name="asterisk::ari::events::playbackcontinuing">
+      <a href="../../Asterisk/ARI/Events/PlaybackContinuing.html">PlaybackContinuing</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/PlaybackFinished" data-name="asterisk::ari::events::playbackfinished">
+      <a href="../../Asterisk/ARI/Events/PlaybackFinished.html">PlaybackFinished</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/PlaybackStarted" data-name="asterisk::ari::events::playbackstarted">
+      <a href="../../Asterisk/ARI/Events/PlaybackStarted.html">PlaybackStarted</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/RecordingFailed" data-name="asterisk::ari::events::recordingfailed">
+      <a href="../../Asterisk/ARI/Events/RecordingFailed.html">RecordingFailed</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/RecordingFinished" data-name="asterisk::ari::events::recordingfinished">
+      <a href="../../Asterisk/ARI/Events/RecordingFinished.html">RecordingFinished</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/RecordingStarted" data-name="asterisk::ari::events::recordingstarted">
+      <a href="../../Asterisk/ARI/Events/RecordingStarted.html">RecordingStarted</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/StasisEnd" data-name="asterisk::ari::events::stasisend">
+      <a href="../../Asterisk/ARI/Events/StasisEnd.html">StasisEnd</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/StasisStart" data-name="asterisk::ari::events::stasisstart">
+      <a href="../../Asterisk/ARI/Events/StasisStart.html">StasisStart</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Events/TextMessageReceived" data-name="asterisk::ari::events::textmessagereceived">
+      <a href="../../Asterisk/ARI/Events/TextMessageReceived.html">TextMessageReceived</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class="parent " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Mailboxes" data-name="asterisk::ari::mailboxes">
+      <a href="../../Asterisk/ARI/Mailboxes.html">Mailboxes</a>
+      
+        <ul>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Mailboxes/Mailbox" data-name="asterisk::ari::mailboxes::mailbox">
+      <a href="../../Asterisk/ARI/Mailboxes/Mailbox.html">Mailbox</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class="parent " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Playbacks" data-name="asterisk::ari::playbacks">
+      <a href="../../Asterisk/ARI/Playbacks.html">Playbacks</a>
+      
+        <ul>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Playbacks/Playback" data-name="asterisk::ari::playbacks::playback">
+      <a href="../../Asterisk/ARI/Playbacks/Playback.html">Playback</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class="parent " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Recordings" data-name="asterisk::ari::recordings">
+      <a href="../../Asterisk/ARI/Recordings.html">Recordings</a>
+      
+        <ul>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Recordings/LiveRecording" data-name="asterisk::ari::recordings::liverecording">
+      <a href="../../Asterisk/ARI/Recordings/LiveRecording.html">LiveRecording</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Recordings/StoredRecording" data-name="asterisk::ari::recordings::storedrecording">
+      <a href="../../Asterisk/ARI/Recordings/StoredRecording.html">StoredRecording</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Request" data-name="asterisk::ari::request">
+      <a href="../../Asterisk/ARI/Request.html">Request</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Resources" data-name="asterisk::ari::resources">
+      <a href="../../Asterisk/ARI/Resources.html">Resources</a>
+      
+    </li>
+  
+  <li class="parent " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Sounds" data-name="asterisk::ari::sounds">
+      <a href="../../Asterisk/ARI/Sounds.html">Sounds</a>
+      
+        <ul>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Sounds/FormatLangPair" data-name="asterisk::ari::sounds::formatlangpair">
+      <a href="../../Asterisk/ARI/Sounds/FormatLangPair.html">FormatLangPair</a>
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/ARI/Sounds/Sound" data-name="asterisk::ari::sounds::sound">
+      <a href="../../Asterisk/ARI/Sounds/Sound.html">Sound</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class="parent " data-id="github.com/ctiapps/asterisk/Asterisk/AsyncAGI" data-name="asterisk::asyncagi">
+      <a href="../../Asterisk/AsyncAGI.html">AsyncAGI</a>
+      
+        <ul>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/AsyncAGI/Server" data-name="asterisk::asyncagi::server">
+      <a href="../../Asterisk/AsyncAGI/Server.html">Server</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class=" " data-id="github.com/ctiapps/asterisk/Asterisk/FastAGI" data-name="asterisk::fastagi">
+      <a href="../../Asterisk/FastAGI.html">FastAGI</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+</ul>
+
+  </div>
+</div>
+
+
+<div class="main-content">
+<h1 class="type-name">
+
+  <span class="kind">class</span> Asterisk::AMI::Response
+
+</h1>
+
+
+  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../Asterisk/AMI/Response.html">Asterisk::AMI::Response</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
+
+
+
+
+
+
+
+
+
+
+
+
+  <h2>Direct Known Subclasses</h2>
+  <ul class="other-types-list">
+  
+    <li class="other-type"><a href="../../Asterisk/AMI/Event.html">Asterisk::AMI::Event</a></li>
+  
+  </ul>
+
+
+
+
+
+
+  <h2>Defined in:</h2>
+  
+    
+      <a href="https://github.com/ctiapps/asterisk/blob/ffd9689a881fdb6fff1f700a69cc6c3a6b0b6b9e/src/asterisk/ami/response.cr#L3" target="_blank">
+        asterisk/ami/response.cr
+      </a>
+    
+    <br/>
+  
+
+
+
+
+
+  <h2>Constructors</h2>
+  <ul class="list-summary">
+    
+      <li class="entry-summary">
+        <a href="#new(data:AMIData?=nil)-class-method" class="signature"><strong>.new</strong>(data : AMIData? = <span class="n">nil</span>)</a>
+        
+      </li>
+    
+  </ul>
+
+
+
+
+
+  <h2>Instance Method Summary</h2>
+  <ul class="list-summary">
+    
+      <li class="entry-summary">
+        <a href="#[](*args,**options)-instance-method" class="signature"><strong>#[]</strong>(*args, **options)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#[](*args,**options,&block)-instance-method" class="signature"><strong>#[]</strong>(*args, **options, &block)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#[]=(*args,**options)-instance-method" class="signature"><strong>#[]=</strong>(*args, **options)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#[]?(*args,**options)-instance-method" class="signature"><strong>#[]?</strong>(*args, **options)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#[]?(*args,**options,&block)-instance-method" class="signature"><strong>#[]?</strong>(*args, **options, &block)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#actionid:ActionID-instance-method" class="signature"><strong>#actionid</strong> : ActionID</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#actionid=(actionid:ActionID)-instance-method" class="signature"><strong>#actionid=</strong>(actionid : ActionID)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#actionid?:ActionID?-instance-method" class="signature"><strong>#actionid?</strong> : ActionID?</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#actionid_present?:Bool-instance-method" class="signature"><strong>#actionid_present?</strong> : Bool</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#data:Hash(String,Array(String)%7CString)-instance-method" class="signature"><strong>#data</strong> : Hash(String, Array(String) | String)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#events:Array(AMIData)?-instance-method" class="signature"><strong>#events</strong> : Array(AMIData)?</a>
+        
+          <div class="summary"><p>Response including nested events (i.e.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#events=(events:Array(AMIData)?)-instance-method" class="signature"><strong>#events=</strong>(events : Array(AMIData)?)</a>
+        
+          <div class="summary"><p>Response including nested events (i.e.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#message:String-instance-method" class="signature"><strong>#message</strong> : String</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#message=(message:String)-instance-method" class="signature"><strong>#message=</strong>(message : String)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#message?:String?-instance-method" class="signature"><strong>#message?</strong> : String?</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#message_present?:Bool-instance-method" class="signature"><strong>#message_present?</strong> : Bool</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#output:Array(String)-instance-method" class="signature"><strong>#output</strong> : Array(String)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#output=(output:Array(String))-instance-method" class="signature"><strong>#output=</strong>(output : Array(String))</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#output?:Array(String)?-instance-method" class="signature"><strong>#output?</strong> : Array(String)?</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#output_present?:Bool-instance-method" class="signature"><strong>#output_present?</strong> : Bool</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#response:String-instance-method" class="signature"><strong>#response</strong> : String</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#response=(response:String)-instance-method" class="signature"><strong>#response=</strong>(response : String)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#response?:String?-instance-method" class="signature"><strong>#response?</strong> : String?</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#response_present?:Bool-instance-method" class="signature"><strong>#response_present?</strong> : Bool</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#success?:Bool-instance-method" class="signature"><strong>#success?</strong> : Bool</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#to_h:Hash(String,Array(String)%7CString)-instance-method" class="signature"><strong>#to_h</strong> : Hash(String, Array(String) | String)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#value:String-instance-method" class="signature"><strong>#value</strong> : String</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#value=(value:String)-instance-method" class="signature"><strong>#value=</strong>(value : String)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#value?:String?-instance-method" class="signature"><strong>#value?</strong> : String?</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#value_present?:Bool-instance-method" class="signature"><strong>#value_present?</strong> : Bool</a>
+        
+      </li>
+    
+  </ul>
+
+
+
+  <h2>Macro Summary</h2>
+  <ul class="list-summary">
+    
+      <li class="entry-summary">
+        <a href="#def_property(property,klass=String)-macro" class="signature"><strong>def_property</strong>(property, klass = <span class="t">String</span>)</a>
+        
+      </li>
+    
+  </ul>
+
+
+
+<div class="methods-inherited">
+  
+    
+
+
+    
+
+
+    
+
+
+  
+    
+
+
+    
+
+
+    
+
+
+  
+</div>
+
+
+  <h2>Constructor Detail</h2>
+  
+    <div class="entry-detail" id="new(data:AMIData?=nil)-class-method">
+      <div class="signature">
+        
+        def self.<strong>new</strong>(data : <a href="../../Asterisk/AMI/AMIData.html">AMIData</a>? = <span class="n">nil</span>)
+
+        <a class="method-permalink" href="#new(data:AMIData?=nil)-class-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/ctiapps/asterisk/blob/ffd9689a881fdb6fff1f700a69cc6c3a6b0b6b9e/src/asterisk/ami/response.cr#L40" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+
+
+
+
+
+  <h2>Instance Method Detail</h2>
+  
+    <div class="entry-detail" id="[](*args,**options)-instance-method">
+      <div class="signature">
+        
+        def <strong>[]</strong>(*args, **options)
+
+        <a class="method-permalink" href="#[](*args,**options)-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/ctiapps/asterisk/blob/ffd9689a881fdb6fff1f700a69cc6c3a6b0b6b9e/src/asterisk/ami/response.cr#L7" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="[](*args,**options,&amp;block)-instance-method">
+      <div class="signature">
+        
+        def <strong>[]</strong>(*args, **options, &block)
+
+        <a class="method-permalink" href="#[](*args,**options,&block)-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/ctiapps/asterisk/blob/ffd9689a881fdb6fff1f700a69cc6c3a6b0b6b9e/src/asterisk/ami/response.cr#L7" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="[]=(*args,**options)-instance-method">
+      <div class="signature">
+        
+        def <strong>[]=</strong>(*args, **options)
+
+        <a class="method-permalink" href="#[]=(*args,**options)-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/ctiapps/asterisk/blob/ffd9689a881fdb6fff1f700a69cc6c3a6b0b6b9e/src/asterisk/ami/response.cr#L5" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="[]?(*args,**options)-instance-method">
+      <div class="signature">
+        
+        def <strong>[]?</strong>(*args, **options)
+
+        <a class="method-permalink" href="#[]?(*args,**options)-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/ctiapps/asterisk/blob/ffd9689a881fdb6fff1f700a69cc6c3a6b0b6b9e/src/asterisk/ami/response.cr#L6" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="[]?(*args,**options,&amp;block)-instance-method">
+      <div class="signature">
+        
+        def <strong>[]?</strong>(*args, **options, &block)
+
+        <a class="method-permalink" href="#[]?(*args,**options,&block)-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/ctiapps/asterisk/blob/ffd9689a881fdb6fff1f700a69cc6c3a6b0b6b9e/src/asterisk/ami/response.cr#L6" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="actionid:ActionID-instance-method">
+      <div class="signature">
+        
+        def <strong>actionid</strong> : <a href="../../Asterisk/AMI/ActionID.html">ActionID</a>
+
+        <a class="method-permalink" href="#actionid:ActionID-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/ctiapps/asterisk/blob/ffd9689a881fdb6fff1f700a69cc6c3a6b0b6b9e/src/asterisk/ami/response.cr#L27" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="actionid=(actionid:ActionID)-instance-method">
+      <div class="signature">
+        
+        def <strong>actionid=</strong>(actionid : <a href="../../Asterisk/AMI/ActionID.html">ActionID</a>)
+
+        <a class="method-permalink" href="#actionid=(actionid:ActionID)-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/ctiapps/asterisk/blob/ffd9689a881fdb6fff1f700a69cc6c3a6b0b6b9e/src/asterisk/ami/response.cr#L27" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="actionid?:ActionID?-instance-method">
+      <div class="signature">
+        
+        def <strong>actionid?</strong> : <a href="../../Asterisk/AMI/ActionID.html">ActionID</a>?
+
+        <a class="method-permalink" href="#actionid?:ActionID?-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/ctiapps/asterisk/blob/ffd9689a881fdb6fff1f700a69cc6c3a6b0b6b9e/src/asterisk/ami/response.cr#L27" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="actionid_present?:Bool-instance-method">
+      <div class="signature">
+        
+        def <strong>actionid_present?</strong> : Bool
+
+        <a class="method-permalink" href="#actionid_present?:Bool-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/ctiapps/asterisk/blob/ffd9689a881fdb6fff1f700a69cc6c3a6b0b6b9e/src/asterisk/ami/response.cr#L30" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="data:Hash(String,Array(String)|String)-instance-method">
+      <div class="signature">
+        
+        def <strong>data</strong> : Hash(String, Array(String) | String)
+
+        <a class="method-permalink" href="#data:Hash(String,Array(String)%7CString)-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/ctiapps/asterisk/blob/ffd9689a881fdb6fff1f700a69cc6c3a6b0b6b9e/src/asterisk/ami/response.cr#L6" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="events:Array(AMIData)?-instance-method">
+      <div class="signature">
+        
+        def <strong>events</strong> : Array(<a href="../../Asterisk/AMI/AMIData.html">AMIData</a>)?
+
+        <a class="method-permalink" href="#events:Array(AMIData)?-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Response including nested events (i.e. action SIPpeers)</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/ctiapps/asterisk/blob/ffd9689a881fdb6fff1f700a69cc6c3a6b0b6b9e/src/asterisk/ami/response.cr#L36" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="events=(events:Array(AMIData)?)-instance-method">
+      <div class="signature">
+        
+        def <strong>events=</strong>(events : Array(<a href="../../Asterisk/AMI/AMIData.html">AMIData</a>)?)
+
+        <a class="method-permalink" href="#events=(events:Array(AMIData)?)-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Response including nested events (i.e. action SIPpeers)</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/ctiapps/asterisk/blob/ffd9689a881fdb6fff1f700a69cc6c3a6b0b6b9e/src/asterisk/ami/response.cr#L40" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="message:String-instance-method">
+      <div class="signature">
+        
+        def <strong>message</strong> : String
+
+        <a class="method-permalink" href="#message:String-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/ctiapps/asterisk/blob/ffd9689a881fdb6fff1f700a69cc6c3a6b0b6b9e/src/asterisk/ami/response.cr#L29" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="message=(message:String)-instance-method">
+      <div class="signature">
+        
+        def <strong>message=</strong>(message : String)
+
+        <a class="method-permalink" href="#message=(message:String)-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/ctiapps/asterisk/blob/ffd9689a881fdb6fff1f700a69cc6c3a6b0b6b9e/src/asterisk/ami/response.cr#L29" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="message?:String?-instance-method">
+      <div class="signature">
+        
+        def <strong>message?</strong> : String?
+
+        <a class="method-permalink" href="#message?:String?-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/ctiapps/asterisk/blob/ffd9689a881fdb6fff1f700a69cc6c3a6b0b6b9e/src/asterisk/ami/response.cr#L29" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="message_present?:Bool-instance-method">
+      <div class="signature">
+        
+        def <strong>message_present?</strong> : Bool
+
+        <a class="method-permalink" href="#message_present?:Bool-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/ctiapps/asterisk/blob/ffd9689a881fdb6fff1f700a69cc6c3a6b0b6b9e/src/asterisk/ami/response.cr#L32" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="output:Array(String)-instance-method">
+      <div class="signature">
+        
+        def <strong>output</strong> : Array(String)
+
+        <a class="method-permalink" href="#output:Array(String)-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/ctiapps/asterisk/blob/ffd9689a881fdb6fff1f700a69cc6c3a6b0b6b9e/src/asterisk/ami/response.cr#L31" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="output=(output:Array(String))-instance-method">
+      <div class="signature">
+        
+        def <strong>output=</strong>(output : Array(String))
+
+        <a class="method-permalink" href="#output=(output:Array(String))-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/ctiapps/asterisk/blob/ffd9689a881fdb6fff1f700a69cc6c3a6b0b6b9e/src/asterisk/ami/response.cr#L31" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="output?:Array(String)?-instance-method">
+      <div class="signature">
+        
+        def <strong>output?</strong> : Array(String)?
+
+        <a class="method-permalink" href="#output?:Array(String)?-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/ctiapps/asterisk/blob/ffd9689a881fdb6fff1f700a69cc6c3a6b0b6b9e/src/asterisk/ami/response.cr#L31" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="output_present?:Bool-instance-method">
+      <div class="signature">
+        
+        def <strong>output_present?</strong> : Bool
+
+        <a class="method-permalink" href="#output_present?:Bool-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/ctiapps/asterisk/blob/ffd9689a881fdb6fff1f700a69cc6c3a6b0b6b9e/src/asterisk/ami/response.cr#L34" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="response:String-instance-method">
+      <div class="signature">
+        
+        def <strong>response</strong> : String
+
+        <a class="method-permalink" href="#response:String-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/ctiapps/asterisk/blob/ffd9689a881fdb6fff1f700a69cc6c3a6b0b6b9e/src/asterisk/ami/response.cr#L28" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="response=(response:String)-instance-method">
+      <div class="signature">
+        
+        def <strong>response=</strong>(response : String)
+
+        <a class="method-permalink" href="#response=(response:String)-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/ctiapps/asterisk/blob/ffd9689a881fdb6fff1f700a69cc6c3a6b0b6b9e/src/asterisk/ami/response.cr#L28" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="response?:String?-instance-method">
+      <div class="signature">
+        
+        def <strong>response?</strong> : String?
+
+        <a class="method-permalink" href="#response?:String?-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/ctiapps/asterisk/blob/ffd9689a881fdb6fff1f700a69cc6c3a6b0b6b9e/src/asterisk/ami/response.cr#L28" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="response_present?:Bool-instance-method">
+      <div class="signature">
+        
+        def <strong>response_present?</strong> : Bool
+
+        <a class="method-permalink" href="#response_present?:Bool-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/ctiapps/asterisk/blob/ffd9689a881fdb6fff1f700a69cc6c3a6b0b6b9e/src/asterisk/ami/response.cr#L31" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="success?:Bool-instance-method">
+      <div class="signature">
+        
+        def <strong>success?</strong> : Bool
+
+        <a class="method-permalink" href="#success?:Bool-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/ctiapps/asterisk/blob/ffd9689a881fdb6fff1f700a69cc6c3a6b0b6b9e/src/asterisk/ami/response.cr#L36" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="to_h:Hash(String,Array(String)|String)-instance-method">
+      <div class="signature">
+        
+        def <strong>to_h</strong> : Hash(String, Array(String) | String)
+
+        <a class="method-permalink" href="#to_h:Hash(String,Array(String)%7CString)-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/ctiapps/asterisk/blob/ffd9689a881fdb6fff1f700a69cc6c3a6b0b6b9e/src/asterisk/ami/response.cr#L44" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="value:String-instance-method">
+      <div class="signature">
+        
+        def <strong>value</strong> : String
+
+        <a class="method-permalink" href="#value:String-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/ctiapps/asterisk/blob/ffd9689a881fdb6fff1f700a69cc6c3a6b0b6b9e/src/asterisk/ami/response.cr#L30" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="value=(value:String)-instance-method">
+      <div class="signature">
+        
+        def <strong>value=</strong>(value : String)
+
+        <a class="method-permalink" href="#value=(value:String)-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/ctiapps/asterisk/blob/ffd9689a881fdb6fff1f700a69cc6c3a6b0b6b9e/src/asterisk/ami/response.cr#L30" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="value?:String?-instance-method">
+      <div class="signature">
+        
+        def <strong>value?</strong> : String?
+
+        <a class="method-permalink" href="#value?:String?-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/ctiapps/asterisk/blob/ffd9689a881fdb6fff1f700a69cc6c3a6b0b6b9e/src/asterisk/ami/response.cr#L30" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="value_present?:Bool-instance-method">
+      <div class="signature">
+        
+        def <strong>value_present?</strong> : Bool
+
+        <a class="method-permalink" href="#value_present?:Bool-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/ctiapps/asterisk/blob/ffd9689a881fdb6fff1f700a69cc6c3a6b0b6b9e/src/asterisk/ami/response.cr#L33" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+
+
+
+  <h2>Macro Detail</h2>
+  
+    <div class="entry-detail" id="def_property(property,klass=String)-macro">
+      <div class="signature">
+        
+        macro <strong>def_property</strong>(property, klass = <span class="t">String</span>)
+
+        <a class="method-permalink" href="#def_property(property,klass=String)-macro">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/ctiapps/asterisk/blob/ffd9689a881fdb6fff1f700a69cc6c3a6b0b6b9e/src/asterisk/ami/response.cr#L9" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+
+
+</div>
+
+</body>
+</html>
