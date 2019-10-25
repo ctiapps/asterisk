@@ -3,7 +3,7 @@ Asterisk libraries
 
 [![Join the chat at https://gitter.im/ctiapps/asterisk](https://badges.gitter.im/ctiapps/asterisk.svg)](https://gitter.im/ctiapps/asterisk?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 &nbsp;
-[![Join the chat at https://t.me/joinchat/asterisk.cr](https://andrius.mobi/images/badges/chat-on-telegram.svg)](https://t.me/joinchat/asterisk.cr)
+[![Join the chat at https://t.me/joinchat/alicecalling](https://andrius.mobi/images/badges/chat-on-telegram.svg)](https://t.me/joinchat/alicecalling)
 
 Asterisk PBX libraries (ARI, AMI and all kinds of AGI) for crystal-lang
 
