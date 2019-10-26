@@ -1,4 +1,4 @@
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 #
 #  WARNING !
 #
@@ -8,7 +8,7 @@
 #  This file was generated using ctiapps/asterisk crystal shard from the
 #  Asterisk PBX version 16.6.0.
 #
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 
 module Asterisk
   class ARI
@@ -16,7 +16,6 @@ module Asterisk
       # Dialed channel information.
       struct Dialed
         include JSON::Serializable
-
       end
     end
   end

@@ -10,7 +10,7 @@ module Asterisk
           base_url % {
             root_dir:      Asterisk::Generator.current_dir,
             resource_name: resource_name.underscore,
-            model_name:    model_name.underscore
+            model_name:    model_name.underscore,
           }
         end
 
@@ -27,7 +27,7 @@ module Asterisk
             parameters = Parameters.new model_data["properties"]
 
             model = <<-END
-                    #------------------------------------------------------------------------------
+                    #-------------------------------------------------------------------------------
                     #
                     #  WARNING !
                     #
@@ -37,7 +37,7 @@ module Asterisk
                     #  This file was generated using ctiapps/asterisk crystal shard from the
                     #  Asterisk PBX version #{`asterisk -rx "core show version"`.split[1]}.
                     #
-                    #------------------------------------------------------------------------------
+                    #-------------------------------------------------------------------------------
 
                     module Asterisk
                       class ARI

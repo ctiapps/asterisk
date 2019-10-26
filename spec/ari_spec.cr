@@ -36,7 +36,6 @@ describe Asterisk::ARI do
     event.type.should eq("StasisStart")
   end
 
-
   ##############################################################################
   # After ari.start, it will connect with asterisk as ari app, it can be
   # discovered calling "ari show apps" from asterisk command line:
@@ -48,15 +47,14 @@ describe Asterisk::ARI do
   it "ARI client should connect to Asterisk" do
     # Asterisk.logger.level = Logger:DEBUG
     ari = Asterisk::ARI.new app: "asterisk.cr",
-                            username: "asterisk.cr",
-                            password: "asterisk.cr"
+      username: "asterisk.cr",
+      password: "asterisk.cr"
     ari.start
     sleep 0.05.seconds
     data = Asterisk::Server.exec "ari show apps"
     data.should match(/asterisk\.cr/m)
     ari.close
   end
-
 
   ##############################################################################
   # Generated voice call should enter to the stasis app, then hangup request
@@ -66,12 +64,12 @@ describe Asterisk::ARI do
   # - StasisEnd
   it "should receive ARI events" do
     ari = Asterisk::ARI.new app: "asterisk.cr",
-                            username: "asterisk.cr",
-                            password: "asterisk.cr"
+      username: "asterisk.cr",
+      password: "asterisk.cr"
 
-    start_ch  = Channel(Bool).new
+    start_ch = Channel(Bool).new
     hangup_ch = Channel(Bool).new
-    end_ch    = Channel(Bool).new
+    end_ch = Channel(Bool).new
 
     ari.on_stasis_start do
       start_ch.send true
@@ -93,9 +91,9 @@ describe Asterisk::ARI do
     # prevent chanels freezing
     spawn do
       sleep 0.5.seconds
-      start_ch.send  false
+      start_ch.send false
       hangup_ch.send false
-      end_ch.send    false
+      end_ch.send false
     end
 
     # Wait until call appear in stasis
@@ -110,7 +108,6 @@ describe Asterisk::ARI do
     ari.close
   end
 
-
   ##############################################################################
   # Generated call should enter to the stasis app, then channel answer should
   # be requested and validated. Then hangup request will be invoked.
@@ -119,12 +116,12 @@ describe Asterisk::ARI do
   # - ChannelStateChange (after channel get answered)
   it "should execute ARI commands" do
     ari = Asterisk::ARI.new app: "asterisk.cr",
-                            username: "asterisk.cr",
-                            password: "asterisk.cr"
+      username: "asterisk.cr",
+      password: "asterisk.cr"
 
-    start_ch  = Channel(Bool).new
+    start_ch = Channel(Bool).new
     answer_ch = Channel(Bool).new
-    end_ch    = Channel(Bool).new
+    end_ch = Channel(Bool).new
 
     ari.on_stasis_start do |event|
       response = ari.channels.answer channel_id: event.channel.id
@@ -150,9 +147,9 @@ describe Asterisk::ARI do
     # prevent chanels freezing
     spawn do
       sleep 0.5.seconds
-      start_ch.send  false
+      start_ch.send false
       answer_ch.send false
-      end_ch.send    false
+      end_ch.send false
     end
 
     # Wait until call appear in stasis
@@ -167,5 +164,4 @@ describe Asterisk::ARI do
     end_ch.receive.should be_true
     ari.close
   end
-
 end

@@ -1,4 +1,4 @@
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 #
 #  WARNING !
 #
@@ -8,7 +8,7 @@
 #  This file was generated using ctiapps/asterisk crystal shard from the
 #  Asterisk PBX version 16.6.0.
 #
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 require "./event.cr"
 
 module Asterisk
@@ -16,7 +16,6 @@ module Asterisk
     class Events < Resources
       # Detailed information about a remote peer that communicates with Asterisk.
       struct Peer < Event
-
         # The current state of the peer. Note that the values of the status are dependent on the underlying peer technology.
         property peer_status : String
 

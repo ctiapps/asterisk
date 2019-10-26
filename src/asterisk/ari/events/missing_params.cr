@@ -1,4 +1,4 @@
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 #
 #  WARNING !
 #
@@ -8,7 +8,7 @@
 #  This file was generated using ctiapps/asterisk crystal shard from the
 #  Asterisk PBX version 16.6.0.
 #
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 require "./message.cr"
 
 module Asterisk
@@ -16,7 +16,6 @@ module Asterisk
     class Events < Resources
       # Error event sent when required params are missing.
       struct MissingParams < Message
-
         # A list of the missing parameters
         property params : Array(String)
       end

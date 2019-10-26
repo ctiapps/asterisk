@@ -1,4 +1,4 @@
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 #
 #  WARNING !
 #
@@ -8,7 +8,7 @@
 #  This file was generated using ctiapps/asterisk crystal shard from the
 #  Asterisk PBX version 16.6.0.
 #
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 require "./event.cr"
 
 module Asterisk
@@ -16,7 +16,6 @@ module Asterisk
     class Events < Resources
       # The state of a contact on an endpoint has changed.
       struct ContactStatusChange < Event
-
         property endpoint : Int32
 
         property contact_info : ContactInfo

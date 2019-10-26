@@ -1,4 +1,4 @@
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 #
 #  WARNING !
 #
@@ -8,7 +8,7 @@
 #  This file was generated using ctiapps/asterisk crystal shard from the
 #  Asterisk PBX version 16.6.0.
 #
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 require "./event.cr"
 
 module Asterisk
@@ -16,7 +16,6 @@ module Asterisk
     class Events < Resources
       # Talking is no longer detected on the channel.
       struct ChannelTalkingFinished < Event
-
         # The channel on which talking completed.
         property channel : Channels::Channel
 

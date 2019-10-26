@@ -8,12 +8,12 @@ module Asterisk
         end
 
         getter parameters_json : JSON::Any
-        getter model_type      : ModelType
-        getter parameters      = {} of String => Parameter
+        getter model_type : ModelType
+        getter parameters = {} of String => Parameter
         # indicate types of parameters to build HTTP request
-        getter path_type       = [] of Parameter
-        getter query_type      = [] of Parameter
-        getter body_type       = [] of Parameter
+        getter path_type = [] of Parameter
+        getter query_type = [] of Parameter
+        getter body_type = [] of Parameter
 
         # returns a string with method arguments from parameters "def(arguments)"
         def arguments
@@ -66,12 +66,12 @@ module Asterisk
         #
         # For resources is's an array behind JSON property "parameters":
         # ```
-        # [{"name" => "body",
-        #   "description" => "The body of the message",
-        #   "paramType" => "query",
-        #   "required" => false,
+        # [{"name"          => "body",
+        #   "description"   => "The body of the message",
+        #   "paramType"     => "query",
+        #   "required"      => false,
         #   "allowMultiple" => false,
-        #   "dataType" => "string"}]
+        #   "dataType"      => "string"}]
         # ```
         #
         # For models it's a hash behind JSON property "properties":
@@ -140,7 +140,6 @@ module Asterisk
 
           # pp @parameters
         end
-
       end
     end
   end

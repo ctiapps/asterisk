@@ -74,7 +74,6 @@ describe Asterisk::AMI do
 
             # short random pause after loop to randomize fibers data
             sleep rand(0.05)
-
           rescue ex
             puts %(\n\nAMI loadtest spec: #{ex.class}:#{ex.message}\n#{ex.backtrace.pretty_inspect}\n\nLatest response: #{response.inspect rescue "-- n/a ---"}\n\n)
             break
@@ -88,7 +87,6 @@ describe Asterisk::AMI do
 
     fibers.receive
   end
-
 
   # This test is useful in order to validate how Asterisk AsyncAGI will be
   # working
@@ -175,9 +173,8 @@ describe Asterisk::AMI do
 
         fibers.receive
         sleep 5.seconds
-      end   # with_ami
+      end # with_ami
 
     end
-
   end
 end

@@ -1,4 +1,4 @@
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 #
 #  WARNING !
 #
@@ -8,14 +8,14 @@
 #  This file was generated using ctiapps/asterisk crystal shard from the
 #  Asterisk PBX version 16.6.0.
 #
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 
 module Asterisk
   class ARI
     class Bridges < Resources
       # The merging of media from one or more channels.
-#
-# Everyone on the bridge receives the same audio.
+      #
+      # Everyone on the bridge receives the same audio.
       struct Bridge
         include JSON::Serializable
 

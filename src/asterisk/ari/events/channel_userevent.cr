@@ -1,4 +1,4 @@
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 #
 #  WARNING !
 #
@@ -8,7 +8,7 @@
 #  This file was generated using ctiapps/asterisk crystal shard from the
 #  Asterisk PBX version 16.6.0.
 #
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 require "./event.cr"
 
 module Asterisk
@@ -16,7 +16,6 @@ module Asterisk
     class Events < Resources
       # User-generated event with additional user-defined fields in the object.
       struct ChannelUserevent < Event
-
         # The name of the user event.
         property eventname : String
 

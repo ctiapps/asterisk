@@ -3,6 +3,7 @@ require "http/params"
 require "http/client"
 require "http/web_socket"
 require "json"
+require "uuid"
 
 require "./logger.cr"
 require "./ari/*"
@@ -18,22 +19,23 @@ module Asterisk
     class ConnectionError < Exception
     end
 
-    GRACEFULLY_HANDLERS_REMOVAL_TIMEOUT = 0.02.seconds
+    HANDLERS_REMOVAL_TIMEOUT = 0.02.seconds
 
     property logger : Logger = ::Asterisk.logger
 
     # ARI app-name
     getter app : String
 
-    # will be set by `connect`
+    # Asterisk PBX version and entity_id (interface mac-address) will be set by
+    # `connect` method
     getter asterisk_version : String?
-    getter entity_id        : String?
+    getter entity_id : String?
 
     @url : String
     @uri : URI
 
-    @username  : String
-    @password  : String
+    @username : String
+    @password : String
 
     private getter! ws : HTTP::WebSocket?
 
@@ -76,34 +78,34 @@ module Asterisk
         process_ws_message json_data
       end
 
-      # Remove orphaned event handlers after expiration
+      # Remove orphaned event handlers after expiration of related ARI object
       on_recording_finished do |event|
         event_filter = JSON.parse(%({"recording": {"name": "#{event.recording.name}"}}))
-        sleep GRACEFULLY_HANDLERS_REMOVAL_TIMEOUT
+        sleep HANDLERS_REMOVAL_TIMEOUT
         handlers(event_filter).keys.each { |handler_id| remove_handler(handler_id) }
       end
 
       on_recording_failed do |event|
         event_filter = JSON.parse(%({"recording": {"name": "#{event.recording.name}"}}))
-        sleep GRACEFULLY_HANDLERS_REMOVAL_TIMEOUT
+        sleep HANDLERS_REMOVAL_TIMEOUT
         handlers(event_filter).keys.each { |handler_id| remove_handler(handler_id) }
       end
 
       on_playback_finished do |event|
         event_filter = JSON.parse(%({"playback": {"id": "#{event.playback.id}"}}))
-        sleep GRACEFULLY_HANDLERS_REMOVAL_TIMEOUT
+        sleep HANDLERS_REMOVAL_TIMEOUT
         handlers(event_filter).keys.each { |handler_id| remove_handler(handler_id) }
       end
 
       on_bridge_destroyed do |event|
         event_filter = JSON.parse(%({"bridge": {"id": "#{event.bridge.id}"}}))
-        sleep GRACEFULLY_HANDLERS_REMOVAL_TIMEOUT
+        sleep HANDLERS_REMOVAL_TIMEOUT
         handlers(event_filter).keys.each { |handler_id| remove_handler(handler_id) }
       end
 
       on_stasis_end do |event|
         event_filter = JSON.parse(%({"channel": {"id": "#{event.channel.id}"}}))
-        sleep GRACEFULLY_HANDLERS_REMOVAL_TIMEOUT
+        sleep HANDLERS_REMOVAL_TIMEOUT
         handlers(event_filter).keys.each { |handler_id| remove_handler(handler_id) }
       end
 
@@ -149,7 +151,7 @@ module Asterisk
     end
 
     def connected?
-      ws? && ! ws.closed?
+      ws? && !ws.closed?
     end
 
     def closed?
@@ -211,25 +213,25 @@ module Asterisk
 
     def event_on(event_filter : JSON::Any, &block : String ->) : String
       handler_id = UUID.random.to_s
-      @handlers[handler_id] = { event_filter => block }
+      @handlers[handler_id] = {event_filter => block}
       handler_id
     end
 
     def event_on(handler_id : String, event_filter : JSON::Any, &block : String ->) : String
-      @handlers[handler_id] = { event_filter => block }
+      @handlers[handler_id] = {event_filter => block}
       handler_id
     end
 
     def event_on(event_filter : NamedTuple, &block : String ->) : String
       event_filter = JSON.parse(event_filter.to_json)
       handler_id = UUID.random.to_s
-      @handlers[handler_id] = { event_filter => block }
+      @handlers[handler_id] = {event_filter => block}
       handler_id
     end
 
     def event_on(handler_id : String, event_filter : NamedTuple, &block : String ->) : String
       event_filter = JSON.parse(event_filter.to_json)
-      @handlers[handler_id] = { event_filter => block }
+      @handlers[handler_id] = {event_filter => block}
       handler_id
     end
 
@@ -252,7 +254,7 @@ module Asterisk
       h = @handlers.map { |handler_id, handler|
         handler.map { |handler_event_filter, _|
           if json_includes?(handler_event_filter, event_filter)
-            { handler_id => handler }
+            {handler_id => handler}
           end
         }
       }.flatten.compact
@@ -270,8 +272,10 @@ module Asterisk
     # https://play.crystal-lang.org/#/r/7lam
     # https://play.crystal-lang.org/#/r/7lb5
     private def json_includes?(event : JSON::Any, event_filter : JSON::Any)
+      # only matchh hashes
       return false unless event_filter.as_h?
-      return false if event_filter.as_h.empty?
+      # any event accepted with no filter
+      return true if event_filter.as_h.empty?
 
       result = event_filter.as_h.map { |key, ef|
         if event[key]?

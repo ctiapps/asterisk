@@ -81,6 +81,5 @@ module Asterisk
         @block.try &.call(call)
       end
     end
-
   end
 end

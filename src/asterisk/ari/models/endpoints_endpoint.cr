@@ -1,4 +1,4 @@
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 #
 #  WARNING !
 #
@@ -8,14 +8,14 @@
 #  This file was generated using ctiapps/asterisk crystal shard from the
 #  Asterisk PBX version 16.6.0.
 #
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 
 module Asterisk
   class ARI
     class Endpoints < Resources
       # An external device that may offer/accept calls to/from Asterisk.
-#
-# Unlike most resources, which have a single unique identifier, an endpoint is uniquely identified by the technology/resource pair.
+      #
+      # Unlike most resources, which have a single unique identifier, an endpoint is uniquely identified by the technology/resource pair.
       struct Endpoint
         include JSON::Serializable
 

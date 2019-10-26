@@ -1,7 +1,7 @@
 module Asterisk
   class ARI
     class Request
-      @uri    : String
+      @uri : String
       @params = Hash(String, String).new
 
       def uri
@@ -16,7 +16,6 @@ module Asterisk
           @params[key] = value.to_s if value
         end
       end
-
     end
   end
 end

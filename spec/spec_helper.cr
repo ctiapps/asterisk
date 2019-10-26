@@ -27,19 +27,18 @@ module TestHelpers
     io.to_s
   end
 
-  def with_ami(host     = ENV.fetch("ASTERISK_HOST", "127.0.0.1"),
-               port     = ENV.fetch("ASTERISK_AMI_PORT", "5038"),
+  def with_ami(host = ENV.fetch("ASTERISK_HOST", "127.0.0.1"),
+               port = ENV.fetch("ASTERISK_AMI_PORT", "5038"),
                username = ENV.fetch("ASTERISK_AMI_USERNAME", "asterisk.cr"),
-               secret   = ENV.fetch("ASTERISK_AMI_PASSWORD", "asterisk.cr"),
-               &block )
-
+               secret = ENV.fetch("ASTERISK_AMI_PASSWORD", "asterisk.cr"),
+               &block)
     ami = Asterisk::AMI.new(host, port, username, secret)
     ami.login
     sleep 0.01
 
     yield ami
 
-    ami.send_action({"action"  => "command", "command" => "hangup request all"})
+    ami.send_action({"action" => "command", "command" => "hangup request all"})
     ami.logoff
     sleep 0.01
     logger.level = LOG_LEVEL
@@ -60,16 +59,15 @@ module TestHelpers
     logger.level = LOG_LEVEL
   end
 
-  def with_ari(url          = %(http://#{ENV.fetch("ASTERISK_HOST", "127.0.0.1")}:#{ENV.fetch("ASTERISK_HTTP_PORT", "8088")}/ari),
-               app          = ENV.fetch("ASTERISK_ARI_APPNAME", "asterisk.cr"),
-               username     = ENV.fetch("ASTERISK_ARI_USERNAME", "asterisk.cr"),
-               password     = ENV.fetch("ASTERISK_ARI_PASSWORD", "asterisk.cr"),
-               ami_host     = ENV.fetch("ASTERISK_HOST", "127.0.0.1"),
-               ami_port     = ENV.fetch("ASTERISK_AMI_PORT", "5038"),
+  def with_ari(url = %(http://#{ENV.fetch("ASTERISK_HOST", "127.0.0.1")}:#{ENV.fetch("ASTERISK_HTTP_PORT", "8088")}/ari),
+               app = ENV.fetch("ASTERISK_ARI_APPNAME", "asterisk.cr"),
+               username = ENV.fetch("ASTERISK_ARI_USERNAME", "asterisk.cr"),
+               password = ENV.fetch("ASTERISK_ARI_PASSWORD", "asterisk.cr"),
+               ami_host = ENV.fetch("ASTERISK_HOST", "127.0.0.1"),
+               ami_port = ENV.fetch("ASTERISK_AMI_PORT", "5038"),
                ami_username = ENV.fetch("ASTERISK_AMI_USERNAME", "asterisk.cr"),
-               ami_secret   = ENV.fetch("ASTERISK_AMI_PASSWORD", "asterisk.cr"),
+               ami_secret = ENV.fetch("ASTERISK_AMI_PASSWORD", "asterisk.cr"),
                &block)
-
     with_ami host: ami_host, port: ami_port, username: ami_username, secret: ami_secret do |ami|
       ari = Asterisk::ARI.new(url, app, username, password)
 
@@ -112,12 +110,12 @@ module TestHelpers
 
   macro generate_call(**data)
     ami_action = { "action"      => "originate",
-                   "channel"     => {{ data[:channel]     || "Local/ari@asterisk.cr" }}.to_s,
+                   "channel"     => {{ data[:channel] || "Local/ari@asterisk.cr" }}.to_s,
                    "application" => {{ data[:application] || "Wait" }}.to_s,
-                   "data"        => {{ data[:app_data]    || "1" }}.to_s,
-                   "async"       => {{ data[:async]       || true }}.to_s,
+                   "data"        => {{ data[:app_data] || "1" }}.to_s,
+                   "async"       => {{ data[:async] || true }}.to_s,
                    "earlymedia"  => "true",
-                   "timeout"     => {{ data[:timeout]     || 30_000 }}.to_s
+                   "timeout"     => {{ data[:timeout] || 30_000 }}.to_s
                  }
     # logger.debug "Sending AMI action\n#{ami_action.pretty_inspect}\n---"
     response = ami.send_action(ami_action)

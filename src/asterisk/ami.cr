@@ -66,7 +66,7 @@ module Asterisk
       run
       response = send_action({"action"   => "Login",
                               "username" => @username,
-                              "secret" => @secret})
+                              "secret"   => @secret})
       if response.success?
         # {"unknown" => "Asterisk Call Manager/2.10.5",
         #  "response" => "Success",
@@ -88,8 +88,14 @@ module Asterisk
         raise LoginError.new(response.message)
       end
     end
-    def connect; login; end
-    def start; login; end
+
+    def connect
+      login
+    end
+
+    def start
+      login
+    end
 
     def logoff
       if running?
@@ -146,7 +152,7 @@ module Asterisk
 
         # got one record and it is not eventlist-like response
         # in this case result is a single response
-        break if first && ! multiple_responses
+        break if first && !multiple_responses
 
         # timeout
         if waited >= expects_answer_before
@@ -161,13 +167,12 @@ module Asterisk
       if multiple_responses
         response = responses.shift
         response.events = [] of AMIData
-        responses.each {|r| response.events.as(Array(AMIData)).push r.data }
+        responses.each { |r| response.events.as(Array(AMIData)).push r.data }
         response
       else
         responses.first
       end
     end
-
 
     # Format action as a multiline string delimited by "\r\n" and send it
     # through AMI TCPSocket connection

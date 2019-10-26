@@ -11,7 +11,7 @@ module Asterisk
           base_url % {
             root_dir:      Asterisk::Generator.current_dir,
             resource_name: resource_name.underscore,
-            model_name:    model_name.underscore
+            model_name:    model_name.underscore,
           }
         end
 
@@ -48,7 +48,7 @@ module Asterisk
             parameters = Parameters.new model_data["properties"]
 
             model = <<-END
-                    #------------------------------------------------------------------------------
+                    #-------------------------------------------------------------------------------
                     #
                     #  WARNING !
                     #
@@ -58,15 +58,14 @@ module Asterisk
                     #  This file was generated using ctiapps/asterisk crystal shard from the
                     #  Asterisk PBX version #{`asterisk -rx "core show version"`.split[1]}.
                     #
-                    #------------------------------------------------------------------------------
+                    #-------------------------------------------------------------------------------
                     #{if klass =~ /^Event$|^MissingParams$/
                         %(require "./message.cr"\n\n)
                       elsif klass != "Message"
                         %(require "./event.cr"\n\n)
                       else
                         ""
-                      end
-                    }
+                      end}
                     module Asterisk
                       class ARI
                         class #{resource} < Resources
@@ -84,7 +83,6 @@ module Asterisk
             file.puts model
             file.close
           end
-
         end
       end
     end

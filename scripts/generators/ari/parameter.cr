@@ -4,14 +4,14 @@ module Asterisk
   module Generator
     class ARI
       class Parameter
-        getter parameter_json    : JSON::Any
-        property  name           : String
-        property  name_ari       : String
-        property  param_type     : String?
+        getter parameter_json : JSON::Any
+        property name : String
+        property name_ari : String
+        property param_type : String?
         property? allow_multiple : Bool?
-        property? required       : Bool?
-        property  description    : String
-        property  datatype       : String = ""
+        property? required : Bool?
+        property description : String
+        property datatype : String = ""
 
         @doc = <<-END
                END
@@ -25,11 +25,11 @@ module Asterisk
           parameter_json["defaultValue"]?
         end
 
-        private def set_datatype()
+        private def set_datatype
           datatype = (parameter_json["dataType"]? || parameter_json["type"]).as_s
           result = Datatype.new(datatype).set!
 
-          if ! required?
+          if !required?
             result += "?"
           end
 
@@ -47,16 +47,15 @@ module Asterisk
         end
 
         def initialize(@name, @parameter_json)
-          @name_ari       = parameter_json["name"]?.try &.as_s || ""
-          @param_type     = parameter_json["paramType"]?.try &.as_s
-          @required       = param_type == "path" || (parameter_json["required"]?.try &.as_bool)
+          @name_ari = parameter_json["name"]?.try &.as_s || ""
+          @param_type = parameter_json["paramType"]?.try &.as_s
+          @required = param_type == "path" || (parameter_json["required"]?.try &.as_bool)
           # allow_multiple is true for comma-separated data, i.e. soundfiles for
           # play command
           @allow_multiple = parameter_json["allowMultiple"]?.try &.as_bool
           set_datatype
-          @description    = (parameter_json["description"]? || parameter_json["descriptioni"]?).to_s
+          @description = (parameter_json["description"]? || parameter_json["descriptioni"]?).to_s
         end
-
       end
     end
   end

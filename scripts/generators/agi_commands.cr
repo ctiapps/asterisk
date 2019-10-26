@@ -2,14 +2,14 @@ module Asterisk
   module Generator
     class AGICommand
       struct Docs
-        property command     : String
-        property method      : String
-        property syntax      : String
+        property command : String
+        property method : String
+        property syntax : String
         property description : String
-        property summary     : String # Synopsis
-        property runs_dead   : Bool?
-        property see_also    : String
-        property method_def  : String
+        property summary : String # Synopsis
+        property runs_dead : Bool?
+        property see_also : String
+        property method_def : String
 
         def initialize(@command = "", @method = "", @syntax = "", @description = "", @summary = "", @runs_dead = nil, @see_also = "", @method_def = "")
         end
@@ -48,10 +48,10 @@ module Asterisk
           # ```
           method = command.gsub(" ", "_")
 
-          @agi_commands[method] = Docs.new command:   command,
-                                           method:    method,
-                                           summary:   summary,
-                                           runs_dead: runs_dead
+          @agi_commands[method] = Docs.new command: command,
+            method: method,
+            summary: summary,
+            runs_dead: runs_dead
         end
       end
 
@@ -66,10 +66,10 @@ module Asterisk
           section = section.split("\n")
           header = section.shift.gsub(/\[|\]/, "")
           body = if header =~ /Description/i
-                  section.join("\n")
-                else
-                  section.join(" ").gsub("  ", " ").strip
-                end
+                   section.join("\n")
+                 else
+                   section.join(" ").gsub("  ", " ").strip
+                 end
 
           next if header =~ /Runs Dead|Synopsis/i
 
@@ -96,26 +96,26 @@ module Asterisk
             method_def = method_def.gsub("()", "")
             args = args.gsub(/\s+$/, "")
             method_def = if args.empty?
-                          <<-METHOD_DEF
+                           <<-METHOD_DEF
                           def #{method_def}
                             execute "#{agi_command.command.upcase}"
                           end
                           METHOD_DEF
-                        else
-                          modifiers = if agi_command.method == "verbose"
-                            %(message = %("\#{message}") if message =~ /\\s+/)
-                          elsif agi_command.method == "set_variable"
-                            %(value = %("\#{value}") if value =~ /\\s+/)
-                          else
-                            nil
-                          end
-                          <<-METHOD_DEF
+                         else
+                           modifiers = if agi_command.method == "verbose"
+                                         %(message = %("\#{message}") if message =~ /\\s+/)
+                                       elsif agi_command.method == "set_variable"
+                                         %(value = %("\#{value}") if value =~ /\\s+/)
+                                       else
+                                         nil
+                                       end
+                           <<-METHOD_DEF
                           def #{method_def}
                             #{modifiers ? "#{modifiers}\n  " : ""}command_str = "#{args}"
                             execute "#{agi_command.command.upcase} \#{command_str}"
                           end
                           METHOD_DEF
-                        end
+                         end
             agi_command.method_def = method_def
           end
 
@@ -158,7 +158,7 @@ module Asterisk
 
       def generate!(command : String? = nil)
         result = if command.nil?
-          klass = <<-END
+                   klass = <<-END
                   #------------------------------------------------------------------------------
                   #
                   #  WARNING !
@@ -176,18 +176,18 @@ module Asterisk
                       module Commands
 
                   END
-          agi_commands.each do |command, _|
-            klass += build_method(command)
-            klass += "\n\n"
-          end
-          klass += "    end\n  end\nend"
-          klass
-        else
-          klass = "module Asterisk\n  class AGI\n      module Commands\n"
-          klass += build_method(command)
-          klass += "\n    end\n  end\nend"
-          klass
-        end
+                   agi_commands.each do |command, _|
+                     klass += build_method(command)
+                     klass += "\n\n"
+                   end
+                   klass += "    end\n  end\nend"
+                   klass
+                 else
+                   klass = "module Asterisk\n  class AGI\n      module Commands\n"
+                   klass += build_method(command)
+                   klass += "\n    end\n  end\nend"
+                   klass
+                 end
         result.gsub(/ +$/m, "").gsub("\n\n\n", "\n\n").strip.chomp
       end
     end
