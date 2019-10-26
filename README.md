@@ -3,9 +3,11 @@ asterisk.cr - Asterisk PBX all-in-one library
 
 Asterisk PBX libraries (ARI, AMI and all types of AGI) for crystal-lang.
 
+[![Docs](https://img.shields.io/badge/docs-available-brightgreen.svg)](//ctiapps.github.io/asterisk)
+&nbsp;
 [![Join the chat at https://gitter.im/ctiapps/asterisk](https://badges.gitter.im/ctiapps/asterisk.svg)](https://gitter.im/ctiapps/asterisk?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 &nbsp;
-[![Join the chat at https://t.me/alicecalling](https://andrius.mobi/images/badges/chat-on-telegram.svg)](https://t.me/alicecalling)
+[![Join the chat at https://t.me/alice_calls](https://img.shields.io/badge/chat-on%20Telegram-blue.svg)](https://t.me/alice_calls)
 
 ## Installation
 
@@ -27,7 +29,7 @@ TODO: Write usage instructions here
 
 ## Examples
 
-Examples and demos are in separate repositoty: [github.com/ctiapps/alicecalls](//github.com/ctiapps/alicecalls)
+Examples and demos are in separate repositoty: [github.com/ctiapps/alice_calls](//github.com/ctiapps/alice_calls)
 
 ## Development
 
